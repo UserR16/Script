@@ -98,21 +98,99 @@ Name = "Instance Interact",
 Default = false,
 Color = Setting.Color,
 Callback = function(v)
-if v then
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
-if v:IsA("ProximityPrompt") and v then
-v.HoldDuration = 0
-end
-end
-InstanceInteract = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].DescendantAdded:Connect(function(v)
-if v:IsA("ProximityPrompt") and v then
-v.HoldDuration = 0
+_G.InstanceInteract = v
+end})
+Tabs.Main:AddSection({Name = "Fix Puzzle"})
+Tabs.Main:AddToggle({
+Name = "Auto Breaker Puzzle",
+Default = false,
+Color = Setting.Color,
+Callback = function(v)
+_G.AutoBreaker = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AutoBreaker then
+RemotesFolder.EBF:FireServer("Fuck Breaker") --EBF = Enabled Breaker Fix ☠️☠️
 end
 end)
+end})
+Tabs.Main:AddButton({
+Name = "Padlock Unlock",
+Callback = function()
+local Floor = game:GetService("ReplicatedStorage").GameData.Floor
+local Paper = workspace:FindFirstChild("LibraryHintPaper",true) or workspace:FindFirstChild("LibraryHintPaperHard",true) or Players:FindFirstChild("LibraryHintPaper",true) or Players:FindFirstChild("LibraryHintPaperHard",true)
+if not Paper then
+OrionLib:Notify({
+	Name = "YOUHUB",
+	Content = "You need a Paper",
+	Image = "rbxassetid://4483345998",
+	Time = 5
+})
+return
+end
+local HintsNeeded = Fools and 8 or 3
+local Hints = 0
+for _,Collected in pairs(game.Players.LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
+if Collected.Name == "Icon" then
+if Collected:IsA("ImageLabel") then
+for _,Icon in pairs(Paper.UI:GetChildren()) do
+if tonumber(Icon.Name) then
+if Icon.ImageRectOffset == Collected.ImageRectOffset then
+Hints += 1
+end
+end
+end
+end
+end
+end
+if Hints < HintsNeeded then
+OrionLib:Notify({
+	Name = "YOUHUB",
+	Content = "Notification content... what will it say??",
+	Image = "rbxassetid://4483345998",
+	Time = 5
+})
+return
+end
+local t = {}
+for i = 1, Floor.Value == "Hotel" and 5 or 10 do
+local Icon = Paper.UI[i]
+local Number = -1
+for _,Collected in pairs(game.Players.LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
+if Collected.Name == "Icon" then
+if Collected.ImageRectOffset == Icon.ImageRectOffset then
+Number = tonumber(Collected.TextLabel.Text)
+end
+end
+end
+table.insert(t,Number)
+end
+for one=0,t[1]==-1 and 9 or 0 do
+for two=0,t[2]==-1 and 9 or 0 do
+for three=0,t[3]==-1 and 9 or 0 do
+for four=0,t[4]==-1 and 9 or 0 do
+for five=0,t[5]==-1 and 9 or 0 do
+if Floor.Value == "Fools" then
+for six=0,t[6]==-1 and 9 or 0 do
+for seven=0,t[7]==-1 and 9 or 0 do
+for eight=0,t[8]==-1 and 9 or 0 do
+for nine=0,t[9]==-1 and 9 or 0 do
+for ten=0,t[10]==-1 and 9 or 0 do
+RemotesFolder.PL:FireServer((t[1]==-1 and one or t[1])..(t[2]==-1 and two or t[2])..(t[3]==-1 and three or t[3])..(t[4]==-1 and four or t[4])..(t[5]==-1 and five or t[5])..(t[6]==-1 and six or t[6])..(t[7]==-1 and seven or t[7])..(t[8]==-1 and eight or t[8])..(t[9]==-1 and nine or t[9])..(t[10]==-1 and ten or t[10]))
+end
+end
+end
+end
+end
 else
-InstanceInteract:Disconnect()
+RemotesFolder.PL:FireServer((t[1]==-1 and one or t[1])..(t[2]==-1 and two or t[2])..(t[3]==-1 and three or t[3])..(t[4]==-1 and four or t[4])..(t[5]==-1 and five or t[5]))
+end
+end
+end
+end
+end
 end
 end})
+
 
 --[[OrionLib:Notify({
 	Name = "Title!",
