@@ -4,12 +4,137 @@ OrionLib.Themes.Default.Stroke = Color3.fromRGB(40,40,40)
 OrionLib.Themes.Default.Second = Color3.fromRGB(0,0,0)
 OrionLib.Themes.Default.Divider = Color3.fromRGB(40,40,40)
 
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local Main_Game = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GameData = ReplicatedStorage:WaitForChild("GameData")
+local Floor = GameData:WaitForChild("Floor")
+local Fools = Floor.Value == "Fools"
+local Hotel = Floor.Value == "Hotel"
+local Mines = Floor.Value == "Mines"
+local Retro = Floor.Value == "Retro"
+local Rooms = Floor.Value == "Rooms"
+local Backdoor = Floor.Value == "Backdoor"
+local Hotelold = game.PlaceId == 110258689672367
+if game.PlaceId == 110258689672367 then
+RemotesFolder = ReplicatedStorage.Bricks
+else
+RemotesFolder = ReplicatedStorage.RemotesFolder
+end
+
 local Setting = {
 Color = Color3.fromRGB(0,255,125)
 }
 Instance.new("UIStroke", game:GetService("CoreGui").Orion:GetChildren()[3]).Color = Setting.Color
-local Window = OrionLib:AddWindow({Name = "Title of the library", HidePremium = false, Icon = "http://www.roblox.com/asset/?id=6031084743", SaveConfig = true, ConfigFolder = "OrionTest"})
-OrionLib:Notify({
+local Window = OrionLib:AddWindow({Name = "YOUHUB", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+
+local Tabs = {
+Main = Window:MakeTab({Name = "Main", Icon = "http://www.roblox.com/asset/?id=6031084743", PremiumOnly = false}),
+Players = Window:MakeTab({Name = "Players", Icon = "http://www.roblox.com/asset/?id=6031084743", PremiumOnly = false}),
+Exploit = Window:MakeTab({Name = "Exploit", Icon = "http://www.roblox.com/asset/?id=6031084743", PremiumOnly = false}),
+Visual = Window:MakeTab({Name = "Visual", Icon = "http://www.roblox.com/asset/?id=6031084743", PremiumOnly = false})
+}
+
+Tabs.Main:AddSection({Name = "Door"})
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.DoorFast then 
+workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Door"):SetAttribute("FastOpen", true)
+end
+end)
+Tabs.Main:AddToggle({
+Name = "Door Fast",
+Default = false,
+Color = Setting.Color,
+Callback = function(v)
+_G.DoorFast = v
+end})
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.DoorReach then
+workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Door").ClientOpen:FireServer()
+end 
+end)
+Tabs.Main:AddToggle({
+Name = "Door Reach",
+Default = false,
+Color = Setting.Color,
+Callback = function(v)
+_G.DoorReach = v
+end})
+Tabs.Main:AddSection({Name = "Interact"})
+Tabs.Main:AddToggle({
+Name = "Remote Interact",
+Default = false,
+Color = Setting.Color,
+Callback = function(v)
+if v then
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+if v:IsA("ProximityPrompt") and v then
+v.MaxActivationDistance = 15
+end
+end
+IncreasedDistance = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].DescendantAdded:Connect(function(v)
+if v:IsA("ProximityPrompt") and v then
+v.MaxActivationDistance = 15
+end
+end)
+else
+IncreasedDistance:Disconnect()
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
+if v:IsA("ProximityPrompt") and v then
+v.MaxActivationDistance = 8
+end
+end
+end
+end})
+Tabs.Main:AddToggle({
+Name = "Through Interact",
+Default = false,
+Color = Setting.Color,
+Callback = function(v)
+if v then
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+if v:IsA("ProximityPrompt") and v then
+v.RequiresLineOfSight = false
+end
+end
+ThroughInteract = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].DescendantAdded:Connect(function(v)
+if v:IsA("ProximityPrompt") and v then
+v.RequiresLineOfSight = false
+end
+end)
+else
+ThroughInteract:Disconnect()
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
+if v:IsA("ProximityPrompt") and v then
+v.RequiresLineOfSight = true
+end
+end
+end
+end})
+Tabs.Main:AddToggle({
+Name = "Instance Interact",
+Default = false,
+Color = Setting.Color,
+Callback = function(v)
+if v then
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+if v:IsA("ProximityPrompt") and v then
+v.HoldDuration = 0
+end
+end
+InstanceInteract = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].DescendantAdded:Connect(function(v)
+if v:IsA("ProximityPrompt") and v then
+v.HoldDuration = 0
+end
+end)
+else
+InstanceInteract:Disconnect()
+end
+end})
+
+--[[OrionLib:Notify({
 	Name = "Title!",
 	Content = "Notification content... what will it say??",
 	Image = "rbxassetid://4483345998",
@@ -81,3 +206,4 @@ Tab:AddDropdown({
 		print(Value)
 	end    
 })
+]]--
