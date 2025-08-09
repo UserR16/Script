@@ -14,7 +14,7 @@ RemotesFolder = ReplicatedStorage.Bricks
 else
 RemotesFolder = ReplicatedStorage.RemotesFolder
 end
-local repo = "https://raw.githubusercontent.com/mstudio45/LinoriaLib/main/"
+local repo = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
 local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
 local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
 local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
@@ -1078,6 +1078,100 @@ Default = false,
 Callback = function(v)
 _G.AntiEyes = v
 end})
+Anti:AddToggle("Anti-Rush",{
+Text = "Anti-Rush",
+Default = false,
+Callback = function(v)
+if v then
+AntiRush = workspace.ChildAdded:Connect(function(v)
+repeat task.wait() until game.Players.LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 750 or not v:IsDescendantOf(workspace)
+if v:IsDescendantOf(workspace) then
+if v.Name == "RushMoving" and v then
+Library:Notify("Anti Rush")
+game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 3, 0)
+game.Players.LocalPlayer.Character.Collision.CanCollide = false
+game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = false
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+elseif v.Name == "GlitchRush" and v then
+Library:Notify("Anti Rush")
+game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 3, 0)
+game.Players.LocalPlayer.Character.Collision.CanCollide = false
+game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = false
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+else
+Library:Notify("Complete Anti Rush")
+game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 0, 0)
+game.Players.LocalPlayer.Character.Collision.CanCollide = true
+game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = true
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+end
+end
+end)
+else
+AntiRush:Disconnect()
+end
+end})
+Anti:AddToggle("Anti-Ambush",{
+Text = "Anti-Ambush",
+Default = false,
+Callback = function(v)
+if v then
+AntiAmbush = workspace.ChildAdded:Connect(function(v)
+repeat task.wait() until game.Players.LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 750 or not v:IsDescendantOf(workspace)
+if v:IsDescendantOf(workspace) then
+if v.Name == "AmbushMoving" and v then
+Library:Notify("Anti Ambush")
+game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 3, 0)
+game.Players.LocalPlayer.Character.Collision.CanCollide = false
+game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = false
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+elseif v.Name == "GlitchAmbush" and v then
+Library:Notify("Anti Ambush")
+game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 3, 0)
+game.Players.LocalPlayer.Character.Collision.CanCollide = false
+game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = false
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+else
+Library:Notify("Complete Anti Ambush")
+game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 0, 0)
+game.Players.LocalPlayer.Character.Collision.CanCollide = true
+game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = true
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+end
+end
+end)
+else
+AntiAmbush:Disconnect()
+end
+end})
+Anti:AddToggle("Anti-Blitz",{
+Text = "Anti-Blitz",
+Default = false,
+Callback = function(v)
+if v then
+AntiBlitz = workspace.ChildAdded:Connect(function(v)
+repeat task.wait() until game.Players.LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 750 or not v:IsDescendantOf(workspace)
+if v:IsDescendantOf(workspace) then
+if v.Name == "BackdoorRush" and v then
+Library:Notify("Anti Blitz")
+game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 3, 0)
+game.Players.LocalPlayer.Character.Collision.CanCollide = false
+game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = false
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+else
+Library:Notify("Complete Anti Blitz")
+game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 0, 0)
+game.Players.LocalPlayer.Character.Collision.CanCollide = true
+game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = true
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+end
+end
+end)
+else
+AntiBlitz:Disconnect()
+end
+end})
+
 if not Hotelold then
 Anti:AddToggle("Anti-Lookman",{
 Text = "Anti-Lookman",
@@ -1711,8 +1805,8 @@ end})
 
 
 local ESP = Tabs.Visual:AddLeftGroupbox("ESP")
-workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
-for _,v in ipairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+workspace.CurrentRooms.ChildAdded:Connect(function(v)
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "Door" and v.Parent.Name == "Door" then
 if v.Parent:GetAttribute("Opened")==true and v:FindFirstChild("DoorESP") then
 LibraryESP:Delete("DoorESP")
@@ -1730,7 +1824,7 @@ if v.Name == "Door" and v.Parent.Name == "Door" then
 LibraryESP:AddESP(v, "Door", _G.DoorCE or Color3.fromRGB(135,135,255), 20, "DoorESP")
 end
 end
-DoorESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+DoorESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
 for _,v in ipairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "Door" and v.Parent.Name == "Door" then
 LibraryESP:AddESP(v, "Door", _G.DoorCE or Color3.fromRGB(135,135,255), 20, "DoorESP")
@@ -1762,7 +1856,7 @@ LibraryESP:AddESP(v, "Electrical Key", _G.KeyCE or Color3.fromRGB(135,255,255), 
 end
 end
 end
-KeyESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+KeyESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
 for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "KeyObtain" then
 if not v:FindFirstChild("KeyESP") and v then
@@ -1800,7 +1894,7 @@ LibraryESP:AddESP(v, "TimerLever", _G.LeverCE or Color3.fromRGB(0,255), 20, "Lev
 end
 end
 end
-LeverESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+LeverESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
 for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "LeverForGate" and v then
 if not v:FindFirstChild("LeverESP") then
@@ -1834,7 +1928,7 @@ LibraryESP:AddESP(v, "Generator", _G.GeneratorCE or Color3.fromRGB(0,255), 20, "
 end
 end
 end
-GeneratorESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+GeneratorESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
 for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "MinesGenerator" and v then
 if not v:FindFirstChild("GeneratorESP") then
@@ -1864,7 +1958,7 @@ LibraryESP:AddESP(v, "Fuse", _G.FuseCE or Color3.fromRGB(255,255,255), 20, "Fuse
 end
 end
 end
-FuseESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+FuseESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
 for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "FuseObtain" and v then
 if not v:FindFirstChild("FuseESP") then
@@ -1894,7 +1988,7 @@ LibraryESP:AddESP(v, "Book", _G.BookCE or Color3.fromRGB(255,0,255), 20, "BookES
 end
 end
 end
-BookESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+BookESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
 for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "LiveHintBook" and v then
 if not v:FindFirstChild("BookESP") then
@@ -1924,7 +2018,7 @@ LibraryESP:AddESP(v, "Breaker", _G.BreakerCE or Color3.fromRGB(255,255,255), 20,
 end
 end
 end
-BreakerESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+BreakerESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
 for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "LiveBreakerPolePickup" and v then
 if not v:FindFirstChild("BreakerESP") then
@@ -1954,7 +2048,7 @@ LibraryESP:AddESP(v, "Anchor " .. v.Sign.TextLabel.Text, _G.AnchorCE or Color3.f
 end
 end
 end
-AnchorESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+AnchorESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
 for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "MinesAnchor" and v then
 if not v:FindFirstChild("AnchorESP") then
@@ -2028,7 +2122,8 @@ LibraryESP:AddESP(v, "Toolbox", _G.ChestCE or Color3.fromRGB(255,135), 20, "Gold
 end
 end
 end
-ChestESP = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+ChestESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
+for _,v in pairs(workspace:GetDescendants()) do
 if v.Name == "ChestBox" and v then
 if not v:FindFirstChild("ChestESP") then
 LibraryESP:AddESP(v, "Chest", _G.ChestCE or Color3.fromRGB(255,135), 20, "GoldESP")
@@ -2048,6 +2143,7 @@ end
 elseif v.Name == "Toolbox" and v then
 if not v:FindFirstChild("ChestESP") then
 LibraryESP:AddESP(v, "Toolbox", _G.ChestCE or Color3.fromRGB(255,135), 20, "GoldESP")
+end
 end
 end
 end)
@@ -2072,10 +2168,12 @@ LibraryESP:AddESP(v, "Waterpump", _G.PumpCE or Color3.fromRGB(0,255,255), 20, "P
 end
 end
 end
-PumpESP = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+PumpESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
+for _,v in pairs(workspace:GetDescendants()) do
 if v.Name == "WaterPump" and v then
 if not v:FindFirstChild("PumpESP") then
 LibraryESP:AddESP(v, "Waterpump", _G.PumpCE or Color3.fromRGB(0,255,255), 20, "PumpESP")
+end
 end
 end
 end)
@@ -2521,12 +2619,6 @@ Text = "Rainbow ESP",
 Default = false,
 Callback = function(v)
 getgenv().RainbowESP = v
-end})
-ESP:AddToggle("TextESP",{
-Text = "Text ESP",
-Default = false,
-Callback = function(v)
-getgenv().TextESP = v
 end})
 
 local Notifying = Tabs.Visual:AddRightGroupbox("Notifying")
