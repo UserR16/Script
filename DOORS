@@ -32,12 +32,11 @@ local Window = Library:CreateWindow({
 	Title = "YOUHUB | DOORS",
 	Footer = "BETA v0.0.1",
 	Icon = 95073582077930,
-        Font = Enum.Font.GothamBlack,
-        CornerRadius = 10,
-        Center = true,
+    Font = Enum.Font.RobotoMono,
+    CornerRadius = 10,
+    Center = true,
 	NotifySide = "Right",
-	ShowCustomCursor = true,
-        AutoShow = true,
+	ShowCustomCursor = true
 })
 
 local Tabs = {
@@ -47,99 +46,63 @@ local Tabs = {
   Visual = Window:AddTab("Visual"),
   Settings = Window:AddTab("Configs"),
 }
-local Fast = Tabs.Main:AddLeftGroupbox("Fast")
+local Door = Tabs.Main:AddLeftGroupbox("Door")
 game:GetService("RunService").RenderStepped:Connect(function()
-pcall(function()
-if _G.FastDoors then game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Door"):SetAttribute("FastOpen", true)
+if _G.DoorsFast then
+game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Door"):SetAttribute("FastOpen", true)
 end 
 end)
-end)
-Fast:AddToggle("DoorsFast",{
+Door:AddToggle("DoorsFast",{
 Text = "Doors Fast",
 Default = false,
 Callback = function(v)
-_G.FastDoors = v
+_G.DoorsFast = v
 end})
-local Reach = Tabs.Main:AddRightGroupbox("Reach")
 game:GetService("RunService").RenderStepped:Connect(function()
-pcall(function()
-if _G.DoorsReach then game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Door").ClientOpen:FireServer()
+if _G.DoorsReach then
+game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Door").ClientOpen:FireServer()
 end 
 end)
-end)
-Reach:AddToggle("DoorsReach",{
+Door:AddToggle("DoorsReach",{
 Text = "Doors Reach",
 Default = false,
 Callback = function(v)
 _G.DoorsReach = v
 end})
-Reach:AddToggle("Reach",{
-Text = "Reach",
-Default = false,
-Callback = function(v)
-if v then
-for _,v in pairs(workspace:GetDescendants()) do
-if v:IsA("ProximityPrompt") and v then
+local Interact = Tabs.Main:AddLeftGroupbox("Interact")
+game:GetService("Workspace").CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].DescendantAdded:Connect(function(v)
+if not _G.RemoteInteract then return end
+if not _G.InstanceInteract then return end
+if not _G.ThroughInteract then return end
+if v:IsA("ProximityPrompt") then
+if _G.RemoteInteract then
 v.MaxActivationDistance = 15
 end
+if _G.ThroughInteract then
+v.RequiresLineOfSight = false
 end
-IncreasedDistance = workspace.DescendantAdded:Connect(function(v)
-if v:IsA("ProximityPrompt") and v then
-v.MaxActivationDistance = 15
+if _G.InstanceInteract then
+v.HoldDuration = 0
+end
 end
 end)
-else
-IncreasedDistance:Disconnect()
-for _,v in pairs(workspace:GetDescendants()) do
-if v:IsA("ProximityPrompt") and v then
-v.MaxActivationDistance = 8
-end
-end
-end
+Interact:AddToggle("Reach",{
+Text = "Remote Interact",
+Default = false,
+Callback = function(v)
+_G.RemoteInteract = v
 end})
-local Interact = Tabs.Main:AddLeftGroupbox("Interact")
 Interact:AddToggle("ThroughInteract",{
 Text = "Through Interact",
 Default = false,
 Callback = function(v)
-if v then
-for _,v in pairs(workspace:GetDescendants()) do
-if v:IsA("ProximityPrompt") and v then
-v.RequiresLineOfSight = false
-end
-end
-ThroughInteract = workspace.DescendantAdded:Connect(function(v)
-if v:IsA("ProximityPrompt") and v then
-v.RequiresLineOfSight = false
-end
-end)
-else
-ThroughInteract:Disconnect()
-for _,v in pairs(workspace:GetDescendants()) do
-if v:IsA("ProximityPrompt") and v then
-v.RequiresLineOfSight = true
-end
-end
-end
+_G.ThroughInteract = v
 end})
 Interact:AddToggle("InstanceInteract",{
 Text = "Instance Interact",
 Default = false,
 Callback = function(v)
-if v then
-for _,v in pairs(workspace:GetDescendants()) do
-if v:IsA("ProximityPrompt") and v then
-v.HoldDuration = 0
-end
-end
-InstanceInteract = workspace.DescendantAdded:Connect(function(v)
-if v:IsA("ProximityPrompt") and v then
-v.HoldDuration = 0
-end
-end)
-else
-InstanceInteract:Disconnect()
-end
+_G.InstanceInteract = v
 end})
 shared = {
     Character = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait(),
@@ -165,16 +128,16 @@ local Script = {
     PromptTable = {
         GamePrompts = {},
         Aura = {
-            ["ActivateEventPrompt"] = false,
+            ["ActivateEventPrompt"] = true,
             ["AwesomePrompt"] = true,
             ["FusesPrompt"] = true,
-            ["HerbPrompt"] = false,
+            ["HerbPrompt"] = true,
             ["LeverPrompt"] = true,
-            ["LootPrompt"] = false,
+            ["LootPrompt"] = true,
             ["ModulePrompt"] = true,
             ["SkullPrompt"] = false,
             ["UnlockPrompt"] = true,
-            ["ValvePrompt"] = false,
+            ["ValvePrompt"] = true,
             ["PropPrompt"] = true
         },
         AuraObjects = {
@@ -333,13 +296,84 @@ Text = "Auto Breaker",
 Default = false,
 Callback = function(v)
 _G.AutoBreaker = v
-while _G.AutoBreaker do wait(0.1)
+game:GetService("RunService").RenderStepped:Connect(function()
 if _G.AutoBreaker then
-RemotesFolder.EBF:FireServer() --EBF = Enabled Breaker Fix ☠️☠️
+RemotesFolder.EBF:FireServer("Fuck Breaker!!")
 end
-end
+end)
 end})
 if not Hotelold then
+Automation:AddToggle("AutoLibrary",{
+Text = "Auto Padlock Unlock",
+Default = false,
+Callback = function(v)
+_G.AutoPadlockUnlock = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AutoPadlockUnlock then
+local Floor = game:GetService("ReplicatedStorage").GameData.Floor
+local Paper = workspace:FindFirstChild("LibraryHintPaper",true) or workspace:FindFirstChild("LibraryHintPaperHard",true) or Players:FindFirstChild("LibraryHintPaper",true) or Players:FindFirstChild("LibraryHintPaperHard",true)
+if not Paper then
+return
+end
+local HintsNeeded = Floor.Value == "Fools" and 8 or 3
+local Hints = 0
+for _,Collected in pairs(game.Players.LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
+if Collected.Name == "Icon" then
+if Collected:IsA("ImageLabel") then
+for _,Icon in pairs(Paper.UI:GetChildren()) do
+if tonumber(Icon.Name) then
+if Icon.ImageRectOffset == Collected.ImageRectOffset then
+Hints += 1
+end
+end
+end
+end
+end
+end
+if Hints < HintsNeeded then
+return
+end
+local t = {}
+for i = 1, Floor.Value == "Hotel" and 5 or 10 do
+local Icon = Paper.UI[i]
+local Number = -1
+for _,Collected in pairs(game.Players.LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
+if Collected.Name == "Icon" then
+if Collected.ImageRectOffset == Icon.ImageRectOffset then
+Number = tonumber(Collected.TextLabel.Text)
+end
+end
+end
+table.insert(t,Number)
+end
+for one=0,t[1]==-1 and 9 or 0 do
+for two=0,t[2]==-1 and 9 or 0 do
+for three=0,t[3]==-1 and 9 or 0 do
+for four=0,t[4]==-1 and 9 or 0 do
+for five=0,t[5]==-1 and 9 or 0 do
+if Floor.Value == "Fools" then
+for six=0,t[6]==-1 and 9 or 0 do
+for seven=0,t[7]==-1 and 9 or 0 do
+for eight=0,t[8]==-1 and 9 or 0 do
+for nine=0,t[9]==-1 and 9 or 0 do
+for ten=0,t[10]==-1 and 9 or 0 do
+RemotesFolder.PL:FireServer((t[1]==-1 and one or t[1])..(t[2]==-1 and two or t[2])..(t[3]==-1 and three or t[3])..(t[4]==-1 and four or t[4])..(t[5]==-1 and five or t[5])..(t[6]==-1 and six or t[6])..(t[7]==-1 and seven or t[7])..(t[8]==-1 and eight or t[8])..(t[9]==-1 and nine or t[9])..(t[10]==-1 and ten or t[10]))
+end
+end
+end
+end
+end
+else
+RemotesFolder.PL:FireServer((t[1]==-1 and one or t[1])..(t[2]==-1 and two or t[2])..(t[3]==-1 and three or t[3])..(t[4]==-1 and four or t[4])..(t[5]==-1 and five or t[5]))
+end
+end
+end
+end
+end
+end
+end
+end)
+end})
 Automation:AddButton({
 Text = "Padlock Unlock Button",
 Default = false,
@@ -428,12 +462,12 @@ Default = false,
 Callback = function(v)
 _G.BlurFakeBridge = v
 if _G.BlurFakeBridge then
-for _,v in pairs(workspace:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "Bridge" and not v.CanCollide == true and v then
 v.Transparency = 0.9
 end
 end
-BlurFakeBridge = workspace.CurrentRooms.ChildAdded:Connect(function(v)
+BlurFakeBridge = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
 for _,v in pairs(workspace:GetDescendants()) do
 if v.Name == "Bridge" and not v.CanCollide == true and v then
 v.Transparency = 0.75
@@ -458,7 +492,7 @@ Callback = function(v)
 _G.NoLiveSanity = v
 while _G.NoLiveSanity do wait(1)
 for _,v in workspace.CurrentCamera:GetChildren() do
-if v.Name == "LiveSanity" and v then
+if v.Name == "LiveSanity" and workspace.CurrentCamera:WaitForChild("LiveSanity") then
 v.Enabled = not _G.NoLiveSanity
 end
 end
@@ -498,7 +532,7 @@ Text = "Show Pathfind Nodes",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
+for _,v in ipairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Parent.Name == "PathfindNodes" and v then
 local Part = Instance.new("Part",workspace)
 Part.Size = v.Size
@@ -509,7 +543,7 @@ Part.Anchored = true
 Part.Material = "ForceField"
 end
 end
-ShowPathfindNodes = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+ShowPathfindNodes = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].DescendantAdded:Connect(function(v)
 if v.Parent.Name == "PathfindNodes" and v then
 local Part = Instance.new("Part",workspace)
 Part.Size = v.Size
@@ -580,7 +614,6 @@ if _G.EnabledSpeed and not _G.SeekSpeed then
 game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.SpeedBoost or 17
 game.Players.LocalPlayer.Character:SetAttribute("SpeedBoost", 1)
 else
-game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 17
 game.Players.LocalPlayer.Character:SetAttribute("SpeedBoost", 0)
 end
 end)
@@ -785,38 +818,6 @@ game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.Foot
 end
 end)
 end})
-Players:AddSlider("GodmodeDepthNew",{
-    Text = "Godmode Depth",
-    Default = 2.5,
-    Min = 2.5,
-    Max = 3,
-    Rounding = 1,
-    Compact = true,
-    Callback = function(v)
-_G.GodmodeDepthNew = v
-end})
-game:GetService("RunService").RenderStepped:Connect(function()
-if _G.GodmodeNew then
-game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, _G.GodmodeDepthNew or 2.5, 0)
-game.Players.LocalPlayer.Character.Collision.CanCollide = false
-game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = false
-else
-game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 0, 0)
-game.Players.LocalPlayer.Character.Collision.CanCollide = true
-game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = true
-end
-end)
-Players:AddToggle("GodmodeNew",{
-Text = "Godmode + Noclip",
-Default = false,
-Callback = function(v)
-_G.GodmodeNew = v
-end}):AddKeyPicker("GodmodeNewKeybind", {
-    Default = "G",
-    Text = "Godmode",
-    Mode = Library.IsMobile and "Toggle",
-    SyncToggleState = Library.IsMobile,
-})
 end
 if not Fools or not Hotelold then
 local LocalPlayer = Tabs.Players:AddRightGroupbox("LocalPlayer")
@@ -870,7 +871,8 @@ Bypass:AddSlider("SpeedBypassDelay",{
 _G.SpeedBypassDelay = v
 end})
 _G.SpeedBypassDelay = 0.2
-local ClonedCollision = game:GetService("Players").LocalPlayer.Character.Collision:Clone()
+if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Collision") then
+local ClonedCollision = game:GetService("Players").LocalPlayer.Character:WaitForChild("Collision"):Clone()
 ClonedCollision.Name = "_CollisionClone"
 ClonedCollision.Massless = true
 ClonedCollision.Parent = game:GetService("Players").LocalPlayer.Character
@@ -887,14 +889,15 @@ if ClonedCollision then
 ClonedCollision.Massless = false
 task.wait(_G.SpeedBypassDelay)
 ClonedCollision.Massless = true
-task.wait(_G.SpeedBypassDelay)
+task.wait(0.22)
 else
 break
 end
 end
-wait()
+task.wait()
 end
 end)
+end
 Bypass:AddToggle("SpeedBypass",{
 Text = "Speed Bypass",
 Default = false,
@@ -973,7 +976,7 @@ Default = false,
 Callback = function(v)
 _G.AntiDupe = v
 if _G.AntiDupe then
-for _,v in pairs(workspace:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "DoorFake" and v:IsA("Model") and v then
 v.Hidden.CanTouch = not _G.AntiDupe
 if v:FindFirstChild("LockPart") and v.LockPart:FindFirstChild("UnlockPrompt") then
@@ -981,7 +984,7 @@ v.LockPart.UnlockPrompt.Enabled = not true
 end
 end
 end
-AntiDupe = workspace.CurrentRooms.ChildAdded:Connect(function()
+AntiDupe =workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function()
 for _,v in pairs(workspace:GetDescendants()) do
 if v.Name == "DoorFake" and v:IsA("Model") and v then
 v.Hidden.CanTouch = not _G.AntiDupe
@@ -993,7 +996,7 @@ end
 end)
 else
 AntiDupe:Disconnect()
-for _,v in pairs(workspace:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "DoorFake" and v:IsA("Model") and v then
 v.Hidden.CanTouch = not false
 if v:FindFirstChild("LockPart") and v.LockPart:FindFirstChild("UnlockPrompt") then
@@ -1128,12 +1131,12 @@ Text = "Anti-Lava",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "Lava" and v then
 v.CanTouch = false
 end
 end
-AntiLava = workspace.CurrentRooms.ChildAdded:Connect(function()
+AntiLava = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function()
 for _,v in pairs(workspace:GetDescendants()) do
 if v.Name == "Lava" and v then
 v.CanTouch = false
@@ -1154,12 +1157,12 @@ Text = "Anti-Seek Wall",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "TheWall" and v then
 v.CanTouch = false
 end
 end
-AntiWall = workspace.CurrentRooms.ChildAdded:Connect(function(v)
+AntiWall = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
 for _,v in pairs(workspace:GetDescendants()) do
 if v.Name == "TheWall" and v then
 v.CanTouch = false
@@ -1259,9 +1262,17 @@ Text = "Removal-Halt",
 Default = false,
 Callback = function(v)
 _G.AntiHalt = v
-while _G.AntiHalt do wait(0.1)
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AntiHalt then
+if ReplicatedStorage.ClientModules.EntityModules:FindFirstChild("Shade") then
 ReplicatedStorage.ClientModules.EntityModules.Shade.Parent = game.Workspace
 end
+else
+if workspace:FindFirstChild("Shade") then
+workspace.Shade.Parent = ReplicatedStorage.ClientModules.EntityModules
+end
+end
+end)
 end})
 if not Fools or not Hotelold then
 Disabled:AddToggle("RemoveDread",{
@@ -1600,108 +1611,23 @@ end)
 end})
 end
 local Jumpcares = Tabs.Exploits:AddLeftGroupbox("Jumpcares")
-Jumpcares:AddToggle("NoAmbushJumpcares",{
-Text = "No Ambush Jumpcares",
-Default = false,
-Callback = function(v)
-_G.RemovalAJ = v
-game:GetService("RunService").RenderStepped:Connect(function()
-if _G.RemovalAJ then
-game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Jumpscare.Jumpscare_Ambush.Visible = false
-end
-end)
-end})
-Jumpcares:AddToggle("NoHideJumpcares",{
-Text = "No Hide Jumpcares",
-Default = false,
-Callback = function(v)
-_G.RemovalHJ = v
-game:GetService("RunService").RenderStepped:Connect(function()
-if _G.RemovalHJ then
-game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Jumpscare.Jumpscare_Hide.Visible = false
-end
-end)
-end})
-Jumpcares:AddToggle("NoRushJumpcares",{
-Text = "No Rush Jumpcares",
-Default = false,
-Callback = function(v)
-_G.RemovalRJ = v
-game:GetService("RunService").RenderStepped:Connect(function()
-if _G.RemovalRJ then
-game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Jumpscare.Jumpscare_Rush.Visible = false
-end
-end)
-end})
 Jumpcares:AddToggle("NoFigureJumpcares",{
-Text = "No Figure Jumpcares",
+Text = "No Jumpcares",
 Default = false,
 Callback = function(v)
 _G.NoFigureJumpscare = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if _G.NoFigureJumpscare then
-if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Jumpscares:FindFirstChild("Figure") then
-game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Jumpscares.Figure.Name = "_Figure"
+if _G.NoJumpscare then
+if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener:FindFirstChild("Jumpscares") then
+game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Jumpscares.Name = "_Jumpscares"
 end
 else
-if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Jumpscares:FindFirstChild("_Figure") then
-game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Jumpscares._Figure.Name = "Figure"
+if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener:FindFirstChild("_Jumpscares") then
+game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener._Jumpscares.Name = "Jumpscares"
 end
 end
 end)
 end})
-Jumpcares:AddToggle("NoSpiderJumpcares",{
-Text = "No Spider Jumpcares",
-Default = false,
-Callback = function(v)
-_G.NoSpiderJumpscare = v
-game:GetService("RunService").RenderStepped:Connect(function()
-if _G.NoSpiderJumpcares then
-if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules:FindFirstChild("SpiderJumpscare") then
-game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules.SpiderJumpscare.Name = "_SpiderJumpscare"
-end
-else
-if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules:FindFirstChild("_SpiderJumpscare") then
-game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules._SpiderJumpscare.Name = "SpiderJumpscare"
-end
-end
-end)
-end})
-Jumpcares:AddToggle("NoSeekJumpcares",{
-Text = "No Seek Jumpcares",
-Default = false,
-Callback = function(v)
-_G.RemovalSJ = v
-game:GetService("RunService").RenderStepped:Connect(function()
-if _G.RemovalSJ then
-game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Jumpscare.Jumpscare_Seek.Visible = false
-end
-end)
-end})
-Jumpcares:AddToggle("NoShadeJumpcares",{
-Text = "No Halt Jumpcares",
-Default = false,
-Callback = function(v)
-_G.RemovalHaltJ = v
-game:GetService("RunService").RenderStepped:Connect(function()
-if _G.RemovalHaltJ then
-game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Jumpscare.Jumpscare_Shade.Visible = false
-end
-end)
-end})
-if Fools then
-Jumpcares:AddToggle("NoGreedJumpcares",{
-Text = "No Greed Jumpcares",
-Default = false,
-Callback = function(v)
-_G.RemovalGreedJ = v
-game:GetService("RunService").RenderStepped:Connect(function()
-if _G.RemovalGreedJ then
-game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Jumpscare.Greed.Visible = false
-end
-end)
-end})
-end
 local Troll = Tabs.Exploits:AddRightGroupbox("Trolling")
 if not Hotelold then
 Troll:AddToggle("Stunned",{
@@ -1785,19 +1711,30 @@ end})
 
 
 local ESP = Tabs.Visual:AddLeftGroupbox("ESP")
+workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+for _,v in ipairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+if v.Name == "Door" and v.Parent.Name == "Door" then
+if v.Parent:GetAttribute("Opened")==true and v:FindFirstChild("DoorESP") then
+LibraryESP:Delete("DoorESP")
+end
+end
+end
+end)
 ESP:AddToggle("DoorESP",{
 Text = "Door ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in ipairs(workspace:GetDescendants()) do
+for _,v in ipairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "Door" and v.Parent.Name == "Door" then
 LibraryESP:AddESP(v, "Door", _G.DoorCE or Color3.fromRGB(135,135,255), 20, "DoorESP")
 end
 end
-DoorESP = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+DoorESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+for _,v in ipairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "Door" and v.Parent.Name == "Door" then
 LibraryESP:AddESP(v, "Door", _G.DoorCE or Color3.fromRGB(135,135,255), 20, "DoorESP")
+end
 end
 end)
 else
@@ -1814,7 +1751,7 @@ Text = "Key ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "KeyObtain" then
 if not v:FindFirstChild("KeyESP") and v then
 LibraryESP:AddESP(v, "Key", _G.KeyCE or Color3.fromRGB(135,255,255), 20, "KeyESP")
@@ -1825,14 +1762,16 @@ LibraryESP:AddESP(v, "Electrical Key", _G.KeyCE or Color3.fromRGB(135,255,255), 
 end
 end
 end
-KeyESP = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
-if v.Name == "KeyObtain" and v then
-if not v:FindFirstChild("KeyESP") then
+KeyESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+if v.Name == "KeyObtain" then
+if not v:FindFirstChild("KeyESP") and v then
 LibraryESP:AddESP(v, "Key", _G.KeyCE or Color3.fromRGB(135,255,255), 20, "KeyESP")
 end
-elseif v.Name == "ElectricalKeyObtain" and v then
-if not v:FindFirstChild("KeyESP") then
+elseif v.Name == "ElectricalKeyObtain" then
+if not v:FindFirstChild("KeyESP") and v then
 LibraryESP:AddESP(v, "Electrical Key", _G.KeyCE or Color3.fromRGB(135,255,255), 20, "KeyESP")
+end
 end
 end
 end)
@@ -1850,7 +1789,7 @@ Text = "Lever ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "LeverForGate" and v then
 if not v:FindFirstChild("LeverESP") then
 LibraryESP:AddESP(v, "Lever", _G.LeverCE or Color3.fromRGB(0,255), 20, "LeverESP")
@@ -1861,7 +1800,8 @@ LibraryESP:AddESP(v, "TimerLever", _G.LeverCE or Color3.fromRGB(0,255), 20, "Lev
 end
 end
 end
-LeverESP = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+LeverESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "LeverForGate" and v then
 if not v:FindFirstChild("LeverESP") then
 LibraryESP:AddESP(v, "Lever", _G.LeverCE or Color3.fromRGB(0,255), 20, "LeverESP")
@@ -1869,6 +1809,7 @@ end
 elseif v.Name == "TimerLever" and v then
 if not v:FindFirstChild("LeverESP") then
 LibraryESP:AddESP(v, "TimerLever", _G.LeverCE or Color3.fromRGB(0,255), 20, "LeverESP")
+end
 end
 end
 end)
@@ -1886,17 +1827,19 @@ Text = "Generator ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "MinesGenerator" and v then
 if not v:FindFirstChild("GeneratorESP") then
 LibraryESP:AddESP(v, "Generator", _G.GeneratorCE or Color3.fromRGB(0,255), 20, "GeneratorESP")
 end
 end
 end
-GeneratorESP = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+GeneratorESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "MinesGenerator" and v then
 if not v:FindFirstChild("GeneratorESP") then
 LibraryESP:AddESP(v, "Generator", _G.GeneratorCE or Color3.fromRGB(0,255), 20, "GeneratorESP")
+end
 end
 end
 end)
@@ -1914,17 +1857,19 @@ Text = "Fuse ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "FuseObtain" and v then
 if not v:FindFirstChild("FuseESP") then
 LibraryESP:AddESP(v, "Fuse", _G.FuseCE or Color3.fromRGB(255,255,255), 20, "FuseESP")
 end
 end
 end
-FuseESP = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+FuseESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "FuseObtain" and v then
 if not v:FindFirstChild("FuseESP") then
 LibraryESP:AddESP(v, "Fuse", _G.FuseCE or Color3.fromRGB(255,255,255), 20, "FuseESP")
+end
 end
 end
 end)
@@ -1942,17 +1887,19 @@ Text = "Book ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "LiveHintBook" and v then
 if not v:FindFirstChild("BookESP") then
 LibraryESP:AddESP(v, "Book", _G.BookCE or Color3.fromRGB(255,0,255), 20, "BookESP")
 end
 end
 end
-BookESP = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+BookESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "LiveHintBook" and v then
 if not v:FindFirstChild("BookESP") then
 LibraryESP:AddESP(v, "Book", _G.BookCE or Color3.fromRGB(255,0,255), 20, "BookESP")
+end
 end
 end
 end)
@@ -1970,17 +1917,19 @@ Text = "Breaker ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "LiveBreakerPolePickup" and v then
 if not v:FindFirstChild("BreakerESP") then
 LibraryESP:AddESP(v, "Breaker", _G.BreakerCE or Color3.fromRGB(255,255,255), 20, "BreakerESP")
 end
 end
 end
-BreakerESP = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+BreakerESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "LiveBreakerPolePickup" and v then
 if not v:FindFirstChild("BreakerESP") then
 LibraryESP:AddESP(v, "Breaker", _G.BreakerCE or Color3.fromRGB(255,255,255), 20, "BreakerESP")
+end
 end
 end
 end)
@@ -1998,17 +1947,19 @@ Text = "Anchor ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "MinesAnchor" and v then
 if not v:FindFirstChild("AnchorESP") then
 LibraryESP:AddESP(v, "Anchor " .. v.Sign.TextLabel.Text, _G.AnchorCE or Color3.fromRGB(255,255,255), 20, "AnchorESP")
 end
 end
 end
-AnchorESP = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+AnchorESP = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
 if v.Name == "MinesAnchor" and v then
 if not v:FindFirstChild("AnchorESP") then
 LibraryESP:AddESP(v, "Anchor " .. v.Sign.TextLabel.Text, _G.AnchorCE or Color3.fromRGB(255,255,255), 20, "AnchorESP")
+end
 end
 end
 end)
