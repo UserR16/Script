@@ -1,1 +1,83 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/UserR16/Script/refs/heads/main/Library/Orion/Library')))()
+OrionLib.Themes.Default.Main = Color3.fromRGB(0,0,0)
+OrionLib.Themes.Default.Stroke = Color3.fromRGB(40,40,40)
+OrionLib.Themes.Default.Second = Color3.fromRGB(0,0,0)
+OrionLib.Themes.Default.Divider = Color3.fromRGB(40,40,40)
 
+local Setting = {
+Color = Color3.fromRGB(0,255,125)
+}
+Instance.new("UIStroke", game:GetService("CoreGui").Orion:GetChildren()[3]).Color = Setting.Color
+local Window = OrionLib:AddWindow({Name = "Title of the library", HidePremium = false, Icon = "http://www.roblox.com/asset/?id=6031084743", SaveConfig = true, ConfigFolder = "OrionTest"})
+OrionLib:Notify({
+	Name = "Title!",
+	Content = "Notification content... what will it say??",
+	Image = "rbxassetid://4483345998",
+	Time = 5
+})
+local Tab = Window:MakeTab({
+	Name = "Tab 1",
+	Icon = "http://www.roblox.com/asset/?id=6031084743",
+	PremiumOnly = false
+})
+
+Tab:AddButton({
+	Name = "Button!",
+	Callback = function()
+      		print("button pressed")
+  	end    
+})
+Tab:AddToggle({
+	Name = "This is a toggle!",
+	Default = false,
+      Color = Setting.Color,
+	Callback = function(Value)
+		print(Value)
+	end    
+})
+Tab:AddColorpicker({
+	Name = "Colorpicker",
+	Default = Color3.fromRGB(255, 0, 0),
+	Callback = function(Value)
+		print(Value)
+	end	  
+})
+Tab:AddSlider({
+	Name = "Slider",
+	Min = 0,
+	Max = 20,
+	Default = 5,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+      Color = Setting.Color,
+	Callback = function(Value)
+		print(Value)
+	end    
+})
+Tab:AddLabel("Label")
+Tab:AddParagraph("Paragraph","Paragraph Content")
+Tab:AddTextbox({
+	Name = "Textbox",
+	Default = "default box input",
+	TextDisappear = true,
+	Callback = function(Value)
+		print(Value)
+	end	  
+})
+Tab:AddBind({
+	Name = "Bind",
+	Default = Enum.KeyCode.E,
+	Hold = false,
+	Callback = function()
+		print("press")
+	end    
+})
+Tab:AddDropdown({
+	Name = "Dropdown",
+	Default = "1",
+	Options = {"1", "2"},
+       Multi = true,
+	Callback = function(Value)
+		print(Value)
+	end    
+})
