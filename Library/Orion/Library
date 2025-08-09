@@ -50,7 +50,33 @@ end
 
 local Orion = Instance.new("ScreenGui")
 Orion.Name = "Orion"
+if Orion then
 Orion.Parent = game.CoreGui
+end
+
+function OrionLib:IsRunning()
+return Orion.Parent == game:GetService("CoreGui")
+end
+
+local function AddConnection(Signal, Function)
+	if (not OrionLib:IsRunning()) then
+		return
+	end
+	local SignalConnect = Signal:Connect(Function)
+	table.insert(OrionLib.Connections, SignalConnect)
+	return SignalConnect
+end
+
+task.spawn(function()
+	while (OrionLib:IsRunning()) do
+		wait()
+	end
+
+	for _, Connection in next, OrionLib.Connections do
+		Connection:Disconnect()
+	end
+end)
+
 
 local function MakeDraggable(DragPoint, Main)
 	pcall(function()
