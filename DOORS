@@ -2114,7 +2114,7 @@ elseif v.Name == "Monument" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Monument", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
-elseif v.Name == "Mandrake" and v then
+elseif v.Name == "Mandrakes" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Mandrake", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
@@ -2126,7 +2126,7 @@ elseif v.Name == "Groundskeeper" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Groundskeeper", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
-elseif v.Name == "Eyes" and v then
+elseif v:IsA("Model") and v.Name == "Eyes" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Eyes", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
@@ -2173,6 +2173,10 @@ end
 elseif v.Name == "JeffTheKiller" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Jeff", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
+end
+elseif v.Name == "Snare" and v then
+if not v:FindFirstChild("EntityESP") then
+LibraryESP:AddESP(v, "Snare", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
 elseif v.Name == "SallyWindow" and v then
 if not v:FindFirstChild("EntityESP") then
@@ -2197,7 +2201,7 @@ elseif v.Name == "Monument" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Monument", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
-elseif v.Name == "Mandrake" and v then
+elseif v.Name == "Mandrakes" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Mandrake", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
@@ -2209,7 +2213,7 @@ elseif v.Name == "Groundskeeper" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Groundskeeper", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
-elseif v.Parent.Name == "Eyes" and v then
+elseif v:IsA("Model") and v.Name == "Eyes" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Eyes", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
@@ -2256,6 +2260,10 @@ end
 elseif v.Name == "JeffTheKiller" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Jeff", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
+end
+elseif v.Name == "Snare" and v then
+if not v:FindFirstChild("EntityESP") then
+LibraryESP:AddESP(v, "Snare", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
 elseif v.Name == "SallyWindow" and v then
 if not v:FindFirstChild("EntityESP") then
@@ -2349,7 +2357,7 @@ Sound.Volume = _G.PlaySoundAlert
 Sound.PlayOnRemove = true
 Sound:Destroy()
 end
-elseif Options.SelectEntity.Value["Groudskeeper"] and v.Name == "Grounskeeper" and v then
+elseif Options.SelectEntity.Value["Groudskeeper"] and v.Name == "Groundskeeper" and v then
 Library:Notify("ENTITIES | Groundskeeper has spawn, dont touch grass!")
 if _G.SoundAlert then
 local Sound = Instance.new("Sound")
