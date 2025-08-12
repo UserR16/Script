@@ -70,7 +70,7 @@ Callback = function(v)
 _G.DoorsReach = v
 end})
 local Interact = Tabs.Main:AddLeftGroupbox("Interact")
-game:GetService("Workspace").CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].DescendantAdded:Connect(function(v)
+game:GetService("Workspace").CurrentRooms.DescendantAdded:Connect(function(v)
 if not _G.RemoteInteract then return end
 if not _G.InstanceInteract then return end
 if not _G.ThroughInteract then return end
@@ -317,7 +317,7 @@ return
 end
 local HintsNeeded = Floor.Value == "Fools" and 8 or 3
 local Hints = 0
-for _,Collected in pairs(game.Players.LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
+for _,Collected in pairs(game.Players.LocalPlayer.PlayerGui:WaitForChild("PermUI"):WaitForChild("Hints"):GetChildren()) do
 if Collected.Name == "Icon" then
 if Collected:IsA("ImageLabel") then
 for _,Icon in pairs(Paper.UI:GetChildren()) do
@@ -462,12 +462,12 @@ Default = false,
 Callback = function(v)
 _G.BlurFakeBridge = v
 if _G.BlurFakeBridge then
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "Bridge" and not v.CanCollide == true and v then
 v.Transparency = 0.9
 end
 end
-BlurFakeBridge = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function(v)
+BlurFakeBridge = workspace.CurrentRooms.ChildAdded:Connect(function(v)
 for _,v in pairs(workspace:GetDescendants()) do
 if v.Name == "Bridge" and not v.CanCollide == true and v then
 v.Transparency = 0.75
@@ -532,7 +532,7 @@ Text = "Show Pathfind Nodes",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in ipairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Parent.Name == "PathfindNodes" and v then
 local Part = Instance.new("Part",workspace)
 Part.Size = v.Size
@@ -543,7 +543,7 @@ Part.Anchored = true
 Part.Material = "ForceField"
 end
 end
-ShowPathfindNodes = workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].DescendantAdded:Connect(function(v)
+ShowPathfindNodes = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
 if v.Parent.Name == "PathfindNodes" and v then
 local Part = Instance.new("Part",workspace)
 Part.Size = v.Size
@@ -984,7 +984,7 @@ v.LockPart.UnlockPrompt.Enabled = not true
 end
 end
 end
-AntiDupe =workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)].ChildAdded:Connect(function()
+AntiDupe =workspace.CurrentRooms.ChildAdded:Connect(function()
 for _,v in pairs(workspace:GetDescendants()) do
 if v.Name == "DoorFake" and v:IsA("Model") and v then
 v.Hidden.CanTouch = not _G.AntiDupe
@@ -996,7 +996,7 @@ end
 end)
 else
 AntiDupe:Disconnect()
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "DoorFake" and v:IsA("Model") and v then
 v.Hidden.CanTouch = not false
 if v:FindFirstChild("LockPart") and v.LockPart:FindFirstChild("UnlockPrompt") then
@@ -1078,100 +1078,6 @@ Default = false,
 Callback = function(v)
 _G.AntiEyes = v
 end})
-Anti:AddToggle("Anti-Rush",{
-Text = "Anti-Rush",
-Default = false,
-Callback = function(v)
-if v then
-AntiRush = workspace.ChildAdded:Connect(function(v)
-repeat task.wait() until game.Players.LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 750 or not v:IsDescendantOf(workspace)
-if v:IsDescendantOf(workspace) then
-if v.Name == "RushMoving" and v then
-Library:Notify("Anti Rush")
-game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 3, 0)
-game.Players.LocalPlayer.Character.Collision.CanCollide = false
-game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = false
-game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-elseif v.Name == "GlitchRush" and v then
-Library:Notify("Anti Rush")
-game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 3, 0)
-game.Players.LocalPlayer.Character.Collision.CanCollide = false
-game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = false
-game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-else
-Library:Notify("Complete Anti Rush")
-game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 0, 0)
-game.Players.LocalPlayer.Character.Collision.CanCollide = true
-game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = true
-game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-end
-end
-end)
-else
-AntiRush:Disconnect()
-end
-end})
-Anti:AddToggle("Anti-Ambush",{
-Text = "Anti-Ambush",
-Default = false,
-Callback = function(v)
-if v then
-AntiAmbush = workspace.ChildAdded:Connect(function(v)
-repeat task.wait() until game.Players.LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 750 or not v:IsDescendantOf(workspace)
-if v:IsDescendantOf(workspace) then
-if v.Name == "AmbushMoving" and v then
-Library:Notify("Anti Ambush")
-game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 3, 0)
-game.Players.LocalPlayer.Character.Collision.CanCollide = false
-game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = false
-game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-elseif v.Name == "GlitchAmbush" and v then
-Library:Notify("Anti Ambush")
-game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 3, 0)
-game.Players.LocalPlayer.Character.Collision.CanCollide = false
-game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = false
-game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-else
-Library:Notify("Complete Anti Ambush")
-game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 0, 0)
-game.Players.LocalPlayer.Character.Collision.CanCollide = true
-game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = true
-game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-end
-end
-end)
-else
-AntiAmbush:Disconnect()
-end
-end})
-Anti:AddToggle("Anti-Blitz",{
-Text = "Anti-Blitz",
-Default = false,
-Callback = function(v)
-if v then
-AntiBlitz = workspace.ChildAdded:Connect(function(v)
-repeat task.wait() until game.Players.LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 750 or not v:IsDescendantOf(workspace)
-if v:IsDescendantOf(workspace) then
-if v.Name == "BackdoorRush" and v then
-Library:Notify("Anti Blitz")
-game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 3, 0)
-game.Players.LocalPlayer.Character.Collision.CanCollide = false
-game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = false
-game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-else
-Library:Notify("Complete Anti Blitz")
-game.Players.LocalPlayer.Character.Collision.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 0, 0)
-game.Players.LocalPlayer.Character.Collision.CanCollide = true
-game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = true
-game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-end
-end
-end)
-else
-AntiBlitz:Disconnect()
-end
-end})
-
 if not Hotelold then
 Anti:AddToggle("Anti-Lookman",{
 Text = "Anti-Lookman",
@@ -1709,7 +1615,7 @@ Jumpcares:AddToggle("NoFigureJumpcares",{
 Text = "No Jumpcares",
 Default = false,
 Callback = function(v)
-_G.NoFigureJumpscare = v
+_G.NoJumpscare = v
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.NoJumpscare then
 if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener:FindFirstChild("Jumpscares") then
@@ -1819,13 +1725,13 @@ Text = "Door ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in ipairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "Door" and v.Parent.Name == "Door" then
 LibraryESP:AddESP(v, "Door", _G.DoorCE or Color3.fromRGB(135,135,255), 20, "DoorESP")
 end
 end
 DoorESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
-for _,v in ipairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "Door" and v.Parent.Name == "Door" then
 LibraryESP:AddESP(v, "Door", _G.DoorCE or Color3.fromRGB(135,135,255), 20, "DoorESP")
 end
@@ -1845,7 +1751,7 @@ Text = "Key ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "KeyObtain" then
 if not v:FindFirstChild("KeyESP") and v then
 LibraryESP:AddESP(v, "Key", _G.KeyCE or Color3.fromRGB(135,255,255), 20, "KeyESP")
@@ -1857,7 +1763,7 @@ end
 end
 end
 KeyESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "KeyObtain" then
 if not v:FindFirstChild("KeyESP") and v then
 LibraryESP:AddESP(v, "Key", _G.KeyCE or Color3.fromRGB(135,255,255), 20, "KeyESP")
@@ -1883,7 +1789,7 @@ Text = "Lever ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "LeverForGate" and v then
 if not v:FindFirstChild("LeverESP") then
 LibraryESP:AddESP(v, "Lever", _G.LeverCE or Color3.fromRGB(0,255), 20, "LeverESP")
@@ -1895,7 +1801,7 @@ end
 end
 end
 LeverESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "LeverForGate" and v then
 if not v:FindFirstChild("LeverESP") then
 LibraryESP:AddESP(v, "Lever", _G.LeverCE or Color3.fromRGB(0,255), 20, "LeverESP")
@@ -1921,7 +1827,7 @@ Text = "Generator ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "MinesGenerator" and v then
 if not v:FindFirstChild("GeneratorESP") then
 LibraryESP:AddESP(v, "Generator", _G.GeneratorCE or Color3.fromRGB(0,255), 20, "GeneratorESP")
@@ -1929,7 +1835,7 @@ end
 end
 end
 GeneratorESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "MinesGenerator" and v then
 if not v:FindFirstChild("GeneratorESP") then
 LibraryESP:AddESP(v, "Generator", _G.GeneratorCE or Color3.fromRGB(0,255), 20, "GeneratorESP")
@@ -1951,7 +1857,7 @@ Text = "Fuse ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "FuseObtain" and v then
 if not v:FindFirstChild("FuseESP") then
 LibraryESP:AddESP(v, "Fuse", _G.FuseCE or Color3.fromRGB(255,255,255), 20, "FuseESP")
@@ -1959,7 +1865,7 @@ end
 end
 end
 FuseESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "FuseObtain" and v then
 if not v:FindFirstChild("FuseESP") then
 LibraryESP:AddESP(v, "Fuse", _G.FuseCE or Color3.fromRGB(255,255,255), 20, "FuseESP")
@@ -1981,7 +1887,7 @@ Text = "Book ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "LiveHintBook" and v then
 if not v:FindFirstChild("BookESP") then
 LibraryESP:AddESP(v, "Book", _G.BookCE or Color3.fromRGB(255,0,255), 20, "BookESP")
@@ -1989,7 +1895,7 @@ end
 end
 end
 BookESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "LiveHintBook" and v then
 if not v:FindFirstChild("BookESP") then
 LibraryESP:AddESP(v, "Book", _G.BookCE or Color3.fromRGB(255,0,255), 20, "BookESP")
@@ -2011,7 +1917,7 @@ Text = "Breaker ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "LiveBreakerPolePickup" and v then
 if not v:FindFirstChild("BreakerESP") then
 LibraryESP:AddESP(v, "Breaker", _G.BreakerCE or Color3.fromRGB(255,255,255), 20, "BreakerESP")
@@ -2019,7 +1925,7 @@ end
 end
 end
 BreakerESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "LiveBreakerPolePickup" and v then
 if not v:FindFirstChild("BreakerESP") then
 LibraryESP:AddESP(v, "Breaker", _G.BreakerCE or Color3.fromRGB(255,255,255), 20, "BreakerESP")
@@ -2041,7 +1947,7 @@ Text = "Anchor ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "MinesAnchor" and v then
 if not v:FindFirstChild("AnchorESP") then
 LibraryESP:AddESP(v, "Anchor " .. v.Sign.TextLabel.Text, _G.AnchorCE or Color3.fromRGB(255,255,255), 20, "AnchorESP")
@@ -2049,7 +1955,7 @@ end
 end
 end
 AnchorESP = workspace.CurrentRooms.ChildAdded:Connect(function(v)
-for _,v in pairs(workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "MinesAnchor" and v then
 if not v:FindFirstChild("AnchorESP") then
 LibraryESP:AddESP(v, "Anchor " .. v.Sign.TextLabel.Text, _G.AnchorCE or Color3.fromRGB(255,255,255), 20, "AnchorESP")
@@ -2200,6 +2106,26 @@ elseif v.Name == "AmbushMoving" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Ambush", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
+elseif v.Name == "Surge" and v then
+if not v:FindFirstChild("EntityESP") then
+LibraryESP:AddESP(v, "Surge", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
+end
+elseif v.Name == "Monument" and v then
+if not v:FindFirstChild("EntityESP") then
+LibraryESP:AddESP(v, "Monument", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
+end
+elseif v.Name == "Mandrake" and v then
+if not v:FindFirstChild("EntityESP") then
+LibraryESP:AddESP(v, "Mandrake", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
+end
+elseif v.Name == "Bramble" and v then
+if not v:FindFirstChild("EntityESP") then
+LibraryESP:AddESP(v, "Bramble", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
+end
+elseif v.Name == "Groundskeeper" and v then
+if not v:FindFirstChild("EntityESP") then
+LibraryESP:AddESP(v, "Groundskeeper", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
+end
 elseif v.Name == "Eyes" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Eyes", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
@@ -2248,7 +2174,7 @@ elseif v.Name == "JeffTheKiller" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Jeff", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
-elseif v.Name == "Sally_Window" and v then
+elseif v.Name == "SallyWindow" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Sally", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
@@ -2262,6 +2188,26 @@ end
 elseif v.Name == "AmbushMoving" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Ambush", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
+end
+elseif v.Name == "Surge" and v then
+if not v:FindFirstChild("EntityESP") then
+LibraryESP:AddESP(v, "Surge", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
+end
+elseif v.Name == "Monument" and v then
+if not v:FindFirstChild("EntityESP") then
+LibraryESP:AddESP(v, "Monument", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
+end
+elseif v.Name == "Mandrake" and v then
+if not v:FindFirstChild("EntityESP") then
+LibraryESP:AddESP(v, "Mandrake", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
+end
+elseif v.Name == "Bramble" and v then
+if not v:FindFirstChild("EntityESP") then
+LibraryESP:AddESP(v, "Bramble", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
+end
+elseif v.Name == "Groundskeeper" and v then
+if not v:FindFirstChild("EntityESP") then
+LibraryESP:AddESP(v, "Groundskeeper", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
 elseif v.Parent.Name == "Eyes" and v then
 if not v:FindFirstChild("EntityESP") then
@@ -2311,7 +2257,7 @@ elseif v.Name == "JeffTheKiller" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Jeff", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
-elseif v.Name == "Sally_Window" and v then
+elseif v.Name == "SallyWindow" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Sally", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
@@ -2331,270 +2277,14 @@ Text = "Items ESP",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(workspace:GetDescendants()) do
-if v:IsA("Model") then
-if v.Name == "StarJug" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Star Jug", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "StarBottle" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Star Bottle", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "AlarmClock" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Alarm Clock", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "StarVial" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Star Vial", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "GweenSoda" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Gween Soda", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Bread" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Bread", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Cheese" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Cheese", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "BandagePack" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Bandage Pack", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "BatteryPack" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Battery Pack", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "LaserPointer" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Laser pointer", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Glowsticks" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Glowstick", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Smoothie" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Smoothie", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Straplight" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Straplight", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Bulklight" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Bulklight", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Lighter" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Lighter", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Lockpick" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Lockpick", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Vitamins" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Vitamin", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Crucifix" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Crucifix", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "CrucifixWall" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Crucifix", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "SkeletonKey" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Skeleton Key", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "GweenSoda" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Gween Soda", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Flashlight" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Flashlight", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Candle" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Candle", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Shears" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Shears", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Battery" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Battery", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Bandage" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Bandage", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "PickupItem" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Paper", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Shakelight" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Shakelight", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Scanner" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "NVCS-3000", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "ShieldMini" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Shield Vial", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "ShieldBig" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Shield Big", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "HolyGrenade" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Holy Hand Grenade", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-end
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
+if v:IsA("Model") and (v:GetAttribute("Pickup") or v:GetAttribute("PropType")) then
+LibraryESP:AddESP(v, v.Name, _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
 end
 end
 ItemsESP = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
-if v:IsA("Model") then
-if v.Name == "StarJug" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Star Jug", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "StarBottle" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Star Bottle", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "AlarmClock" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Alarm Clock", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "StarVial" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Star Vial", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "GweenSoda" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Gween Soda", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Bread" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Bread", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Cheese" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Cheese", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "BandagePack" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Bandage Pack", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "BatteryPack" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Battery Pack", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "LaserPointer" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Laser pointer", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Glowsticks" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Glowstick", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Smoothie" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Smoothie", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Straplight" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Straplight", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Bulklight" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Bulklight", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Lighter" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Lighter", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Lockpick" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Lockpick", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Vitamins" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Vitamin", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Crucifix" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Crucifix", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "CrucifixWall" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Crucifix", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "SkeletonKey" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Skeleton Key", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "GweenSoda" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Gween Soda", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Flashlight" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Flashlight", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Candle" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Candle", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Shears" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Shears", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Battery" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Battery", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Bandage" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Bandage", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "PickupItem" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Paper", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Shakelight" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Shakelight", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "Scanner" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "NVCS-3000", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "ShieldMini" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Shield Vial", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "ShieldBig" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Shield Big", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-elseif v.Name == "HolyGrenade" and v then
-if not v:FindFirstChild("ItemsESP") then
-LibraryESP:AddESP(v, "Holy Bomb", _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
-end
-end
+if v:IsA("Model") and (v:GetAttribute("Pickup") or v:GetAttribute("PropType")) then
+LibraryESP:AddESP(v, v.Name, _G.ItemsCE or Color3.fromRGB(255,0,255), 20, "ItemsESP")
 end
 end)
 else
@@ -2624,7 +2314,7 @@ end})
 local Notifying = Tabs.Visual:AddRightGroupbox("Notifying")
 Notifying:AddDropdown('SelectEntity',{
 	Text = "Select Entity",
-        Values = {'Rush', 'Ambush', 'Blitz', 'A60', 'A120', 'Lookman', 'Eyes', 'Seek Chase', 'JeffTheKiller', 'AR0xMBUSH', 'RNIUSHCg==', 'Gloombat Swarm'},
+    Values = {'Eyestalk Chase', 'Surge', 'Groundskeeper', 'Monument', 'Rush', 'Ambush', 'Blitz', 'A60', 'A120', 'Lookman', 'Eyes', 'Seek Chase', 'JeffTheKiller', 'AR0xMBUSH', 'RNIUSHCg==', 'Gloombat Swarm'},
 	Default = 0,
 	Multi = true
 })
@@ -2639,7 +2329,47 @@ NotificationEntity = workspace.ChildAdded:Connect(function(v)
 if table.find(Entity,v.Name) then
 repeat task.wait() until game.Players.LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 750 or not v:IsDescendantOf(workspace)
 if v:IsDescendantOf(workspace) then
-if Options.SelectEntity.Value["Rush"] and v.Name == "RushMoving" and v then
+if Options.SelectEntity.Value["Eyestalk Chase"] and v.Name == "Eyestalk" and v then
+Library:Notify("ENTITIES | Eyestalk has spawn, find hiding place and hide now!")
+if _G.SoundAlert then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = _G.PlaySoundAlert
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["Surge"] and v.Name == "Surge" and v then
+Library:Notify("ENTITIES | Surge has spawn, find hiding place and hide now!")
+if _G.SoundAlert then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = _G.PlaySoundAlert
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["Groudskeeper"] and v.Name == "Grounskeeper" and v then
+Library:Notify("ENTITIES | Groundskeeper has spawn, dont touch grass!")
+if _G.SoundAlert then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = _G.PlaySoundAlert
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["Monument"] and v.Name == "Monument" and v then
+Library:Notify("ENTITIES | Monument has spawn, careful!")
+if _G.SoundAlert then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = _G.PlaySoundAlert
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["Rush"] and v.Name == "RushMoving" and v then
 Library:Notify("ENTITIES | Rush has spawn, find hiding place and hide now!")
 if _G.SoundAlert then
 local Sound = Instance.new("Sound")
