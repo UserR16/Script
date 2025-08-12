@@ -2828,6 +2828,27 @@ end
 end})
 FPS:AddDivider()
 FPS:AddToggle("DeleteBatDecorate",{
+Text = "Delete Trees",
+Default = false,
+Callback = function(v)
+if v then
+for _,v in pairs(game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+if v:IsA("Model") and v.Name == "Trees" and v then
+v:Destroy()
+end
+end
+NoTrees = workspace.CurrentRooms.ChildAdded:Connect(function(child)
+for _,v in pairs(game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+if v:IsA("Model") and v.Name == "Trees" and v then
+v:Destroy()
+end
+end
+end)
+else
+NoTrees:Disconnect()
+end
+end})
+FPS:AddToggle("DeleteBatDecorate",{
 Text = "Delete Bat Decorate",
 Default = false,
 Callback = function(v)
