@@ -308,13 +308,13 @@ Text = "Auto Padlock Unlock",
 Default = false,
 Callback = function(v)
 _G.AutoPadlockUnlock = v
-game:GetService("RunService").RenderStepped:Connect(function()
-if _G.AutoPadlockUnlock then
 local Floor = game:GetService("ReplicatedStorage").GameData.Floor
 local Paper = workspace:FindFirstChild("LibraryHintPaper",true) or workspace:FindFirstChild("LibraryHintPaperHard",true) or Players:FindFirstChild("LibraryHintPaper",true) or Players:FindFirstChild("LibraryHintPaperHard",true)
 if not Paper then
 return
 end
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AutoPadlockUnlock then
 local HintsNeeded = Floor.Value == "Fools" and 8 or 3
 local Hints = 0
 for _,Collected in pairs(game.Players.LocalPlayer.PlayerGui:WaitForChild("PermUI"):WaitForChild("Hints"):GetChildren()) do
@@ -719,7 +719,6 @@ end
 end
 end)
 end})
-if Fools or Hotelold then
 Players:AddSlider("GodmodeDepth",{
     Text = "Godmode Depth",
     Default = 10,
@@ -754,7 +753,6 @@ end}):AddKeyPicker("Godmode", {
     Mode = Library.IsMobile and "Toggle",
     SyncToggleState = Library.IsMobile,
 })
-end
 Players:AddToggle("NoAccessories",{
 Text = "No Accessories",
 Default = false,
@@ -871,8 +869,8 @@ Bypass:AddSlider("SpeedBypassDelay",{
 _G.SpeedBypassDelay = v
 end})
 _G.SpeedBypassDelay = 0.2
-if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Collision") then
-local ClonedCollision = game:GetService("Players").LocalPlayer.Character:WaitForChild("Collision"):Clone()
+if game:GetService("Players").LocalPlayer.Character:FindFirstChild("CollisionPart") then
+local ClonedCollision = game:GetService("Players").LocalPlayer.Character:WaitForChild("CollisionPart"):Clone()
 ClonedCollision.Name = "_CollisionClone"
 ClonedCollision.Massless = true
 ClonedCollision.Parent = game:GetService("Players").LocalPlayer.Character
@@ -1270,6 +1268,40 @@ end
 else
 if workspace:FindFirstChild("Shade") then
 workspace.Shade.Parent = ReplicatedStorage.ClientModules.EntityModules
+end
+end
+end)
+end})
+Disabled:AddToggle("RemoveGlitch",{
+Text = "Removal-Glitch",
+Default = false,
+Callback = function(v)
+_G.AntiGlitch = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AntiGlitch then
+if ReplicatedStorage.ClientModules.EntityModules:FindFirstChild("Glitch") then
+ReplicatedStorage.ClientModules.EntityModules.Glitch.Parent = game.Workspace
+end
+else
+if workspace:FindFirstChild("Glitch") then
+workspace.Glitch.Parent = ReplicatedStorage.ClientModules.EntityModules
+end
+end
+end)
+end})
+Disabled:AddToggle("RemoveHalt",{
+Text = "Removal-Void",
+Default = false,
+Callback = function(v)
+_G.AntiVoid = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AntiVoid then
+if ReplicatedStorage.ClientModules.EntityModules:FindFirstChild("Void") then
+ReplicatedStorage.ClientModules.EntityModules.Void.Parent = game.Workspace
+end
+else
+if workspace:FindFirstChild("Void") then
+workspace.Void.Parent = ReplicatedStorage.ClientModules.EntityModules
 end
 end
 end)
@@ -1711,15 +1743,6 @@ end})
 
 
 local ESP = Tabs.Visual:AddLeftGroupbox("ESP")
-workspace.CurrentRooms.ChildAdded:Connect(function(v)
-for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
-if v.Name == "Door" and v.Parent.Name == "Door" then
-if v.Parent:GetAttribute("Opened")==true and v:FindFirstChild("DoorESP") then
-LibraryESP:Delete("DoorESP")
-end
-end
-end
-end)
 ESP:AddToggle("DoorESP",{
 Text = "Door ESP",
 Default = false,
@@ -2110,15 +2133,15 @@ elseif v.Name == "Surge" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Surge", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
-elseif v.Name == "Monument" and v then
+elseif v:IsA("Model") and v.Name == "Monument" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Monument", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
-elseif v.Name == "Mandrakes" and v then
+elseif v:IsA("Model") and v.Name == "Mandrakes" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Mandrake", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
-elseif v.Name == "Bramble" and v then
+elseif v:IsA("Model") v.Name == "Bramble" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Bramble", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
@@ -2197,11 +2220,11 @@ elseif v.Name == "Surge" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Surge", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
-elseif v.Name == "Monument" and v then
+elseif v:IsA("Model") and v.Name == "Monument" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Monument", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
-elseif v.Name == "Mandrakes" and v then
+elseif v:IsA("Model") and v.Name == "Mandrakes" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Mandrake", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
@@ -2337,7 +2360,7 @@ NotificationEntity = workspace.ChildAdded:Connect(function(v)
 if table.find(Entity,v.Name) then
 repeat task.wait() until game.Players.LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 750 or not v:IsDescendantOf(workspace)
 if v:IsDescendantOf(workspace) then
-if Options.SelectEntity.Value["Eyestalk Chase"] and v.Name == "Eyestalk" and v then
+if Options.SelectEntity.Value["Eyestalk Chase"] and v.Name == "EyestalkMoving" and v then
 Library:Notify("ENTITIES | Eyestalk has spawn, find hiding place and hide now!")
 if _G.SoundAlert then
 local Sound = Instance.new("Sound")
@@ -2347,8 +2370,8 @@ Sound.Volume = _G.PlaySoundAlert
 Sound.PlayOnRemove = true
 Sound:Destroy()
 end
-elseif Options.SelectEntity.Value["Surge"] and v.Name == "Surge" and v then
-Library:Notify("ENTITIES | Surge has spawn, find hiding place and hide now!")
+elseif Options.SelectEntity.Value["Surge"] and v.Name == "SurgePartspawn" and v then
+Library:Notify("ENTITIES | Surge can spawn, find hiding place and hide now!")
 if _G.SoundAlert then
 local Sound = Instance.new("Sound")
 Sound.Parent = game.SoundService
@@ -2357,7 +2380,7 @@ Sound.Volume = _G.PlaySoundAlert
 Sound.PlayOnRemove = true
 Sound:Destroy()
 end
-elseif Options.SelectEntity.Value["Groudskeeper"] and v.Name == "Groundskeeper" and v then
+elseif Options.SelectEntity.Value["Groundskeeper"] and v.Name == "Groundskeeper" and v then
 Library:Notify("ENTITIES | Groundskeeper has spawn, dont touch grass!")
 if _G.SoundAlert then
 local Sound = Instance.new("Sound")
@@ -2840,13 +2863,13 @@ Text = "Delete Trees",
 Default = false,
 Callback = function(v)
 if v then
-for _,v in pairs(game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+for _,v in pairs(game.workspace.CurrentRooms:GetDescendants()) do
 if v:IsA("Model") and v.Name == "Trees" and v then
 v:Destroy()
 end
 end
-NoTrees = workspace.CurrentRooms.ChildAdded:Connect(function(child)
-for _,v in pairs(game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:GetDescendants()) do
+NoTrees = workspace.CurrentRooms.ChildAdded:Connect(function(v)
+for _,v in pairs(game.workspace.CurrentRooms:GetDescendants()) do
 if v:IsA("Model") and v.Name == "Trees" and v then
 v:Destroy()
 end
