@@ -2141,7 +2141,7 @@ elseif v:IsA("Model") and v.Name == "Mandrakes" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Mandrake", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
-elseif v:IsA("Model") v.Name == "Bramble" and v then
+elseif v:IsA("Model") and v.Name == "Bramble" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Bramble", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
@@ -2228,7 +2228,7 @@ elseif v:IsA("Model") and v.Name == "Mandrakes" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Mandrake", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
-elseif v.Name == "Bramble" and v then
+elseif v:IsA("Model") and v.Name == "Bramble" and v then
 if not v:FindFirstChild("EntityESP") then
 LibraryESP:AddESP(v, "Bramble", _G.EntityCE or Color3.fromRGB(255), 20, "EntityESP")
 end
