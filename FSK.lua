@@ -27,15 +27,14 @@ UIStroke.Transparency = 0
 end
 --// Create Highlight \\
 local function Highlight(target, color, name)
-task.wait(0.25)
 local Highlight = Instance.new('Highlight', target)
 --// Highlight \\
+Highlight.Name = "BlueKing : " .. name
 Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 Highlight.FillColor = color
 Highlight.OutlineColor = color
-Highlight.FillTransparency = 1
+Highlight.FillTransparency = 0.75
 Highlight.OutlineTransparency =  0
-Highlight.Name = name
 end
 --// Create Tracer \\
 local function Tracer(target, color)
