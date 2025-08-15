@@ -19,7 +19,7 @@ TextLabel.TextTransparency = 0
 TextLabel.Visible = true
 TextLabel.Text = title
 TextLabel.Size = UDim2.new(1,0,0,0)
-TextLabel.Position = UDim2.new(0.5,0,0.7,0)
+TextLabel.Position = UDim2.new(0.5,0,0.7,-5)
 --// UIStroke \\
 UIStroke.Thickness = 1
 UIStroke.Color = Color3.new()
@@ -130,14 +130,11 @@ v.RequiresLineOfSight = false
 v.MaxActivationDistance = 15
 end
 end)
-
+if game:GetService("ReplicatedStorage").Modules.StatusEffects:WaitForChild("Slowness") then
+game:GetService("ReplicatedStorage").Modules.StatusEffects.Slowness:Destroy()
+end
 game:GetService("RunService").RenderStepped:Connect(function()
 game.Players.LocalPlayer.PlayerGui.TemporaryUI.PlayerInfo.CurrentSurvivors.Visible = true
-StaminaScript = require(game:GetService("ReplicatedStorage").Systems.Character.Game.Sprinting)
-StaminaScript.MaxStamina = 5000
-StaminaScript.StaminaGain = 500
-StaminaScript.StaminaLoss = 10
-StaminaScript.SprintSpeed = 30
 game.Lighting.OutdoorAmbient = Color3.fromRGB(255,255,255)
 game.Lighting.Brightness = 1.5
 game.Lighting.GlobalShadows = false
@@ -151,7 +148,9 @@ if fog then
 if not fog:GetAttribute("Density") then fog:SetAttribute("Density", fog.Density) end
 fog.Density = true and 0 or fog:GetAttribute("Density")
 end
+StaminaScript = require(game:GetService("ReplicatedStorage").Systems.Character.Game.Sprinting)
+StaminaScript.MaxStamina = 5000
+StaminaScript.StaminaGain = 500
+StaminaScript.StaminaLoss = 10
+StaminaScript.SprintSpeed = 30
 end)
-if game:GetService("ReplicatedStorage").Modules.StatusEffects:WaitForChild("Slowness") then
-game:GetService("ReplicatedStorage").Modules.StatusEffects.Slowness:Destroy()
-end
