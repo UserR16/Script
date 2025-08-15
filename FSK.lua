@@ -19,7 +19,7 @@ TextLabel.TextTransparency = 0
 TextLabel.Visible = true
 TextLabel.Text = title
 TextLabel.Size = UDim2.new(1,0,0,0)
-TextLabel.Position = UDim2.new(0,0,0,0)
+TextLabel.Position = UDim2.new(0.5,0,0.7,0)
 --// UIStroke \\
 UIStroke.Thickness = 1
 UIStroke.Color = Color3.new()
