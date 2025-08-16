@@ -89,14 +89,12 @@ Tracer(v, Color3.new(0,0,1))
 end
 end
 end
-GeneratorESP = workspace.Map.Ingame.Map.ChildAdded:Connect(function(v)
-for _, v in ipairs(workspace:GetDescendants()) do
+GeneratorESP = workspace.Map.Ingame.DescendantAdded:Connect(function(v)
 if v:IsA("Model") and v.Parent.Name == "Map" and v.Name == "Generator" and not v:FindFirstChild("Generator_ESP") then
 Text(v, v.Name, Color3.new(0,0,1), 14, "Generator_ESP")
 Highlight(v, Color3.new(0,0,1), "Generator_ESP")
 if _G.TracerGenerator then
 Tracer(v, Color3.new(0,0,1))
-end
 end
 end
 end)
@@ -148,8 +146,15 @@ if not fog:GetAttribute("Density") then fog:SetAttribute("Density", fog.Density)
 fog.Density = true and 0 or fog:GetAttribute("Density")
 end
 StaminaScript = require(game:GetService("ReplicatedStorage").Systems.Character.Game.Sprinting)
+if workspace.Players.Killers:FindFirstChildWhichIsA("Model"):GetAttribute("Username") == game.Players.LocalPlayer.Name then
+StaminaScript.MaxStamina = 5000
+StaminaScript.StaminaGain = 500
+StaminaScript.StaminaLoss = 10
+StaminaScript.SprintSpeed = 31.5
+else
 StaminaScript.MaxStamina = 5000
 StaminaScript.StaminaGain = 500
 StaminaScript.StaminaLoss = 10
 StaminaScript.SprintSpeed = 30
+end
 end)
