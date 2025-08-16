@@ -33,8 +33,12 @@ Highlight.Name = "BlueKing : " .. name
 Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 Highlight.FillColor = color
 Highlight.OutlineColor = color
-Highlight.FillTransparency = 0.75
-Highlight.OutlineTransparency =  0
+Highlight.FillTransparency = 1
+Highlight.OutlineTransparency =  1
+game:GetService('TweenService'):Create(Highlight, TweenInfo.new(1), {
+ FillTransparency = 0.7,
+ OutlineTransparency = 0
+}):Play()
 end
 --// Create Tracer \\
 local function Tracer(target, color)
@@ -131,7 +135,7 @@ if game:GetService("ReplicatedStorage").Modules.StatusEffects:WaitForChild("Slow
 game:GetService("ReplicatedStorage").Modules.StatusEffects.Slowness:Destroy()
 end
 game:GetService("RunService").RenderStepped:Connect(function()
-game.Players.LocalPlayer.PlayerGui.TemporaryUI.PlayerInfo.CurrentSurvivors.Visible = true
+game.Players.LocalPlayer.PlayerGui.TemporaryUI:WaitForChild("PlayerInfo").CurrentSurvivors.Visible = true
 game.Lighting.OutdoorAmbient = Color3.fromRGB(255,255,255)
 game.Lighting.Brightness = 1.5
 game.Lighting.GlobalShadows = false
@@ -146,15 +150,8 @@ if not fog:GetAttribute("Density") then fog:SetAttribute("Density", fog.Density)
 fog.Density = true and 0 or fog:GetAttribute("Density")
 end
 StaminaScript = require(game:GetService("ReplicatedStorage").Systems.Character.Game.Sprinting)
-if workspace.Players.Killers:FindFirstChildWhichIsA("Model"):GetAttribute("Username") == game.Players.LocalPlayer.Name then
 StaminaScript.MaxStamina = 5000
-StaminaScript.StaminaGain = 500
-StaminaScript.StaminaLoss = 10
-StaminaScript.SprintSpeed = 31.5
-else
-StaminaScript.MaxStamina = 5000
-StaminaScript.StaminaGain = 500
-StaminaScript.StaminaLoss = 10
+StaminaScript.StaminaGain = 5000
+StaminaScript.StaminaLoss = 1
 StaminaScript.SprintSpeed = 30
-end
 end)
