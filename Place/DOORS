@@ -1,7 +1,6 @@
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Char = LocalPlayer.Character
-local Collision = Char:WaitForChild("CollisionPart")
 local RunService = game:GetService("RunService")
 
 if game.Players.LocalPlayer.PlayerGui.MainUI.Initiator:FindFirstChild("Main_Game") then
@@ -98,7 +97,7 @@ local Auto = AutoNotifiers:AddTab("Auto")
 
 RunService.Heartbeat:Connect(function()
 if getgenv().autolobby and Char.Humanoid.Health < 0 then
-RemotesFolder.PlayAgain:FireServer()
+RemotesFolder.Lobby:FireServer()
 end
 end)
 
@@ -116,8 +115,8 @@ Auto:AddCheckbox("AutoPadlockUnlock", {
 	Callback = function(v)
 	getgenv().autopadlockunlock = v
 local Paper = workspace:FindFirstChild("LibraryHintPaper",true) or workspace:FindFirstChild("LibraryHintPaperHard",true) or Players:FindFirstChild("LibraryHintPaper",true) or Players:FindFirstChild("LibraryHintPaperHard",true)
-if not Paper then
-Library:Notify("[50] : Now you need Paper", if Paper then 0 else 9e9)
+if not Paper and ReplicatedStorage.GameData.LatestRoom == 50 then
+Library:Notify("[50] : Now you need Paper", if getgenv().autopadlockunlock and ReplicatedStorage.GameData.LatestRoom == 50 then 9e9 else 1)
 return
 end
 RunService.Heartbeat:Connect(function()
@@ -187,7 +186,8 @@ Auto:AddCheckbox("AutoBreakerBox", {
 	Callback = function(v)
 getgenv().autobreakerbox = v
 RunService.Heartbeat:Connect(function()
-if getgenv().autobreakerbox then
+if getgenv().autobreakerbox and ReplicatedStorage.GameData.LatestRoom == 100 then
 RemotesFolder.EBF:FireServer()
 end
+end)
 end})
