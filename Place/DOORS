@@ -191,3 +191,214 @@ RemotesFolder.EBF:FireServer()
 end
 end)
 end})
+local Notifiers = AutoNotifiers:AddTab("Notifiers")
+
+Notifiers:AddDropdown('SelectEntity',{
+	Text = "Select Entity",
+    Values = {'Surge', 'Groundskeeper', 'Monument', 'Rush', 'Ambush', 'Blitz', 'A60', 'A120', 'Lookman', 'Eyes', 'Seek Chase', 'JeffTheKiller', 'AR0xMBUSH', 'RNIUSHCg==', 'Gloombat Swarm'},
+	Default = 0,
+	Multi = true
+})
+getgenv().volume = 5
+Notifiers:AddToggle("EntityNotify",{
+Text = "Entity Notify",
+Default = false,
+Callback = function(v)
+if v then
+local Entity = {"SurgePartspawn", "Groundskeeper","Monument","SeekMovingNewClone","SeekMoving","GlitchAmbush","GlitchRush","BackdoorLookman","BackdoorRush","GloombatSwarm","Eyes","JeffTheKiller","RushMoving","AmbushMoving","A60","A120"}
+NotificationEntity = workspace.DescendantAdded:Connect(function(v)
+if table.find(Entity,v.Name) then
+repeat task.wait() until game.Players.LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 750 or not v:IsDescendantOf(workspace)
+if v:IsDescendantOf(workspace) then
+if Options.SelectEntity.Value["Surge"] and v.Name == "SurgePartspawn" and v then
+wait(9)
+if v then
+Library:Notify("ENTITIES | Surge")
+end
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["Groundskeeper"] and v.Name == "Groundskeeper" and v then
+Library:Notify("ENTITIES | Groundskeeper")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["Monument"] and v.Name == "Monument" and v then
+Library:Notify("ENTITIES | Monument")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["Rush"] and v.Name == "RushMoving" and v then
+Library:Notify("ENTITIES | Rush")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["Ambush"] and v.Name == "AmbushMoving" and v then
+Library:Notify("ENTITIES | Ambush")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["Blitz"] and v.Name == "BackdoorRush" and v then
+Library:Notify("ENTITIES | Blitz")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["A60"] and v.Name == "A60" and v then
+Library:Notify("ENTITIES | A60")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["A120"] and v.Name == "A120" and v then
+Library:Notify("ENTITIES | A120")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["Lookman"] and v.Name == "BackdoorLookman" and v then
+Library:Notify("ENTITIES | Lookman")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["Eyes"] and v.Name == "Eyes" and v then
+Library:Notify("ENTITIES | Eyes")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["Seek Chase"] and v.Name == "SeekMoving" or v.Name == "SeekMovingNewClone" and v then
+Library:Notify("ENTITIES | Seek")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["JeffTheKiller"] and v.Name == "JeffTheKiller" and v then
+Library:Notify("ENTITIES | Jeff")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["AR0xMBUSH"] and v.Name == "GlitchAmbush" and v then
+Library:Notify("ENTITIES | AR0xMBUSH")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["RNIUSHCg=="] and v.Name == "GlitchRush" and v then
+Library:Notify("ENTITIES | RNIUSHCg==")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+elseif Options.SelectEntity.Value["Gloombat Swarm"] and v.Name == "GloombatSwarm" and v then
+Library:Notify("ENTITIES | Gloombat")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+end
+end
+end
+end)
+else
+NotificationEntity:Disconnect()
+end
+end})
+Notifiers:AddToggle("OxyNotify",{
+Text = "Oxygen Notify",
+Default = false,
+Callback = function(v)
+getgenv().oxygennotify = v
+if v then
+OxygenNotify = game.Players.LocalPlayer.Character:GetAttributeChangedSignal("Oxygen"):Connect(function()
+if game.Players.LocalPlayer.Character:GetAttribute("Oxygen") < 100 and getgenv().oxygennotify then
+firesignal(RemotesFolder.Caption.OnClientEvent, string.format("Oxygen: %.1f", game.Players.LocalPlayer.Character:GetAttribute("Oxygen")))
+end
+end)
+else
+OxygenNotify:Disconnect()
+end
+end})
+Notifying:AddToggle("PlaySound",{
+Text = "Playing Sound",
+Default = false,
+Callback = function(v)
+getgenv().playsound = v
+end})
+Notifying:AddSlider("VolumeSound",{
+Text = "Volume",
+Min = 5,
+Default = 5,
+Max = 10,
+Rounding = 1,
+Compact = true,
+Callback = function(v)
+getgenv().volume = v
+end})
