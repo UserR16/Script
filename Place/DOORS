@@ -18,5 +18,77 @@ local SubFloor = {
 ["Retro"] = Floor.Value == "Retro",
 ["Backdoor"] = Floor.Value == "Backdoor",
 ["Mines"] = Floor.Value == "Mines",
-["Hotel-"] = game.PlaceId == 110258689672367
+["Hotel-"] = game.PlaceId == 110258689672367,
+["Garden"] = Floor.Value == "Garden"
 }
+
+if SubFloor["Hotel-"] then
+RemotesFolder = ReplicatedStorage.Bricks
+else
+RemotesFolder = ReplicatedStorage.RemotesFolder
+end
+
+local repo = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
+local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
+
+local Options = Library.Options
+local Toggles = Library.Toggles
+
+Library.ForceCheckbox = false
+Library.ShowToggleFrameInKeybinds = true
+
+local Window = Library:CreateWindow({
+	Title = "YOUHUB",
+	Footer = Floor.Value,
+	Icon = 95073582077930,
+  Font = Enum.Font.RobotoMono,
+  CornerRadius = 10,
+  Center = true,
+	NotifySide = "Right",
+	ShowCustomCursor = true
+})
+
+Library:SetWatermarkVisibility(true)
+
+local FrameTimer = tick()
+local FrameCounter = 0
+local FPS = 60
+
+local WatermarkConnection = game:GetService('RunService').RenderStepped:Connect(function()
+	FrameCounter += 1
+
+	if (tick() - FrameTimer) >= 1 then
+		FPS = FrameCounter
+		FrameTimer = tick()
+		FrameCounter = 0
+	end
+if SubFloor["Hotel-"] or SubFloor["Hotel"] or SubFloor["Fools"] or SubFloor["Rooms"] or SubFloor["Retro"] then
+	Library:SetWatermark(('YOUHUB | Rooms : %s | %s fps | %s ping'):format(
+    math.floor((game:GetService("ReplicatedStorage").GameData.LatestRoom.Value) + 1)
+		math.floor(FPS),
+		math.floor(game:GetService('Stats').Network.ServerStatsItem['Data Ping']:GetValue())
+	))
+elseif SubFloor["Mines"] then
+	Library:SetWatermark(('YOUHUB | Rooms : %s | %s fps | %s ping'):format(
+    math.floor((game:GetService("ReplicatedStorage").GameData.LatestRoom.Value) + 101)
+		math.floor(FPS),
+		math.floor(game:GetService('Stats').Network.ServerStatsItem['Data Ping']:GetValue())
+	))
+elseif SubFloor["Backdoor"] then
+	Library:SetWatermark(('YOUHUB | %s fps | %s ping'):format(
+  	math.floor(FPS),
+		math.floor(game:GetService('Stats').Network.ServerStatsItem['Data Ping']:GetValue())
+	))
+end
+end)
+
+
+
+
+
+
+
+
+
