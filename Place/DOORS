@@ -65,13 +65,15 @@ local WatermarkConnection = game:GetService('RunService').RenderStepped:Connect(
 		FrameCounter = 0
 	end
 if SubFloor["Garden"] or SubFloor["Hotel-"] or SubFloor["Hotel"] or SubFloor["Fools"] or SubFloor["Rooms"] or SubFloor["Retro"] then
-	Library:SetWatermark(('YOUHUB | Rooms : %s | %s fps | %s ping'):format(
+	Library:SetWatermark(('YOUHUB | Rooms : %s | Next Room : %s | %s fps | %s ping'):format(
+        math.floor((game:GetService("ReplicatedStorage").GameData.LatestRoom.Value) + 0),
         math.floor((game:GetService("ReplicatedStorage").GameData.LatestRoom.Value) + 1),
 		math.floor(FPS),
 		math.floor(game:GetService('Stats').Network.ServerStatsItem['Data Ping']:GetValue())
 	))
 elseif SubFloor["Mines"] then
-	Library:SetWatermark(('YOUHUB | Rooms : %s | %s fps | %s ping'):format(
+	Library:SetWatermark(('YOUHUB | Rooms : %s | Next Room : %s | %s fps | %s ping'):format(
+        math.floor((game:GetService("ReplicatedStorage").GameData.LatestRoom.Value) + 100),
         math.floor((game:GetService("ReplicatedStorage").GameData.LatestRoom.Value) + 101),
 		math.floor(FPS),
 		math.floor(game:GetService('Stats').Network.ServerStatsItem['Data Ping']:GetValue())
@@ -94,19 +96,6 @@ local Tabs = {
 
 local AutoNotifiers = Tabs.Main:AddLeftTabbox()
 local Auto = AutoNotifiers:AddTab("Auto")
-
-RunService.Heartbeat:Connect(function()
-if getgenv().autolobby and Char.Humanoid.Health < 0 then
-RemotesFolder.Lobby:FireServer()
-end
-end)
-
-Auto:AddCheckbox("AutoLobby", {
-	Text = "Auto Lobby",
-	Default = false,
-	Callback = function(v)
-	getgenv().autolobby = v
-end})
 Auto:AddDivider()
 if not SubFloor["Hotel-"] or not SubFloor["Rooms"] or not SubFloor["Backdoors"] or SubFloor["Garden"] then
 Auto:AddCheckbox("AutoPadlockUnlock", {
@@ -387,13 +376,13 @@ else
 OxygenNotify:Disconnect()
 end
 end})
-Notifying:AddToggle("PlaySound",{
+Notifiers:AddToggle("PlaySound",{
 Text = "Playing Sound",
 Default = false,
 Callback = function(v)
 getgenv().playsound = v
 end})
-Notifying:AddSlider("VolumeSound",{
+Notifiers:AddSlider("VolumeSound",{
 Text = "Volume",
 Min = 5,
 Default = 5,
@@ -403,3 +392,14 @@ Compact = true,
 Callback = function(v)
 getgenv().volume = v
 end})
+Notifiers:AddButton("Play Notification", function()
+Library:Notify("Notification | Played")
+if getgenv().playsound then
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = getgenv().volume
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+end)
