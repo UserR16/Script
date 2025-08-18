@@ -2,6 +2,7 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Char = LocalPlayer.Character
 local Collision = Char:WaitForChild("CollisionPart")
+local RunService = game:GetService("RunService")
 
 if game.Players.LocalPlayer.PlayerGui.MainUI.Initiator:FindFirstChild("Main_Game") then
 local Main_Game = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game)
@@ -84,11 +85,109 @@ elseif SubFloor["Backdoor"] then
 end
 end)
 
+local Tabs = {
+  Main = Window:AddTab("Main", "boxes"),
+  Players = Window:AddTab("Players", "boxes"),
+  Exploits = Window:AddTab("Exploits", "boxes"),
+  Visual = Window:AddTab("Visual", "boxes"),
+  Settings = Window:AddTab("Configs", "boxes"),
+}
 
+local AutoNotifiers = Tabs.Main:AddLeftTabbox()
+local Auto = AutoNotifiers:AddTab("Auto")
 
+RunService.Heartbeat:Connect(function()
+if getgenv().autolobby and Char.Humanoid.Health < 0 then
+RemotesFolder.PlayAgain:FireServer()
+end
+end)
 
-
-
-
-
-
+Auto:AddCheckbox("AutoLobby", {
+	Text = "Auto Lobby",
+	Default = false,
+	Callback = function(v)
+	getgenv().autolobby = v
+end})
+Auto:AddDivider()
+if not SubFloor["Hotel-"] or not SubFloor["Rooms"] or not SubFloor["Backdoors"] or SubFloor["Garden"] then
+Auto:AddCheckbox("AutoPadlockUnlock", {
+	Text = "Auto Padlock Unlock",
+	Default = false,
+	Callback = function(v)
+	getgenv().autopadlockunlock = v
+local Paper = workspace:FindFirstChild("LibraryHintPaper",true) or workspace:FindFirstChild("LibraryHintPaperHard",true) or Players:FindFirstChild("LibraryHintPaper",true) or Players:FindFirstChild("LibraryHintPaperHard",true)
+if not Paper then
+Library:Notify("[50] : Now you need Paper", if Paper then 0 else 9e9)
+return
+end
+RunService.Heartbeat:Connect(function()
+if Paper then
+local HintsNeeded = Floor.Value == "Fools" and 8 or 3
+local Hints = 0
+for _,Collected in pairs(game.Players.LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
+if Collected.Name == "Icon" then
+if Collected:IsA("ImageLabel") then
+for _,Icon in pairs(Paper.UI:GetChildren()) do
+if tonumber(Icon.Name) then
+if Icon.ImageRectOffset == Collected.ImageRectOffset then
+Hints += 1
+end
+end
+end
+end
+end
+end
+if Hints < HintsNeeded then
+return
+end
+local t = {}
+for i = 1, Floor.Value == "Hotel" and 5 or 10 do
+local Icon = Paper.UI[i]
+local Number = -1
+for _,Collected in pairs(game.Players.LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
+if Collected.Name == "Icon" then
+if Collected.ImageRectOffset == Icon.ImageRectOffset then
+Number = tonumber(Collected.TextLabel.Text)
+end
+end
+end
+table.insert(t,Number)
+end
+for one=0,t[1]==-1 and 9 or 0 do
+for two=0,t[2]==-1 and 9 or 0 do
+for three=0,t[3]==-1 and 9 or 0 do
+for four=0,t[4]==-1 and 9 or 0 do
+for five=0,t[5]==-1 and 9 or 0 do
+if Floor.Value == "Fools" then
+for six=0,t[6]==-1 and 9 or 0 do
+for seven=0,t[7]==-1 and 9 or 0 do
+for eight=0,t[8]==-1 and 9 or 0 do
+for nine=0,t[9]==-1 and 9 or 0 do
+for ten=0,t[10]==-1 and 9 or 0 do
+RemotesFolder.PL:FireServer((t[1]==-1 and one or t[1])..(t[2]==-1 and two or t[2])..(t[3]==-1 and three or t[3])..(t[4]==-1 and four or t[4])..(t[5]==-1 and five or t[5])..(t[6]==-1 and six or t[6])..(t[7]==-1 and seven or t[7])..(t[8]==-1 and eight or t[8])..(t[9]==-1 and nine or t[9])..(t[10]==-1 and ten or t[10]))
+end
+end
+end
+end
+end
+else
+RemotesFolder.PL:FireServer((t[1]==-1 and one or t[1])..(t[2]==-1 and two or t[2])..(t[3]==-1 and three or t[3])..(t[4]==-1 and four or t[4])..(t[5]==-1 and five or t[5]))
+end
+end
+end
+end
+end
+end
+end)
+end})
+end
+Auto:AddCheckbox("AutoBreakerBox", {
+	Text = "Auto Breaker Box",
+	Default = false,
+	Callback = function(v)
+getgenv().autobreakerbox = v
+RunService.Heartbeat:Connect(function()
+if getgenv().autobreakerbox then
+RemotesFolder.EBF:FireServer()
+end
+end})
