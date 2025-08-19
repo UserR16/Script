@@ -190,7 +190,7 @@ Notifiers:AddDropdown('SelectEntity',{
 	Multi = true
 })
 getgenv().volume = 5
-Notifiers:AddToggle("EntityNotify",{
+Notifiers:AddCheckbox("EntityNotify",{
 Text = "Entity Notify",
 Default = false,
 Callback = function(v)
@@ -293,7 +293,7 @@ Sound.Volume = getgenv().volume
 Sound.PlayOnRemove = true
 Sound:Destroy()
 end
-elseif Options.SelectEntity.Value["Eyes"] and v.Name == "Eyes" and v then
+elseif v:IsA("Model") and Options.SelectEntity.Value["Eyes"] and v.Name == "Eyes" and v then
 Library:Notify("ENTITIES | Eyes")
 if getgenv().playsound then
 local Sound = Instance.new("Sound")
@@ -361,7 +361,7 @@ else
 NotificationEntity:Disconnect()
 end
 end})
-Notifiers:AddToggle("OxyNotify",{
+Notifiers:AddCheckbox("OxyNotify",{
 Text = "Oxygen Notify",
 Default = false,
 Callback = function(v)
@@ -376,7 +376,7 @@ else
 OxygenNotify:Disconnect()
 end
 end})
-Notifiers:AddToggle("PlaySound",{
+Notifiers:AddCheckbox("PlaySound",{
 Text = "Playing Sound",
 Default = false,
 Callback = function(v)
@@ -403,3 +403,94 @@ Sound.PlayOnRemove = true
 Sound:Destroy()
 end
 end)
+
+local MainAuras = Tabs.Main:AddRightTabbox()
+local Main = MainAuras:AddTab("Main")
+
+workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+if not getgenv().instanceinteract then return end
+if not getgenv().reachinteract then return end
+if not getgenv().throughinteract then return end
+if v:IsA("ProximityPrompt") then
+if getgenv().instanceinteract then
+v.HoldDuration = 0
+end
+if getgenv().reachinteract then
+v.MaxActivationDistance = 15
+end
+if getgenv().throughinteract then
+v.RequiresLineOfSight = false
+end
+end
+end)
+
+Main:AddCheckbox("InstanceInteract",{
+Text = "Instance Interact",
+Default = false,
+Callback = function(v)
+getgenv().instanceinteract = v
+end})
+Main:AddCheckbox("ReachInteract",{
+Text = "Reach Interact",
+Default = false,
+Callback = function(v)
+getgenv().reachinteract = v
+end})
+Main:AddCheckbox("ThroughInteract",{
+Text = "Through Interact",
+Default = false,
+Callback = function(v)
+getgenv().throughinteract = v
+end})
+Main:AddDivider()
+game:GetService("RunService").RenderStepped:Connect(function()
+if getgenv().doorsfast then
+game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Door"):SetAttribute("FastOpen", true)
+end 
+if getgenv().doorsreach then
+game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Door").ClientOpen:FireServer()
+end 
+end)
+Main:AddCheckbox("DoorReach",{
+Text = "Doors Reach",
+Default = false,
+Callback = function(v)
+getgenv().doorsreach = v
+end})
+Main:AddCheckbox("DoorFast",{
+Text = "Doors Fast",
+Default = false,
+Callback = function(v)
+getgenv().doorsfast = v
+end})
+local Auras = MainAuras:AddTab("Auras")
+Auras:AddCheckbox("KeyAuras",{
+Text = "Key Auras",
+Default = false,
+Callback = function(v)
+if v then
+local function keyaura(v)
+if v:IsA("Model") then
+if v.Name == "KeyObtain" then
+task.spawn(function()
+repeat task.wait(0.1)
+fireproximityprompt(v.ModulePrompt)
+until task.wait(0.1)
+end)
+end
+end
+end
+end
+KeyAura = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+keyaura(v)
+end)
+else
+KeyAura:Disconnect()
+end
+end})
+
+
+
+
+
+
