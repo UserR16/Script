@@ -466,6 +466,7 @@ Text = "Key Auras",
 Default = false,
 Callback = function(v)
 if v then
+KeyAura = RunService.RenderStepped:Connect(function()
 local function keyaura(v)
 if v:IsA("Model") then
 if v.Name == "KeyObtain" and (v:FindFirstChildOfClass("BasePart").Position - Char.Head.Position).Magnitude < 15 then
@@ -477,7 +478,6 @@ end)
 end
 end
 end
-KeyAura = RunService.RenderStepped:Connect(function()
 for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
 keyaura(v)
 end
@@ -491,6 +491,7 @@ Text = "Books Auras",
 Default = false,
 Callback = function(v)
 if v then
+BooksAura = RunService.RenderStepped:Connect(function()
 local function booksaura(v)
 if v:IsA("Model") then
 if v.Name == "LiveHintBook" and (v:FindFirstChildOfClass("BasePart").Position - Char.Head.Position).Magnitude < 15 then
@@ -502,7 +503,6 @@ end)
 end
 end
 end
-BooksAura = RunService.RenderStepped:Connect(function()
 for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
 booksaura(v)
 end
