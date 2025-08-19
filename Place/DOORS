@@ -201,10 +201,7 @@ if table.find(Entity,v.Name) then
 repeat task.wait() until game.Players.LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 750 or not v:IsDescendantOf(workspace)
 if v:IsDescendantOf(workspace) then
 if Options.SelectEntity.Value["Surge"] and v.Name == "SurgePartspawn" and v then
-wait(9)
-if v then
 Library:Notify("ENTITIES | Surge")
-end
 if getgenv().playsound then
 local Sound = Instance.new("Sound")
 Sound.Parent = game.SoundService
@@ -471,7 +468,7 @@ Callback = function(v)
 if v then
 local function keyaura(v)
 if v:IsA("Model") then
-if v.Name == "KeyObtain" then
+if v.Name == "KeyObtain" and (v:FindFirstChildOfClass("BasePart").Position - Char.Head.Position).Magnitude < 15 then
 task.spawn(function()
 repeat task.wait(0.1)
 fireproximityprompt(v.ModulePrompt)
@@ -480,14 +477,141 @@ end)
 end
 end
 end
-end
-KeyAura = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+KeyAura = RunService.RenderStepped:Connect(function()
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
 keyaura(v)
+end
 end)
 else
 KeyAura:Disconnect()
 end
 end})
+Auras:AddCheckbox("BooksAuras",{
+Text = "Books Auras",
+Default = false,
+Callback = function(v)
+if v then
+local function booksaura(v)
+if v:IsA("Model") then
+if v.Name == "LiveHintBook" and (v:FindFirstChildOfClass("BasePart").Position - Char.Head.Position).Magnitude < 15 then
+task.spawn(function()
+repeat task.wait(0.1)
+fireproximityprompt(v.ModulePrompt)
+until task.wait(0.1)
+end)
+end
+end
+end
+BooksAura = RunService.RenderStepped:Connect(function()
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
+booksaura(v)
+end
+end)
+else
+BooksAura:Disconnect()
+end
+end})
+Auras:AddCheckbox("BreakerAuras",{
+Text = "Breaker Auras",
+Default = false,
+Callback = function(v)
+if v then
+local function breakeraura(v)
+if v:IsA("Model") then
+if v.Name == "LiveBreakerPolePickup" and (v:FindFirstChildOfClass("BasePart").Position - Char.Head.Position).Magnitude < 15 then
+task.spawn(function()
+repeat task.wait(0.1)
+fireproximityprompt(v.ModulePrompt)
+until task.wait(0.1)
+end)
+end
+end
+end
+BreakerAura = RunService.RenderStepped:Connect(function()
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
+breakeraura(v)
+end
+end)
+else
+BreakerAura:Disconnect()
+end
+end})
+Auras:AddCheckbox("LeverAuras",{
+Text = "Lever Auras",
+Default = false,
+Callback = function(v)
+if v then
+local function leveraura(v)
+if v:IsA("Model") then
+if v.Name == "LeverForGate" or v.Name == "TimerLever" and (v:FindFirstChildOfClass("BasePart").Position - Char.Head.Position).Magnitude < 15 then
+task.spawn(function()
+repeat task.wait(0.1)
+fireproximityprompt(v.ActivateEventPrompt)
+until task.wait(0.1)
+end)
+end
+end
+end
+LeverAura = RunService.RenderStepped:Connect(function()
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
+leveraura(v)
+end
+end)
+else
+LeverAura:Disconnect()
+end
+end})
+Auras:AddCheckbox("VentAuras",{
+Text = "Vent Auras",
+Default = false,
+Callback = function(v)
+if v then
+local function ventaura(v)
+if v:IsA("Model") then
+if v.Name == "VentGrate" and (v:FindFirstChildOfClass("BasePart").Position - Char.Head.Position).Magnitude < 15 then
+task.spawn(function()
+repeat task.wait(0.1)
+fireproximityprompt(v.AwesomePrompt)
+until task.wait(0.1)
+end)
+end
+end
+end
+VentAura = RunService.RenderStepped:Connect(function()
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
+ventaura(v)
+end
+end)
+else
+VentAura:Disconnect()
+end
+end})
+Auras:AddCheckbox("GoldAuras",{
+Text = "Gold Auras",
+Default = false,
+Callback = function(v)
+if v then
+local function goldaura(v)
+if v:IsA("Model") then
+if v.Name == "GoldPile" and (v:FindFirstChildOfClass("BasePart").Position - Char.Head.Position).Magnitude < 15 then
+task.spawn(function()
+repeat task.wait(0.1)
+fireproximityprompt(v.LootPrompt)
+until task.wait(0.1)
+end)
+end
+end
+end
+GoldAura = RunService.RenderStepped:Connect(function()
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
+goldaura(v)
+end
+end)
+else
+GoldAura:Disconnect()
+end
+end})
+
 
 
 
