@@ -1,1 +1,26 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/Library-ui/refs/heads/main/Redzhubui"))()
+Library.Themes.Darker["Color Hub 2"] = Color3.fromRGB(20,20,20)
+Library.Themes.Darker["Color Stroke"] = Color3.fromRGB(15,15,15)
+Library.Themes.Darker["Color Theme"] = Color3.fromRGB(0,255,255)
+Library.Themes.Darker["Color Text"] = Color3.fromRGB(255,255,255)
+Library.Themes.Darker["Color Dark Text"] = Color3.fromRGB(0,255,255)
+Library.Themes.Darker["Color Hub 1"] = ColorSequence.new({
+ ColorSequenceKeypoint.new(0.00, Color3.fromRGB()),
+ ColorSequenceKeypoint.new(0.50, Color3.fromRGB(5,5,5)),
+ ColorSequenceKeypoint.new(1.00, Color3.fromRGB(2,2,2))
+})
+
+local Window = Library:MakeWindow({"Blueway", "v0.0.1", "testando | redz lib v5.lua"})
+
+local Button = Window:AddMinimizeButton({
+Button = { ImageColor3 = Color3.fromRGB(0,255,255), Image = "rbxassetid://95869322194132", BackgroundColor3 = Color3.fromRGB(), BackgroundTransparency = 0 },
+Corner = { CornerRadius = UDim.new(0, 5) },
+})
+Instance.new("UIStroke", game:GetService("CoreGui")["redz Library V5"].Hub).Color = Color3.fromRGB(0,255,255)
+Instance.new("UIStroke", game:GetService("CoreGui")["redz Library V5"].ImageButton).Color = Color3.fromRGB(0,255,255)
+
+
+
+
+
 
