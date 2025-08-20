@@ -27,11 +27,11 @@ Teleport = Window:MakeTab({"Teleport", "Apple"})
 }
 
 Tabs.Main:AddSection({"Kill Aura"})
-
+getgenv().killdistance = 50
 game:GetService("RunService").RenderStepped:Connect(function()
 for _,v in ipairs(workspace.Characters:GetChildren()) do
 if getgenv().killaura and v.Parent.Name == "Characters" then
-if (v:FindFirstChildWhichIsA("BasePart").Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < getgenv().killdistance or 50 then
+if (v:FindFirstChildOfClass("BasePart").Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < getgenv().killdistance then
 game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("ToolDamageObject"):InvokeServer(v, game:GetService("Players").LocalPlayer:WaitForChild("Inventory"):FindFirstChildWhichIsA("Model"), "2_4241172567", CFrame.new(1,1,1))
 end
 end
