@@ -46,8 +46,8 @@ local Window = Library:CreateWindow({
 	KeySystem = true,
     KeySettings = {
 	Title = "Key System",
-	Subtitle = "Key System",
-	Note = "https://discord.gg/",
+	Subtitle = "DOORS",
+	Note = "BLUEWAY",
 	SaveInRoot = false, 
     SaveKey = true, 
     Key = {"PernamentKey_96ba82fa05c991ff"},
@@ -171,6 +171,12 @@ EntityNotify:Disconnect()
 end
 end})
 Tabs.Main:CreateToggle({
+	Name = "Play Chat",
+	CurrentValue = false,
+    Callback = function(v)
+_G.PlayChat = v
+end})
+Tabs.Main:CreateToggle({
 	Name = "Play Sound",
 	CurrentValue = false,
     Callback = function(v)
@@ -191,6 +197,99 @@ else
 OxygenNotify:Disconnect()
 end
 end})
+
+Tabs.Main:CreateSection("Doors")
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.ReachDoors then
+game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Door").ClientOpen:FireServer()
+end
+if _G.FastDoors then 
+game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Door"):SetAttribute("FastOpen", true)
+end
+end)
+Tabs.Main:CreateToggle({
+	Name = "Reach Doors",
+	CurrentValue = false,
+    Callback = function(v)
+_G.ReachDoors = v
+end})
+Tabs.Main:CreateToggle({
+	Name = "Fast Doors",
+	CurrentValue = false,
+    Callback = function(v)
+_G.FastDoors = v
+end})
+Tabs.Main:CreateSection("Proximity Prompt")
+workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+if not _G.InstanceInteract then return end
+if not _G.ReachInteract then return end
+if not _G.ThroughInteract then return end
+if v:IsA("ProximityPrompt") then
+if _G.InstanceInteract then
+v.HoldDuration = 0
+end
+if _G.ReachInteract then
+v.MaxActivationDistance = 15
+end
+if _G.ThroughInteract then
+v.RequiresLineOfSight = false
+end
+end
+end)
+Tabs.Main:CreateToggle({
+	Name = "Instance Interact",
+	CurrentValue = false,
+    Callback = function(v)
+_G.InstanceInteract = v
+if v then
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.HoldDuration = 0
+end
+end
+else
+print()
+end
+end})
+Tabs.Main:CreateToggle({
+	Name = "Reach Interact",
+	CurrentValue = false,
+    Callback = function(v)
+_G.ReachInteract = v
+if v then
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.MaxActivationDistance = 15
+end
+end
+else
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.MaxActivationDistance = 7
+end
+end
+end
+end})
+Tabs.Main:CreateToggle({
+	Name = "Through Interact",
+	CurrentValue = false,
+    Callback = function(v)
+_G.ThroughInteract = v
+if v then
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.RequiresLineOfSight = false
+end
+end
+else
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.RequiresLineOfSight = true
+end
+end
+end
+end})
+
 
 --[[
 local Luna = loadstring(game:HttpGet("https://raw.githubusercontent.com/Nebula-Softworks/Luna-Interface-Suite/refs/heads/master/source.lua", true))()
