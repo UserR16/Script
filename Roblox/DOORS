@@ -1,1 +1,131 @@
 
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Nebula-Softworks/Luna-Interface-Suite/refs/heads/master/source.lua", true))()
+
+local PermanentKey = {"96ba-82fa-05c9-91ff","82sf-62ba-0g05-7f1g"}
+local GetKey = {"71b9-82fa-05c9-91ff"}
+local Window = Library:CreateWindow({
+	Name = "BLUEWAY - (0.0.1) - DOORS",
+	Subtitle = "Hotel",
+	LogoID = "82795327169782",
+	LoadingEnabled = true,
+  LoadingTitle = "BLUEWAY",
+  LoadingSubtitle = "BY RECHEDMCVN",
+
+	ConfigSettings = {
+		RootFolder = nil,
+    ConfigFolder = "Big Hub"
+},
+
+	KeySystem = true,
+  KeySettings = {
+		Title = "Key System",
+		Subtitle = "Key System",
+		Note = "https://discord.gg/",
+		SaveInRoot = false, 
+    SaveKey = true, 
+    Key = {PermanentKey or GetKey},
+    SecondAction = {
+			Enabled = true, -- Set to false if you do not want a second action,
+			Type = "Link", -- Link / Discord.
+			Parameter = "" -- If Type is Discord, then put your invite link (DO NOT PUT DISCORD.GG/). Else, put the full link of your key system here.
+		}
+	}
+})
+
+
+
+
+--[[
+local Luna = loadstring(game:HttpGet("https://raw.githubusercontent.com/Nebula-Softworks/Luna-Interface-Suite/refs/heads/master/source.lua", true))()
+local Window = Luna:CreateWindow({
+	Name = "Luna Example Window", -- This Is Title Of Your Window
+	Subtitle = nil, -- A Gray Subtitle next To the main title.
+	LogoID = "82795327169782", -- The Asset ID of your logo. Set to nil if you do not have a logo for Luna to use.
+	LoadingEnabled = true, -- Whether to enable the loading animation. Set to false if you do not want the loading screen or have your own custom one.
+	LoadingTitle = "Luna Interface Suite", -- Header for loading screen
+	LoadingSubtitle = "by Nebula Softworks", -- Subtitle for loading screen
+
+	ConfigSettings = {
+		RootFolder = nil, -- The Root Folder Is Only If You Have A Hub With Multiple Game Scripts and u may remove it. DO NOT ADD A SLASH
+		ConfigFolder = "Big Hub" -- The Name Of The Folder Where Luna Will Store Configs For This Script. DO NOT ADD A SLASH
+	},
+
+	KeySystem = false, -- As Of Beta 6, Luna Has officially Implemented A Key System!
+	KeySettings = {
+		Title = "Luna Example Key",
+		Subtitle = "Key System",
+		Note = "Best Key System Ever! Also, Please Use A HWID Keysystem like Pelican, Luarmor etc. that provide key strings based on your HWID since putting a simple string is very easy to bypass",
+		SaveInRoot = false, -- Enabling will save the key in your RootFolder (YOU MUST HAVE ONE BEFORE ENABLING THIS OPTION)
+		SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+		Key = {"Example Key"}, -- List of keys that will be accepted by the system, please use a system like Pelican or Luarmor that provide key strings based on your HWID since putting a simple string is very easy to bypass
+		SecondAction = {
+			Enabled = true, -- Set to false if you do not want a second action,
+			Type = "Link", -- Link / Discord.
+			Parameter = "" -- If Type is Discord, then put your invite link (DO NOT PUT DISCORD.GG/). Else, put the full link of your key system here.
+		}
+	}
+})
+Luna:Notification({ 
+	Title = "Luna Notification Example",
+	Icon = "notifications_active",
+	ImageSource = "Material",
+	Content = "This Is A Preview Of Luna's Dynamic Notification System Entailing Estimated/Calculated Wait Times, A Sleek Design, Icons, And A Glassmorphic Look"
+})
+local Tab = Window:CreateTab({
+	Name = "Tab Example",
+	Icon = "view_in_ar",
+	ImageSource = "Material",
+	ShowTitle = true -- This will determine whether the big header text in the tab will show
+})
+Tab:CreateSection("Section Example")
+local Toggle = Tab:CreateToggle({
+	Name = "Toggle Example",
+	Description = nil,
+	CurrentValue = false,
+    	Callback = function(Value)
+       	 -- The function that takes place when the toggle is switched
+       	 -- The variable (Value) is a boolean on whether the toggle is true or false
+    	end
+}, "Toggle") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+Tab:CreateDivider()
+local Button = Tab:CreateButton({
+	Name = "Button Example!",
+	Description = nil, -- Creates A Description For Users to know what the button does (looks bad if you use it all the time),
+    	Callback = function()
+         -- The function that takes place when the button is pressed
+    	end
+})
+local ColorPicker = Tab:CreateColorPicker({
+	Name = "Color Picker Example",
+	Color = Color3.fromRGB(86, 171, 128),
+	Flag = "ColorPicker1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(Value)
+		-- The function that takes place every time the color picker is moved/changed
+		-- The variable (Value) is a Color3fromRGB value based on which color is selected
+	end
+}, "ColorPicker") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+local Slider = Tab:CreateSlider({
+	Name = "Slider Example",
+	Range = {0, 200}, -- The Minimum And Maximum Values Respectively
+	Increment = 5, -- Basically The Changing Value/Rounding Off
+	CurrentValue = 100, -- The Starting Value
+    	Callback = function(Value)
+       	 -- The function that takes place when the slider changes
+       	 -- The variable (Value) is a number which correlates to the value the slider is currently at
+    	end
+}, "Slider") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+local Input = Tab:CreateInput({
+	Name = "Dynamic Input Example",
+	Description = nil,
+	PlaceholderText = "Input Placeholder",
+	CurrentValue = "", -- the current text
+	Numeric = false, -- When true, the user may only type numbers in the box (Example walkspeed)
+	MaxCharacters = nil, -- if a number, the textbox length cannot exceed the number
+	Enter = false, -- When true, the callback will only be executed when the user presses enter.
+    	Callback = function(Text)
+       	 -- The function that takes place when the input is changed
+	 -- The variable (Text) is a string for the value in the text box
+    	end
+}, "Input") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+]]
