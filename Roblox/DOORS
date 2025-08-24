@@ -369,6 +369,141 @@ end
 end
 end)
 end})
+Tabs.Main:CreateDivider()
+Tabs.Main:CreateToggle({
+	Name = "Show Pathfind Nodes",
+	CurrentValue = false,
+    Callback = function(v)
+if v then
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
+if v.Parent.Name == "PathfindNodes" and v then
+local Part = Instance.new("Part",workspace)
+Part.Size = v.Size
+Part.CFrame = v.CFrame
+Part.CanCollide = false
+Part.Shape = "Ball"
+Part.Anchored = true
+Part.Material = "ForceField"
+end
+end
+ShowPathfindNodes = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+if v.Parent.Name == "PathfindNodes" and v then
+local Part = Instance.new("Part",workspace)
+Part.Size = v.Size
+Part.Name = "_PathfindNodes"
+Part.CFrame = v.CFrame
+Part.CanCollide = false
+Part.Shape = "Ball"
+Part.Anchored = true
+Part.Material = "ForceField"
+end
+end)
+else
+ShowPathfindNodes:Disconnect()
+for _,v in ipairs(workspace:GetDescendants()) do
+if v.Name == "_PathfindNodes" then
+v:Destroy()
+end
+end
+end
+end})
+Tabs.Main:CreateSection("Gameplay")
+if Floor["Mines"] then
+Tabs.Main:CreateButton({
+	Name = "Notify Anchor Code",
+	Callback = function()
+if ReplicatedStorage.GameData.LatestRoom < 50 then
+Notify("You right in room 50")
+end
+if ReplicatedStorage.GameData.LatestRoom > 50 then
+Notify("You have done it")
+end
+if ReplicatedStorage.GameData.LatestRoom == 50 then
+Notify("Anchor Code : " .. LocalPlayer.PlayerGui.MainUI:WaitForChild("AnchorHintFrame").AnchorCode.Text)
+end
+end})
+if not Floor["Hotel-"] or not Floor["Rooms"] or not Floor["Backdoors"] or Floor["Garden"] or Floor["Mines"] then
+Tabs.Main:CreateToggle({
+	Name = "Auto Padlock Unlock",
+	CurrentValue = false,
+    Callback = function(v)
+_G.AutoPadlockUnlock = v
+local Paper = workspace:FindFirstChild("LibraryHintPaper",true) or workspace:FindFirstChild("LibraryHintPaperHard",true) or Players:FindFirstChild("LibraryHintPaper",true) or Players:FindFirstChild("LibraryHintPaperHard",true)
+if not Paper and ReplicatedStorage.GameData.LatestRoom == 50 then
+Library:Notify("[50] : Now you need Paper", if getgenv().autopadlockunlock and ReplicatedStorage.GameData.LatestRoom == 50 then 9e9 else 1)
+return
+end
+RunService.Heartbeat:Connect(function()
+if Paper and _G.AutoPadlockUnlock then
+local HintsNeeded = Floor.Value == "Fools" and 8 or 3
+local Hints = 0
+for _,Collected in pairs(game.Players.LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
+if Collected.Name == "Icon" then
+if Collected:IsA("ImageLabel") then
+for _,Icon in pairs(Paper.UI:GetChildren()) do
+if tonumber(Icon.Name) then
+if Icon.ImageRectOffset == Collected.ImageRectOffset then
+Hints += 1
+end
+end
+end
+end
+end
+end
+if Hints < HintsNeeded then
+return
+end
+local t = {}
+for i = 1, Floor.Value == "Hotel" and 5 or 10 do
+local Icon = Paper.UI[i]
+local Number = -1
+for _,Collected in pairs(game.Players.LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
+if Collected.Name == "Icon" then
+if Collected.ImageRectOffset == Icon.ImageRectOffset then
+Number = tonumber(Collected.TextLabel.Text)
+end
+end
+end
+table.insert(t,Number)
+end
+for one=0,t[1]==-1 and 9 or 0 do
+for two=0,t[2]==-1 and 9 or 0 do
+for three=0,t[3]==-1 and 9 or 0 do
+for four=0,t[4]==-1 and 9 or 0 do
+for five=0,t[5]==-1 and 9 or 0 do
+if Floor.Value == "Fools" then
+for six=0,t[6]==-1 and 9 or 0 do
+for seven=0,t[7]==-1 and 9 or 0 do
+for eight=0,t[8]==-1 and 9 or 0 do
+for nine=0,t[9]==-1 and 9 or 0 do
+for ten=0,t[10]==-1 and 9 or 0 do
+RemotesFolder.PL:FireServer((t[1]==-1 and one or t[1])..(t[2]==-1 and two or t[2])..(t[3]==-1 and three or t[3])..(t[4]==-1 and four or t[4])..(t[5]==-1 and five or t[5])..(t[6]==-1 and six or t[6])..(t[7]==-1 and seven or t[7])..(t[8]==-1 and eight or t[8])..(t[9]==-1 and nine or t[9])..(t[10]==-1 and ten or t[10]))
+end
+end
+end
+end
+end
+else
+RemotesFolder.PL:FireServer((t[1]==-1 and one or t[1])..(t[2]==-1 and two or t[2])..(t[3]==-1 and three or t[3])..(t[4]==-1 and four or t[4])..(t[5]==-1 and five or t[5]))
+end
+end
+end
+end
+end
+end
+end
+end)
+Tabs.Main:CreateToggle({
+	Name = "Auto Breaker Box",
+	CurrentValue = false,
+    Callback = function(v)
+_G.AutoBreakerBox = v
+RunService.Heartbeat:Connect(function()
+if getgenv().autobreakerbox and ReplicatedStorage.GameData.LatestRoom == 100 then
+RemotesFolder.EBF:FireServer()
+end
+end)
+end
 
 Tabs.Setting:BuildThemeSection()
 Tabs.Setting:BuildConfigSection()
