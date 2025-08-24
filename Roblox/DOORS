@@ -302,6 +302,74 @@ Tabs.Main:CreateToggle({
     Callback = function(v)
 _G.ClosetsExitFix = v
 end})
+Tabs.Main:CreateToggle({
+	Name = "Blur Fake Bridge",
+	CurrentValue = false,
+    Callback = function(v)
+if v then
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "Bridge" and not v.CanCollide == true and v then
+v.Transparency = 0.9
+end
+end
+BlurFakeBridge = workspace.CurrentRooms.ChildAdded:Connect(function(v)
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "Bridge" and not v.CanCollide == true and v then
+v.Transparency = 0.75
+end
+end
+end)
+else
+BlurFakeBridge:Disconnect()
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "Bridge" and not v.CanCollide == true and v then
+v.Transparency = 0
+end
+end
+end
+end})
+Tabs.Main:CreateDivider()
+Tabs.Main:CreateToggle({
+	Name = "Disabled Sanity",
+	CurrentValue = false,
+    Callback = function(v)
+_G.NoLiveSanity = v
+while _G.NoLiveSanity == true do wait()
+for _,v in workspace.CurrentCamera:GetChildren() do
+if v.Name == "LiveSanity" and v then
+v.Enabled = false
+end
+end
+end
+end})
+Tabs.Main:CreateToggle({
+	Name = "Disabled Void",
+	CurrentValue = false,
+    Callback = function(v)
+if v then
+workspace.FallenPartsDestroyHeight = 0 / 0
+else
+workspace.FallenPartsDestroyHeight = -50000
+end
+end})
+Tabs.Main:CreateToggle({
+	Name = "Disabled Jamming",
+	CurrentValue = false,
+    Callback = function(v)
+_G.HidingJam = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.HidingJam then
+if ReplicatedStorage:FindFirstChild("LiveModifiers"):FindFirstChild("Jammin") then
+game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.Health.Jam.Playing = false
+end
+else
+if ReplicatedStorage:FindFirstChild("LiveModifiers"):FindFirstChild("Jammin") then
+game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.Health.Jam.Playing = true
+end
+end
+end)
+end})
+
 Tabs.Setting:BuildThemeSection()
 Tabs.Setting:BuildConfigSection()
 
