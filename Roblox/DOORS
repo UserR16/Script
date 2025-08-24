@@ -50,7 +50,7 @@ local Window = Library:CreateWindow({
 	Note = "https://discord.gg/",
 	SaveInRoot = false, 
     SaveKey = true, 
-    Key = {"TYSMGV","lolhaxA"},
+    Key = {"PernamentKey_96ba82fa05c991ff"},
     SecondAction = {
 			Enabled = true, -- Set to false if you do not want a second action,
 			Type = "Link", -- Link / Discord.
@@ -59,6 +59,20 @@ local Window = Library:CreateWindow({
 	}
 })
 
+local function Notify(notify)
+Library:Notification({ 
+	Title = "BLUEWAY",
+	Icon = "notifications_active",
+	ImageSource = "Material",
+	Content = notify
+})
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = _G.PlaySound and 10 or 0
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
 local Tabs = {
 Main = Window:CreateTab({Name = "Main", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
 Players = Window:CreateTab({Name = "Players", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
@@ -74,17 +88,81 @@ Tabs.Main:CreateToggle({
 	CurrentValue = false,
     Callback = function(v)
 if v then
-EntityTable = {'RushMoving'='Rush', 'AmbushMoving'='Ambush', 'BackdoorRush'='Blitz', 'A60'='A60', 'A120'='A120', 'MonumentEntity'='Monument', 'BackdoorLookman'='Lookman', 'Eyes'='Eyes', 'Groundskeeper'='Groudskeeper', 'SeekMoving'='Seek', 'SeekMovingNewClone'='Seek', 'JeffTheKiller'='Jeff', 'GlitchRush'='RNIUSHCg==', 'GlitchAmbush'='AR0xMBUSH', 'GloombatSwarm'='Gloombat Swarm'}
+EntityTable = {'RushMoving', 'AmbushMoving', 'BackdoorRush', 'A60', 'A120', 'MonumentEntity', 'BackdoorLookman', 'Eyes', 'Groundskeeper', 'SeekMoving', 'SeekMovingNewClone', 'JeffTheKiller', 'GlitchRush', 'GlitchAmbush', 'GloombatSwarm', 'SallyWindow'}
 EntityNotify = workspace.DescendantAdded:Connect(function(v)
 if table.find(EntityTable,v.Name) then
 repeat task.wait() until game.Players.LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 750 or not v:IsDescendantOf(workspace)
 if v:IsDescendantOf(workspace) then
-Library:Notification({ 
-	Title = "BLUEWAY",
-	Icon = "notifications_active",
-	ImageSource = "Material",
-	Content = EntityTable[v.Name] .. " has spawn!"
-})
+if v.Name == "RushMoving" then
+Notify("Rush!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Rush!")
+end
+elseif v.Name == "AmbushMoving" then
+Notify("Ambush!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Ambush!")
+end
+elseif v.Name == "BackdoorRush" then
+Notify("Blitz!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Blitz!")
+end
+elseif v.Name == "A60" then
+Notify("A60!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("A60!")
+end
+elseif v.Name == "A120" then
+Notify("A120!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("A120!")
+end
+elseif v.Name == "MonumentEntity" then
+Notify("Monument!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Monument!")
+end
+elseif v.Name == "BackdoorLookman" then
+Notify("Lookman!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Lookman!")
+end
+elseif v:IsA("Model") and v.Name == "Eyes" then
+Notify("Eyes!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Eyes!")
+end
+elseif v.Name == "Groudskeeper" then
+Notify("Groundskeeper!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Groudskeeper!")
+end
+elseif v.Name == "SeekMoving" or v.Name == "SeekMovingNewClone" then
+Notify("Seek, goodluck!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Seek, goodluck!")
+end
+elseif v.Name == "JeffTheKiller" then
+Notify("Jeff!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Jeff!")
+end
+elseif v.Name == "GlitchRush" then
+Notify("Glitch Rush!")
+elseif v.Name == "GlitchAmbush" then
+Notify("Glitch Ambush!")
+elseif v.Name == "GloombatSwarm" then
+Notify("Gloombat Swarm!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Gloombat Swarm!")
+end
+elseif v.Name == "SallyWindow" then
+Notify("Sally!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Sally!")
+end
+end
 end
 end
 end)
@@ -92,10 +170,27 @@ else
 EntityNotify:Disconnect()
 end
 end})
-
-
-
-
+Tabs.Main:CreateToggle({
+	Name = "Play Sound",
+	CurrentValue = false,
+    Callback = function(v)
+_G.PlaySound = v
+end})
+Tabs.Main:CreateDivider()
+Tabs.Main:CreateToggle({
+	Name = "Oxygen Notify",
+	CurrentValue = false,
+    Callback = function(v)
+if v then
+OxygenNotify = game.Players.LocalPlayer.Character:GetAttributeChangedSignal("Oxygen"):Connect(function()
+if game.Players.LocalPlayer.Character:GetAttribute("Oxygen") < 100 then
+firesignal(RemotesFolder.Caption.OnClientEvent, string.format("Oxygen: %.1f", game.Players.LocalPlayer.Character:GetAttribute("Oxygen")))
+end
+end)
+else
+OxygenNotify:Disconnect()
+end
+end})
 
 --[[
 local Luna = loadstring(game:HttpGet("https://raw.githubusercontent.com/Nebula-Softworks/Luna-Interface-Suite/refs/heads/master/source.lua", true))()
