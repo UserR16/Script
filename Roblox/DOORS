@@ -59,6 +59,41 @@ local Window = Library:CreateWindow({
 	}
 })
 
+local Tabs = {
+Main = Window:CreateTab({Name = "Main", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
+Players = Window:CreateTab({Name = "Players", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
+Cheats = Window:CreateTab({Name = "Cheats", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
+Miscellaneous = Window:CreateTab({Name = "Miscellaneous", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
+Visual = Window:CreateTab({Name = "Visual", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
+}
+
+Tabs.Main:CreateSection("Notifiers")
+
+Tabs.Main:CreateToggle({
+	Name = "Entities Notify",
+	CurrentValue = false,
+    Callback = function(v)
+if v then
+EntityTable = {'RushMoving'='Rush', 'AmbushMoving'='Ambush', 'BackdoorRush'='Blitz', 'A60'='A60', 'A120'='A120', 'MonumentEntity'='Monument', 'BackdoorLookman'='Lookman', 'Eyes'='Eyes', 'Groundskeeper'='Groudskeeper', 'SeekMoving'='Seek', 'SeekMovingNewClone'='Seek', 'JeffTheKiller'='Jeff', 'GlitchRush'='RNIUSHCg==', 'GlitchAmbush'='AR0xMBUSH', 'GloombatSwarm'='Gloombat Swarm'}
+EntityNotify = workspace.DescendantAdded:Connect(function(v)
+if table.find(EntityTable,v.Name) then
+repeat task.wait() until game.Players.LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 750 or not v:IsDescendantOf(workspace)
+if v:IsDescendantOf(workspace) then
+Library:Notification({ 
+	Title = "BLUEWAY",
+	Icon = "notifications_active",
+	ImageSource = "Material",
+	Content = EntityTable[v.Name] .. " has spawn!"
+})
+end
+end
+end)
+else
+EntityNotify:Disconnect()
+end
+end})
+
+
 
 
 
