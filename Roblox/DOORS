@@ -1,30 +1,56 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Char = LocalPlayer.Character
+local RunService = game:GetService("RunService")
 
+if game.Players.LocalPlayer.PlayerGui.MainUI.Initiator:FindFirstChild("Main_Game") then
+local Main_Game = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game)
+end
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GameData = ReplicatedStorage:WaitForChild("GameData")
+local Floor = GameData:WaitForChild("Floor")
+
+local Floor = {
+["Hotel"] = Floor.Value == "Hotel",
+["Fools"] = Floor.Value == "Fools",
+["Rooms"] = Floor.Value == "Rooms",
+["Retro"] = Floor.Value == "Retro",
+["Backdoor"] = Floor.Value == "Backdoor",
+["Mines"] = Floor.Value == "Mines",
+["Hotel-"] = game.PlaceId == 110258689672367,
+["Garden"] = Floor.Value == "Garden"
+}
+
+if Floor["Hotel-"] then
+RemotesFolder = ReplicatedStorage.Bricks
+else
+RemotesFolder = ReplicatedStorage.RemotesFolder
+end
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Nebula-Softworks/Luna-Interface-Suite/refs/heads/master/source.lua", true))()
 
-local PermanentKey = {"96ba-82fa-05c9-91ff","82sf-62ba-0g05-7f1g"}
-local GetKey = {"71b9-82fa-05c9-91ff"}
 local Window = Library:CreateWindow({
 	Name = "BLUEWAY - (0.0.1) - DOORS",
 	Subtitle = "Hotel",
 	LogoID = "82795327169782",
 	LoadingEnabled = true,
-  LoadingTitle = "BLUEWAY",
-  LoadingSubtitle = "BY RECHEDMCVN",
+    LoadingTitle = "BLUEWAY",
+    LoadingSubtitle = "BY RECHEDMCVN",
 
 	ConfigSettings = {
-		RootFolder = nil,
+	RootFolder = nil,
     ConfigFolder = "Big Hub"
 },
 
 	KeySystem = true,
-  KeySettings = {
-		Title = "Key System",
-		Subtitle = "Key System",
-		Note = "https://discord.gg/",
-		SaveInRoot = false, 
+    KeySettings = {
+	Title = "Key System",
+	Subtitle = "Key System",
+	Note = "https://discord.gg/",
+	SaveInRoot = false, 
     SaveKey = true, 
-    Key = {PermanentKey or GetKey},
+    Key = {"TYSMGV","lolhaxA"},
     SecondAction = {
 			Enabled = true, -- Set to false if you do not want a second action,
 			Type = "Link", -- Link / Discord.
