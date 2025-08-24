@@ -290,8 +290,18 @@ end
 end
 end
 end})
-
-
+Tabs.Main:CreateSection("World")
+game.Players.LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("MoveDirection"):Connect(function()
+if _G.ClosetsExitFix and game.Players.LocalPlayer.Character:GetAttribute("Hiding")==true then 
+RemotesFolder.CamLock:FireServer()
+end 
+end)
+Tabs.Main:CreateToggle({
+	Name = "Closets Exit Fix",
+	CurrentValue = false,
+    Callback = function(v)
+_G.ClosetsExitFix = v
+end})
 Tabs.Setting:BuildThemeSection()
 Tabs.Setting:BuildConfigSection()
 
