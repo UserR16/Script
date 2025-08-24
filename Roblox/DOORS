@@ -79,6 +79,7 @@ Players = Window:CreateTab({Name = "Players", Icon = "view_in_ar", ImageSource =
 Cheats = Window:CreateTab({Name = "Cheats", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
 Miscellaneous = Window:CreateTab({Name = "Miscellaneous", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
 Visual = Window:CreateTab({Name = "Visual", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
+Setting = Window:CreateTab({Name = "Setting", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
 }
 
 Tabs.Main:CreateSection("Notifiers")
@@ -289,6 +290,22 @@ end
 end
 end
 end})
+
+
+Tabs.Setting:BuildThemeSection()
+Tabs.Setting:BuildConfigSection()
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 --[[
