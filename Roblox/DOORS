@@ -43,7 +43,7 @@ local Window = Library:CreateWindow({
     ConfigFolder = "Big Hub"
 },
 
-	KeySystem = true,
+	KeySystem = false,
     KeySettings = {
 	Title = "Key System",
 	Subtitle = "DOORS",
