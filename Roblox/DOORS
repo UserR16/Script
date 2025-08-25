@@ -674,8 +674,8 @@ end})
 Tabs.Players:CreateDivider()
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.ThirdPerson then
-game.Workspace.CurrentCamera.CFrame = (game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(math.rad(-30),0,0)) * CFrame.new(0,2, _G.DistanceZoom or 5)
-game.Players.LocalPlayer.Character.Head.Transparency = 0
+game.Workspace.CurrentCamera.CFrame = (Char.HumanoidRootPart.CFrame * CFrame.Angles(math.rad(-30),0,0)) * CFrame.new(0,2, _G.DistanceZoom or 5)
+Char.Head.Transparency = 0
 end
 end)
 local DistanceZoomSlider = Tabs.Players:CreateSlider({
