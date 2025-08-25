@@ -75,16 +75,16 @@ Sound:Destroy()
 end
 local Tabs = {
 Main = Window:CreateTab({Name = "Main", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
-Players = Window:CreateTab({Name = "Players", Icon = "user", ImageSource = "Material", ShowTitle = true}),
-Cheats = Window:CreateTab({Name = "Cheats", Icon = "book", ImageSource = "Material", ShowTitle = true}),
-Miscellaneous = Window:CreateTab({Name = "Miscellaneous", Icon = "apple", ImageSource = "Material", ShowTitle = true}),
-Visual = Window:CreateTab({Name = "Visual", Icon = "eye", ImageSource = "Material", ShowTitle = true}),
-Setting = Window:CreateTab({Name = "Setting", Icon = "setting", ImageSource = "Material", ShowTitle = true}),
+Players = Window:CreateTab({Name = "Players", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
+Cheats = Window:CreateTab({Name = "Cheats", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
+Miscellaneous = Window:CreateTab({Name = "Miscellaneous", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
+Visual = Window:CreateTab({Name = "Visual", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
+Setting = Window:CreateTab({Name = "Setting", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
 }
 
 Tabs.Main:CreateSection("Notifiers")
 
-Tabs.Main:CreateToggle({
+local EntitiesNotify = Tabs.Main:CreateToggle({
 	Name = "Entities Notify",
 	CurrentValue = false,
     Callback = function(v)
@@ -509,16 +509,18 @@ end
 end
 end
 end)
+end})
 Tabs.Main:CreateToggle({
 	Name = "Auto Breaker Box",
 	CurrentValue = false,
     Callback = function(v)
 _G.AutoBreakerBox = v
 RunService.Heartbeat:Connect(function()
-if getgenv().autobreakerbox and ReplicatedStorage.GameData.LatestRoom == 100 then
+if _G.AutoBreakerBox and ReplicatedStorage.GameData.LatestRoom == 100 then
 RemotesFolder.EBF:FireServer()
 end
 end)
+end})
 end
 
 Tabs.Setting:BuildThemeSection()
