@@ -603,8 +603,8 @@ end
 end})
 Tabs.Players:CreateDivider()
 game:GetService("RunService").RenderStepped:Connect(function()
-game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.Crosshair.HitmarkerHead.Visible = _G.ShowCrosshair
-game:GetService("Players").LocalPlayer.PlayerGui.MainUI.MainFrame.Crosshair.Hitmarker.Visible = _G.ShowCrosshair
+LocalPlayer.PlayerGui.MainUI.MainFrame:WaitForChild("Crosshair").HitmarkerHead.Visible = _G.ShowCrosshair
+LocalPlayer.PlayerGui.MainUI.MainFrame:WaitForChild("Crosshair").Hitmarker.Visible = _G.ShowCrosshair
 end)
 local Crosshair = Tabs.Players:CreateToggle({
 	Name = "Show Crosshair",
@@ -613,6 +613,66 @@ local Crosshair = Tabs.Players:CreateToggle({
 _G.ShowCrosshair = v
 end})
 Tabs.Players:AddDivider()
+local AutoEatCandy = Tabs.Players:CreateToggle({
+	Name = "Always Eat Candy (Block Can-Die Candy)",
+	CurrentValue = false,
+    Callback = function(v)
+_G.AlwaysEatCandy = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if Char:FindFirstChild("Candy",true) and _G.AlwaysEatCandy then
+if not Char:FindFirstChild("Meshes/DOORS_EvilCandy_Cube", true) then
+Char.Candy.Remote:FireServer()
+end
+end
+end)
+end})
+local NoAccessories = Tabs.Players:CreateToggle({
+	Name = "No Accessories",
+	CurrentValue = false,
+    Callback = function(v)
+_G.NoAccessories = v
+game:GetService("RunService").RenderStepped:Connect(function()
+Char.Head.Massless = not _G.NoAccessories
+Char.LeftFoot.Massless = not _G.NoAccessories
+Char.LeftHand.Massless = not _G.NoAccessories
+Char.LeftLowerArm.Massless = not _G.NoAccessories
+Char.LeftLowerLeg.Massless = not _G.NoAccessories
+Char.LeftUpperArm.Massless = not _G.NoAccessories
+Char.LeftUpperLeg.Massless = not _G.NoAccessories
+Char.LowerTorso.Massless = not _G.NoAccessories
+Char.RightFoot.Massless = not _G.NoAccessories
+Char.RightFoot.Massless = not _G.NoAccessories
+Char.RightHand.Massless = not _G.NoAccessories
+Char.RightLowerArm.Massless = not _G.NoAccessories
+Char.RightLowerLeg.Massless = not _G.NoAccessories
+Char.RightUpperArm.Massless = not _G.NoAccessories
+Char.RightUpperLeg.Massless = not _G.NoAccessories
+Char.UpperTorso.Massless = not _G.NoAccessories
+end)
+end})
+
+local Noclip = Tabs.Players:CreateToggle({
+	Name = "Noclip",
+	CurrentValue = false,
+    Callback = function(v)
+if v then
+Noclip = game:GetService("RunService").Stepped:Connect(function()
+if LocalPlayer and Char then
+for _, part in pairs(Char:GetDescendants()) do
+if part:IsA("BasePart") then
+part.CanCollide = false
+end
+end
+end
+end)
+else
+if Noclip then
+Noclip:Disconnect()
+end
+end
+end})
+
+
 
 
 
