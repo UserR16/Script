@@ -75,11 +75,11 @@ Sound:Destroy()
 end
 local Tabs = {
 Main = Window:CreateTab({Name = "Main", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
-Players = Window:CreateTab({Name = "Players", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
-Cheats = Window:CreateTab({Name = "Cheats", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
-Miscellaneous = Window:CreateTab({Name = "Miscellaneous", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
-Visual = Window:CreateTab({Name = "Visual", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
-Setting = Window:CreateTab({Name = "Setting", Icon = "view_in_ar", ImageSource = "Material", ShowTitle = true}),
+Players = Window:CreateTab({Name = "Players", Icon = "user", ImageSource = "Material", ShowTitle = true}),
+Cheats = Window:CreateTab({Name = "Cheats", Icon = "book", ImageSource = "Material", ShowTitle = true}),
+Miscellaneous = Window:CreateTab({Name = "Miscellaneous", Icon = "apple", ImageSource = "Material", ShowTitle = true}),
+Visual = Window:CreateTab({Name = "Visual", Icon = "eye", ImageSource = "Material", ShowTitle = true}),
+Setting = Window:CreateTab({Name = "Setting", Icon = "setting", ImageSource = "Material", ShowTitle = true}),
 }
 
 Tabs.Main:CreateSection("Notifiers")
@@ -330,7 +330,7 @@ end
 end})
 Tabs.Main:CreateDivider()
 Tabs.Main:CreateToggle({
-	Name = "Disabled Sanity",
+	Name = "Disable Sanity",
 	CurrentValue = false,
     Callback = function(v)
 _G.NoLiveSanity = v
@@ -343,7 +343,7 @@ end
 end
 end})
 Tabs.Main:CreateToggle({
-	Name = "Disabled Void",
+	Name = "Disable Void",
 	CurrentValue = false,
     Callback = function(v)
 if v then
@@ -353,7 +353,7 @@ workspace.FallenPartsDestroyHeight = -50000
 end
 end})
 Tabs.Main:CreateToggle({
-	Name = "Disabled Jamming",
+	Name = "Disable Jamming",
 	CurrentValue = false,
     Callback = function(v)
 _G.HidingJam = v
@@ -369,6 +369,21 @@ end
 end
 end)
 end})
+Tabs.Main:CreateToggle({
+	Name = "Disable Walking Sound ",
+	CurrentValue = false,
+    Callback = function(v)
+if v then
+DisableWalkingSound = game.Players.LocalPlayer.Character.ChildAdded:Connect(function(v)
+if v:IsA("Sound") then
+v:Destroy()
+end
+end)
+else
+DisableWalkingSound:Disconnect()
+end
+end})
+
 Tabs.Main:CreateDivider()
 Tabs.Main:CreateToggle({
 	Name = "Show Pathfind Nodes",
@@ -422,6 +437,7 @@ if ReplicatedStorage.GameData.LatestRoom == 50 then
 Notify("Anchor Code : " .. LocalPlayer.PlayerGui.MainUI:WaitForChild("AnchorHintFrame").AnchorCode.Text)
 end
 end})
+end
 if not Floor["Hotel-"] or not Floor["Rooms"] or not Floor["Backdoors"] or Floor["Garden"] or Floor["Mines"] then
 Tabs.Main:CreateToggle({
 	Name = "Auto Padlock Unlock",
