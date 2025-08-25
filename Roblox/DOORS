@@ -612,7 +612,7 @@ local Crosshair = Tabs.Players:CreateToggle({
     Callback = function(v)
 _G.ShowCrosshair = v
 end})
-Tabs.Players:AddDivider()
+Tabs.Players:CreateDivider()
 local AutoEatCandy = Tabs.Players:CreateToggle({
 	Name = "Always Eat Candy (Block Can-Die Candy)",
 	CurrentValue = false,
@@ -671,8 +671,27 @@ Noclip:Disconnect()
 end
 end
 end})
-
-
+Tabs.Players:CreateDivider()
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.ThirdPerson then
+game.Workspace.CurrentCamera.CFrame = (game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(math.rad(-30),0,0)) * CFrame.new(0,2, _G.DistanceZoom or 5)
+game.Players.LocalPlayer.Character.Head.Transparency = 0
+end
+end)
+local DistanceZoomSlider = Tabs.Players:CreateSlider({
+	Name = "Distance Zoom",
+	Range = {5, 15},
+    Increment = 1,
+	CurrentValue = 5,
+    Callback = function(v)
+_G.DistanceZoom = v or 5
+end})
+local ThirdPerson = Tabs.Players:CreateToggle({
+	Name = "Third Person",
+	CurrentValue = false,
+    Callback = function(v)
+_G.ThirdPerson = v
+end})
 
 
 
