@@ -28,7 +28,7 @@ else
 RemotesFolder = ReplicatedStorage.RemotesFolder
 end
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Nebula-Softworks/Luna-Interface-Suite/refs/heads/master/source.lua", true))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/UserR16/Library/refs/heads/main/Source.lua", true))()
 
 local Window = Library:CreateWindow({
 	Name = "BLUEWAY - (0.0.1) - DOORS",
@@ -171,20 +171,20 @@ else
 EntityNotify:Disconnect()
 end
 end})
-Tabs.Main:CreateToggle({
+local PlayChat = Tabs.Main:CreateToggle({
 	Name = "Play Chat",
 	CurrentValue = false,
     Callback = function(v)
 _G.PlayChat = v
 end})
-Tabs.Main:CreateToggle({
+local PlaySound = Tabs.Main:CreateToggle({
 	Name = "Play Sound",
 	CurrentValue = false,
     Callback = function(v)
 _G.PlaySound = v
 end})
 Tabs.Main:CreateDivider()
-Tabs.Main:CreateToggle({
+local OxygenNotify = Tabs.Main:CreateToggle({
 	Name = "Oxygen Notify",
 	CurrentValue = false,
     Callback = function(v)
@@ -208,13 +208,13 @@ if _G.FastDoors then
 game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Door"):SetAttribute("FastOpen", true)
 end
 end)
-Tabs.Main:CreateToggle({
+local ReachDoors = Tabs.Main:CreateToggle({
 	Name = "Reach Doors",
 	CurrentValue = false,
     Callback = function(v)
 _G.ReachDoors = v
 end})
-Tabs.Main:CreateToggle({
+local FastDoors = Tabs.Main:CreateToggle({
 	Name = "Fast Doors",
 	CurrentValue = false,
     Callback = function(v)
@@ -237,7 +237,7 @@ v.RequiresLineOfSight = false
 end
 end
 end)
-Tabs.Main:CreateToggle({
+local InstanceInteract = Tabs.Main:CreateToggle({
 	Name = "Instance Interact",
 	CurrentValue = false,
     Callback = function(v)
@@ -252,7 +252,7 @@ else
 print()
 end
 end})
-Tabs.Main:CreateToggle({
+local ReachInteract = Tabs.Main:CreateToggle({
 	Name = "Reach Interact",
 	CurrentValue = false,
     Callback = function(v)
@@ -271,7 +271,7 @@ end
 end
 end
 end})
-Tabs.Main:CreateToggle({
+local ThroughInteract = Tabs.Main:CreateToggle({
 	Name = "Through Interact",
 	CurrentValue = false,
     Callback = function(v)
@@ -296,13 +296,13 @@ if _G.ClosetsExitFix and game.Players.LocalPlayer.Character:GetAttribute("Hiding
 RemotesFolder.CamLock:FireServer()
 end 
 end)
-Tabs.Main:CreateToggle({
+local ClosetExitFix = Tabs.Main:CreateToggle({
 	Name = "Closets Exit Fix",
 	CurrentValue = false,
     Callback = function(v)
 _G.ClosetsExitFix = v
 end})
-Tabs.Main:CreateToggle({
+local BlurFakeBridge = Tabs.Main:CreateToggle({
 	Name = "Blur Fake Bridge",
 	CurrentValue = false,
     Callback = function(v)
@@ -329,7 +329,7 @@ end
 end
 end})
 Tabs.Main:CreateDivider()
-Tabs.Main:CreateToggle({
+local DisableSanity = Tabs.Main:CreateToggle({
 	Name = "Disable Sanity",
 	CurrentValue = false,
     Callback = function(v)
@@ -342,7 +342,7 @@ end
 end
 end
 end})
-Tabs.Main:CreateToggle({
+local DisableVoid = Tabs.Main:CreateToggle({
 	Name = "Disable Void",
 	CurrentValue = false,
     Callback = function(v)
@@ -352,7 +352,7 @@ else
 workspace.FallenPartsDestroyHeight = -50000
 end
 end})
-Tabs.Main:CreateToggle({
+local DisableJamming = Tabs.Main:CreateToggle({
 	Name = "Disable Jamming",
 	CurrentValue = false,
     Callback = function(v)
@@ -369,7 +369,7 @@ end
 end
 end)
 end})
-Tabs.Main:CreateToggle({
+local DisableWalkingSound = Tabs.Main:CreateToggle({
 	Name = "Disable Walking Sound ",
 	CurrentValue = false,
     Callback = function(v)
@@ -385,7 +385,7 @@ end
 end})
 
 Tabs.Main:CreateDivider()
-Tabs.Main:CreateToggle({
+local ShowPathfindNodes = Tabs.Main:CreateToggle({
 	Name = "Show Pathfind Nodes",
 	CurrentValue = false,
     Callback = function(v)
@@ -439,7 +439,7 @@ end
 end})
 end
 if not Floor["Hotel-"] or not Floor["Rooms"] or not Floor["Backdoors"] or Floor["Garden"] or Floor["Mines"] then
-Tabs.Main:CreateToggle({
+local AutoPadlockUnlock = Tabs.Main:CreateToggle({
 	Name = "Auto Padlock Unlock",
 	CurrentValue = false,
     Callback = function(v)
@@ -510,7 +510,7 @@ end
 end
 end)
 end})
-Tabs.Main:CreateToggle({
+local AutoBreakerBox = Tabs.Main:CreateToggle({
 	Name = "Auto Breaker Box",
 	CurrentValue = false,
     Callback = function(v)
@@ -522,6 +522,29 @@ end
 end)
 end})
 end
+
+
+Tabs.Players:CreateSection("Players")
+local SpeedBoostSlider = Tabs.Players:CreateSlider({
+	Name = "Speed Boost",
+	Range = {1, _G.SpeedBypass and 10 or 6},
+    Increment = 1,
+	CurrentValue = 1,
+    Callback = function(v)
+_G.SpeedBoost = v or 1
+end})
+local SpeedBoost = Tabs.Main:CreateToggle({
+	Name = "Enabled Speed Boost",
+	CurrentValue = false,
+    Callback = function(v)
+_G.EnabledSpeedBoost = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.EnabledSpeedBoost then
+game.Players.LocalPlayer.Character:SetAttribute("SpeedBoost", _G.EnabledSpeedBoost and _G.SpeedBoost or 0)
+end
+end)
+end})
+
 
 Tabs.Setting:BuildThemeSection()
 Tabs.Setting:BuildConfigSection()
