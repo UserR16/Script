@@ -3,6 +3,8 @@ local Library = loadstring(game:HttpGet(repo .. "Library"))()
 local SaveManager = loadstring(game:HttpGet(repo .. "SaveManager"))()
 local SaveManager = loadstring(game:HttpGet(repo .. "ThemeManager"))()
 
+local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/IceMinisterq/Notification-Library/Main/Library.lua"))()
+
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Char = LocalPlayer.Character
@@ -30,14 +32,30 @@ TabPadding = 5,
 MenuFadeTime = 0.2
 })
 
-local function Notify(title)
-Library:Notify(title)
+local function Notify(title, time)
+Notification:SendNotification("Warning", title, time or 5)
+wait(0.2)
+for _,v in ipairs(game.CoreGui:GetDescendants()) do
+if v.Name == "Warning" then
+local UIStroke = Instance.new("UIStroke", v)
+UIStroke.Thickness = 3
+UIStroke.Color = Color3.fromRGB(20,20,20)
+v.Size = UDim2.new(1,0,0.04,0)
+v.bar.Visible = false
+v.Filler.Visible = false
+v.Header.TextColor3 = Color3.new(1,1,1)
+v.Header.Position = UDim2.new(0.425,0,0.57,0)
+if v.decal:FindFirstChild("icon") then
+v.decal.icon:Destroy()
+end
 local Sound = Instance.new("Sound")
 Sound.Parent = game.SoundService
 Sound.SoundId = "rbxassetid://4590657391"
 Sound.Volume = _G.PlaySound and 10 or 0
 Sound.PlayOnRemove = true
 Sound:Destroy()
+end
+end
 end
 
 local Main = Window:AddTab("Main")
