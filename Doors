@@ -2,3 +2,65 @@ local repo = "https://raw.githubusercontent.com/UserR16/Library/refs/heads/main/
 local Library = loadstring(game:HttpGet(repo .. "Library"))()
 local SaveManager = loadstring(game:HttpGet(repo .. "Manager"))()
 local SaveManager = loadstring(game:HttpGet(repo .. "Manager"))()
+
+local Window = Library:CreateWindow({
+Title = "Lunaria - (v0.0.1) DOORS",
+Center = true,
+AutoShow = true,
+TabPadding = 5,
+MenuFadeTime = 0.2
+})
+
+local Main = Window:AddTab("Main")
+local Players = Window:AddTab("Players")
+local Exploits = Window:AddTab("Exploits")
+local Visual = Window:AddTab("Visual")
+local Config = Window:AddTab("Config")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
