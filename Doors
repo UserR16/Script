@@ -1,1 +1,4 @@
-
+local repo = "https://raw.githubusercontent.com/UserR16/Library/refs/heads/main/"
+local Library = loadstring(game:HttpGet(repo .. "Library"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "Manager"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "Manager"))()
