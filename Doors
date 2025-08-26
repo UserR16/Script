@@ -3,6 +3,25 @@ local Library = loadstring(game:HttpGet(repo .. "Library"))()
 local SaveManager = loadstring(game:HttpGet(repo .. "Manager"))()
 local SaveManager = loadstring(game:HttpGet(repo .. "Manager"))()
 
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Char = LocalPlayer.Character
+local RunService = game:GetService("RunService")
+
+if game.Players.LocalPlayer.PlayerGui.MainUI.Initiator:FindFirstChild("Main_Game") then
+local Main_Game = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game)
+end
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GameData = ReplicatedStorage:WaitForChild("GameData")
+local Floor = GameData:WaitForChild("Floor")
+
+if game.PlaceId == 110258689672367 then
+RemotesFolder = ReplicatedStorage.Bricks
+else
+RemotesFolder = ReplicatedStorage.RemotesFolder
+end
+
 local Window = Library:CreateWindow({
 Title = "Lunaria - (v0.0.1) DOORS",
 Center = true,
@@ -11,35 +30,297 @@ TabPadding = 5,
 MenuFadeTime = 0.2
 })
 
+local function Notify(title)
+Library:Notify(title)
+local Sound = Instance.new("Sound")
+Sound.Parent = game.SoundService
+Sound.SoundId = "rbxassetid://4590657391"
+Sound.Volume = _G.PlaySound and 10 or 0
+Sound.PlayOnRemove = true
+Sound:Destroy()
+end
+
 local Main = Window:AddTab("Main")
 local Players = Window:AddTab("Players")
 local Exploits = Window:AddTab("Exploits")
 local Visual = Window:AddTab("Visual")
 local Config = Window:AddTab("Config")
 
+local Notifier = Main:AddLeftGroupbox("Notifier")
+
+Notifier:AddToggle("EntitiesNotify",{
+Text = "Entities Notify",
+Default = false,
+Callback = function(v)
+if v then
+EntityTable = {'RushMoving', 'AmbushMoving', 'BackdoorRush', 'A60', 'A120', 'MonumentEntity', 'BackdoorLookman', 'Eyes', 'Groundskeeper', 'SeekMoving', 'SeekMovingNewClone', 'JeffTheKiller', 'GlitchRush', 'GlitchAmbush', 'GloombatSwarm', 'SallyWindow'}
+EntityNotify = workspace.DescendantAdded:Connect(function(v)
+if table.find(EntityTable,v.Name) then
+repeat task.wait() until game.Players.LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 750 or not v:IsDescendantOf(workspace)
+if v:IsDescendantOf(workspace) then
+if v.Name == "RushMoving" then
+Notify("Rush!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Rush!")
+end
+elseif v.Name == "AmbushMoving" then
+Notify("Ambush!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Ambush!")
+end
+elseif v.Name == "BackdoorRush" then
+Notify("Blitz!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Blitz!")
+end
+elseif v.Name == "A60" then
+Notify("A60!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("A60!")
+end
+elseif v.Name == "A120" then
+Notify("A120!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("A120!")
+end
+elseif v.Name == "MonumentEntity" then
+Notify("Monument!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Monument!")
+end
+elseif v.Name == "BackdoorLookman" then
+Notify("Lookman!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Lookman!")
+end
+elseif v:IsA("Model") and v.Name == "Eyes" then
+Notify("Eyes!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Eyes!")
+end
+elseif v.Name == "Groudskeeper" then
+Notify("Groundskeeper!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Groudskeeper!")
+end
+elseif v.Name == "SeekMoving" or v.Name == "SeekMovingNewClone" then
+Notify("Seek, goodluck!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Seek, goodluck!")
+end
+elseif v.Name == "JeffTheKiller" then
+Notify("Jeff!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Jeff!")
+end
+elseif v.Name == "GlitchRush" then
+Notify("Glitch Rush!")
+elseif v.Name == "GlitchAmbush" then
+Notify("Glitch Ambush!")
+elseif v.Name == "GloombatSwarm" then
+Notify("Gloombat Swarm!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Gloombat Swarm!")
+end
+elseif v.Name == "SallyWindow" then
+Notify("Sally!")
+if _G.PlayChat then
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Sally!")
+end
+end
+end
+end
+end)
+else
+EntityNotify:Disconnect()
+end
+end})
+Notifier:AddToggle("PlayChat",{
+Text = "Play Chat",
+Default = false,
+Callback = function(v)
+_G.PlayChat = v
+end})
+Notifier:AddToggle("PlaySound",{
+Text = "Play Sound",
+Default = false,
+Callback = function(v)
+_G.PlaySound = v
+end})
+Notifier:AddDivider()
+Notifier:AddToggle("OxygenNotify",{
+Text = "Oxygen Notify",
+Default = false,
+Callback = function(v)
+if v then
+OxygenNotify = game.Players.LocalPlayer.Character:GetAttributeChangedSignal("Oxygen"):Connect(function()
+if game.Players.LocalPlayer.Character:GetAttribute("Oxygen") < 100 then
+firesignal(RemotesFolder.Caption.OnClientEvent, string.format("Oxygen: %.1f", game.Players.LocalPlayer.Character:GetAttribute("Oxygen")))
+end
+end)
+else
+OxygenNotify:Disconnect()
+end
+end})
 
 
+local Doors = Main:AddRightGroupbox("Doors")
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.ReachDoors then
+game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Door").ClientOpen:FireServer()
+end
+if _G.FastDoors then 
+game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Door"):SetAttribute("FastOpen", true)
+end
+end)
 
+Doors:AddToggle("ReachDoors",{
+Text = "Reach Doors",
+Default = false,
+Callback = function(v)
+_G.ReachDoors = v
+end})
+Doors:AddToggle("FastDoors",{
+Text = "Fast Doors",
+Default = false,
+Callback = function(v)
+_G.FastDoors = v
+end})
 
+local ProximityPrompt = Main:AddRightGroupbox("Proximity Prompt")
+workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+if not _G.InstanceInteract then return end
+if not _G.ReachInteract then return end
+if not _G.ThroughInteract then return end
+if v:IsA("ProximityPrompt") then
+if _G.InstanceInteract then
+v.HoldDuration = 0
+end
+if _G.ReachInteract then
+v.MaxActivationDistance = 15
+end
+if _G.ThroughInteract then
+v.RequiresLineOfSight = false
+end
+end
+end)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ProximityPrompt:AddToggle("InstanceInteract",{
+Text = "Instance Interact",
+Default = false,
+Callback = function(v)
+_G.InstanceInteract = v
+if v then
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.HoldDuration = 0
+end
+end
+else
+print()
+end
+end})
+ProximityPrompt:AddToggle("ReachInteract",{
+Text = "Reach Interact",
+Default = false,
+Callback = function(v)
+_G.ReachInteract = v
+if v then
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.MaxActivationDistance = 15
+end
+end
+else
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.MaxActivationDistance = 7
+end
+end
+end
+end})
+ProximityPrompt:AddToggle("ThroughInteract",{
+Text = "Through Interact",
+Default = false,
+Callback = function(v)
+_G.ThroughInteract = v
+if v then
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.RequiresLineOfSight = false
+end
+end
+else
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.RequiresLineOfSight = true
+end
+end
+end
+end})
+local World = Main:AddLeftGroupbox("World")
+game.Players.LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("MoveDirection"):Connect(function()
+if _G.ClosetsExitFix and game.Players.LocalPlayer.Character:GetAttribute("Hiding")==true then 
+RemotesFolder.CamLock:FireServer()
+end 
+end)
+World:AddToggle("ClosetsExitFix",{
+Text = "Closets Exit Fix",
+Default = false,
+Callback = function(v)
+_G.ClosetsExitFix = v
+end})
+World:AddToggle("BlurFakeBridge",{
+Text = "Blur Fake Bridge",
+Default = false,
+Callback = function(v)
+if v then
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "Bridge" and not v.CanCollide == true and v then
+v.Transparency = 0.9
+end
+end
+BlurFakeBridge = workspace.CurrentRooms.ChildAdded:Connect(function(v)
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "Bridge" and not v.CanCollide == true and v then
+v.Transparency = 0.75
+end
+end
+end)
+else
+BlurFakeBridge:Disconnect()
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "Bridge" and not v.CanCollide == true and v then
+v.Transparency = 0
+end
+end
+end
+end})
+World:AddDivider()
+World:AddToggle("DisableSanity",{
+Text = "Disable Sanity",
+Default = false,
+Callback = function(v)
+_G.NoLiveSanity = v
+while _G.NoLiveSanity == true do wait()
+for _,v in workspace.CurrentCamera:GetChildren() do
+if v.Name == "LiveSanity" and v then
+v.Enabled = false
+end
+end
+end
+end})
+local Void = workspace.FallenPartsDestroyHeight
+World:AddToggle("DisableVoid",{
+Text = "Disable Void",
+Default = false,
+Callback = function(v)
+if v then
+workspace.FallenPartsDestroyHeight = 0 / 0
+else
+workspace.FallenPartsDestroyHeight = Void
+end
+end})
 
 
 
