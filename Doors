@@ -1,7 +1,7 @@
 local repo = "https://raw.githubusercontent.com/UserR16/Library/refs/heads/main/"
 local Library = loadstring(game:HttpGet(repo .. "Library"))()
-local SaveManager = loadstring(game:HttpGet(repo .. "Manager"))()
-local SaveManager = loadstring(game:HttpGet(repo .. "Manager"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "SaveManager"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "ThemeManager"))()
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -148,6 +148,7 @@ Callback = function(v)
 _G.PlaySound = v
 end})
 Notifier:AddDivider()
+if not Floor.Value == "Fools" or not Floor.Value == "Rooms" or game.PlaceId == 110258689672367 then
 Notifier:AddToggle("OxygenNotify",{
 Text = "Oxygen Notify",
 Default = false,
@@ -162,7 +163,7 @@ else
 OxygenNotify:Disconnect()
 end
 end})
-
+end
 
 local Doors = Main:AddRightGroupbox("Doors")
 game:GetService("RunService").RenderStepped:Connect(function()
@@ -270,6 +271,7 @@ Default = false,
 Callback = function(v)
 _G.ClosetsExitFix = v
 end})
+if Floor.Value == "Retro" then
 World:AddToggle("BlurFakeBridge",{
 Text = "Blur Fake Bridge",
 Default = false,
@@ -296,7 +298,9 @@ end
 end
 end
 end})
+end
 World:AddDivider()
+if Floor.Value == "Hotel" or Floor.Value == "Mines" or Floor.Value == "Backdoor" then
 World:AddToggle("DisableSanity",{
 Text = "Disable Sanity",
 Default = false,
@@ -310,6 +314,7 @@ end
 end
 end
 end})
+end
 local Void = workspace.FallenPartsDestroyHeight
 World:AddToggle("DisableVoid",{
 Text = "Disable Void",
@@ -321,16 +326,175 @@ else
 workspace.FallenPartsDestroyHeight = Void
 end
 end})
+if Floor.Value == "Hotel" or Floor.Value == "Mines" then
+World:AddToggle("DisableJamming",{
+Text = "Disable Jamming",
+Default = false,
+Callback = function(v)
+_G.HidingJam = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.HidingJam then
+if ReplicatedStorage:FindFirstChild("LiveModifiers"):FindFirstChild("Jammin") then
+game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.Health.Jam.Playing = false
+end
+else
+if ReplicatedStorage:FindFirstChild("LiveModifiers"):FindFirstChild("Jammin") then
+game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.Health.Jam.Playing = true
+end
+end
+end)
+end})
+end
+World:AddToggle("DisableVoid",{
+Text = "Disable Walking Sound",
+Default = false,
+Callback = function(v)
+if v then
+DisableWalkingSound = game.Players.LocalPlayer.Character.ChildAdded:Connect(function(v)
+if v:IsA("Sound") then
+v:Destroy()
+end
+end)
+else
+DisableWalkingSound:Disconnect()
+end
+end})
+World:AddDivider()
+World:AddToggle("ShowPathfindNodes",{
+Text = "Show Pathfind Nodes",
+Default = false,
+Callback = function(v)
+if v then
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
+if v.Parent.Name == "PathfindNodes" and v then
+local Part = Instance.new("Part",workspace)
+Part.Size = v.Size
+Part.CFrame = v.CFrame
+Part.CanCollide = false
+Part.Shape = "Ball"
+Part.Anchored = true
+Part.Material = "ForceField"
+end
+end
+ShowPathfindNodes = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+if v.Parent.Name == "PathfindNodes" and v then
+local Part = Instance.new("Part",workspace)
+Part.Size = v.Size
+Part.Name = "_PathfindNodes"
+Part.CFrame = v.CFrame
+Part.CanCollide = false
+Part.Shape = "Ball"
+Part.Anchored = true
+Part.Material = "ForceField"
+end
+end)
+else
+ShowPathfindNodes:Disconnect()
+for _,v in ipairs(workspace:GetDescendants()) do
+if v.Name == "_PathfindNodes" then
+v:Destroy()
+end
+end
+end
+end})
 
-
-
-
-
-
-
-
-
-
+local Gameplay = Main:AddRightGroupbox("Gameplay")
+if Floor.Value == "Mines" then
+Gameplay:AddButton("Notify Anchor Code", function()
+if GameData.LatestRoom < 50 then
+Notify("You right in room 50")
+end
+if GameData.LatestRoom > 50 then
+Notify("You have done it")
+end
+if GameData.LatestRoom == 50 then
+Notify("Anchor Code : " .. LocalPlayer.PlayerGui.MainUI:WaitForChild("AnchorHintFrame").AnchorCode.Text)
+end
+end)
+end
+if Floor.Value == "Hotel" or Floor.Value == "Fools" then
+Gameplay:AddToggle("AutoPadlockUnlock",{
+Text = "Auto Padlock Unlock",
+Default = false,
+Callback = function(v)
+_G.AutoPadlockUnlock = v
+local Paper = workspace:FindFirstChild("LibraryHintPaper",true) or workspace:FindFirstChild("LibraryHintPaperHard",true) or Players:FindFirstChild("LibraryHintPaper",true) or Players:FindFirstChild("LibraryHintPaperHard",true)
+if not Paper and ReplicatedStorage.GameData.LatestRoom == 50 then
+Library:Notify("[50] : Now you need Paper", if ReplicatedStorage.GameData.LatestRoom == 50 then 9e9 else 1)
+return
+end
+RunService.Heartbeat:Connect(function()
+if Paper and _G.AutoPadlockUnlock then
+local HintsNeeded = Floor.Value == "Fools" and 8 or 3
+local Hints = 0
+for _,Collected in pairs(LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
+if Collected.Name == "Icon" then
+if Collected:IsA("ImageLabel") then
+for _,Icon in pairs(Paper.UI:GetChildren()) do
+if tonumber(Icon.Name) then
+if Icon.ImageRectOffset == Collected.ImageRectOffset then
+Hints += 1
+end
+end
+end
+end
+end
+end
+if Hints < HintsNeeded then
+return
+end
+local t = {}
+for i = 1, Floor.Value == "Hotel" and 5 or 10 do
+local Icon = Paper.UI[i]
+local Number = -1
+for _,Collected in pairs(LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
+if Collected.Name == "Icon" then
+if Collected.ImageRectOffset == Icon.ImageRectOffset then
+Number = tonumber(Collected.TextLabel.Text)
+end
+end
+end
+table.insert(t,Number)
+end
+for one=0,t[1]==-1 and 9 or 0 do
+for two=0,t[2]==-1 and 9 or 0 do
+for three=0,t[3]==-1 and 9 or 0 do
+for four=0,t[4]==-1 and 9 or 0 do
+for five=0,t[5]==-1 and 9 or 0 do
+if Floor.Value == "Fools" then
+for six=0,t[6]==-1 and 9 or 0 do
+for seven=0,t[7]==-1 and 9 or 0 do
+for eight=0,t[8]==-1 and 9 or 0 do
+for nine=0,t[9]==-1 and 9 or 0 do
+for ten=0,t[10]==-1 and 9 or 0 do
+RemotesFolder.PL:FireServer((t[1]==-1 and one or t[1])..(t[2]==-1 and two or t[2])..(t[3]==-1 and three or t[3])..(t[4]==-1 and four or t[4])..(t[5]==-1 and five or t[5])..(t[6]==-1 and six or t[6])..(t[7]==-1 and seven or t[7])..(t[8]==-1 and eight or t[8])..(t[9]==-1 and nine or t[9])..(t[10]==-1 and ten or t[10]))
+end
+end
+end
+end
+end
+else
+RemotesFolder.PL:FireServer((t[1]==-1 and one or t[1])..(t[2]==-1 and two or t[2])..(t[3]==-1 and three or t[3])..(t[4]==-1 and four or t[4])..(t[5]==-1 and five or t[5]))
+end
+end
+end
+end
+end
+end
+end
+end)
+end})
+Gameplay:AddToggle("AutoBreakerBox",{
+Text = "Auto Breaker Box",
+Default = false,
+Callback = function(v)
+_G.AutoBreakerBox = v
+RunService.Heartbeat:Connect(function()
+if _G.AutoBreakerBox and ReplicatedStorage.GameData.LatestRoom == 100 then
+RemotesFolder.EBF:FireServer()
+end
+end)
+end})
 
 
 
