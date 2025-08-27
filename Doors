@@ -515,22 +515,45 @@ end)
 end})
 end
 local Items = Main:AddRightGroupbox("Items")
-game:GetService("ProximityPromptService").PromptTriggered:Connect(function(v)
-if _G.InfLockpick then
-if v.Name == "UnlockPrompt" or v.Name == "LockPrompt" or v.Name == "SkullPrompt" then 
-if Char:FindFirstChild("Lockpick") or Char:FindFirstChild("SkeletonKey") then 
-RemotesFolder.DropItem:FireServer(Char:FindFirstChild("Lockpick") or Char:FindFirstChild("SkeletonKey"))
-task.wait(0.6)
-fireproximityprompt(Char:FindFirstChild("Lockpick"):FindFirstChildWhichIsA("ProximityPrompt") or Char:FindFirstChild("SkeletonKey"):FindFirstChildWhichIsA("ProximityPrompt"))
-end
-end
+local function AddFake(v,bp)
+if not v or not v:IsA("ProximityPrompt") then return end
+if v:GetAttribute("HasFake") then return end
+v:SetAttribute("HasFake", true)
+local HasFakeClone = v:Clone()
+HasFakeClone.Name = "FakePrompt"
+HasFakeClone.Parent = v.Parent
+HasFakeClone.Enabled = true
+HasFakeClone.ClickablePrompt = true
+v.Enabled = false
+v.ClickablePrompt = false
+HasFakeClone.Triggered:Connect(function()
+if not Char:FindFirstChildOfClass("Tool") then return end
+RemotesFolder.DropItem:FireServer(Char:FindFirstChildOfClass("Tool"))
+workspace.Drops.DescendantAdded:Connect(function(v)
+if v:FindFirstChildOfClass("ProximityPrompt") then
+fireproximityprompt(v)
 end
 end)
+end)
+end
 Items:AddToggle("InfLockpick",{
 Text = "Infinite Lockpick",
 Default = false,
 Callback = function(v)
 _G.InfLockpick = v
+task.spawn(function()
+local inflockpick = {}
+while _G.InfLockpick == true do
+for _,v in ipairs(inflockpick) do
+if v and v.Parent and not v:GetAttribute("HasFake") then 
+if Char:FindFirstChild("Lockpick") then
+AddFake(v,"Lockpick")
+end
+end 
+end 
+task.wait(0.05)
+end
+end)
 end})
 
 
