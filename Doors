@@ -515,7 +515,7 @@ end)
 end})
 end
 local Items = Main:AddRightGroupbox("Items")
-game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(v)
+game:GetService("ProximityPromptService").PromptTriggered:Connect(function(v)
 if _G.InfLockpick then
 if v.Name == "UnlockPrompt" or v.Name == "LockPrompt" or v.Name == "SkullPrompt" then 
 if Char:FindFirstChild("Lockpick") or Char:FindFirstChild("SkeletonKey") then 
