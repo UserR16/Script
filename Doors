@@ -542,16 +542,15 @@ Default = false,
 Callback = function(v)
 _G.InfLockpick = v
 task.spawn(function()
-local inflockpick = {}
 while _G.InfLockpick == true do
-for _,v in ipairs(inflockpick) do
+for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
 if v and v.Parent and not v:GetAttribute("HasFake") then 
 if Char:FindFirstChild("Lockpick") then
 AddFake(v)
 end
 end 
 end 
-task.wait(0.05)
+task.wait(1)
 end
 end)
 end})
