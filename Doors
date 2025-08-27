@@ -515,7 +515,7 @@ end)
 end})
 end
 local Items = Main:AddRightGroupbox("Items")
-local function AddFake(v,bp)
+local function AddFake(v)
 if not v or not v:IsA("ProximityPrompt") then return end
 if v:GetAttribute("HasFake") then return end
 v:SetAttribute("HasFake", true)
@@ -547,7 +547,7 @@ while _G.InfLockpick == true do
 for _,v in ipairs(inflockpick) do
 if v and v.Parent and not v:GetAttribute("HasFake") then 
 if Char:FindFirstChild("Lockpick") then
-AddFake(v,"Lockpick")
+AddFake(v)
 end
 end 
 end 
