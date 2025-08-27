@@ -514,46 +514,44 @@ end
 end)
 end})
 end
-local Items = Main:AddRightGroupbox("Items")
-local function AddFake(v)
-if not v or not v:IsA("ProximityPrompt") then return end
-if v:GetAttribute("HasFake") then return end
-v:SetAttribute("HasFake", true)
-local HasFakeClone = v:Clone()
-HasFakeClone.Name = "FakePrompt"
-HasFakeClone.Parent = v.Parent
-HasFakeClone.Enabled = true
-HasFakeClone.ClickablePrompt = true
-v.Enabled = false
-v.ClickablePrompt = false
-HasFakeClone.Triggered:Connect(function()
-if not Char:FindFirstChildOfClass("Tool") then return end
-RemotesFolder.DropItem:FireServer(Char:FindFirstChildOfClass("Tool"))
-workspace.Drops.DescendantAdded:Connect(function(v)
-if v:FindFirstChildOfClass("ProximityPrompt") then
-fireproximityprompt(v)
-end
-end)
-end)
-end
-Items:AddToggle("InfLockpick",{
-Text = "Infinite Lockpick",
-Default = false,
-Callback = function(v)
-_G.InfLockpick = v
-task.spawn(function()
-while _G.InfLockpick == true do
-for _,v in pairs(workspace.CurrentRooms:GetDescendants()) do
-if v and v.Parent and not v:GetAttribute("HasFake") then 
-if Char:FindFirstChild("Lockpick") then
-AddFake(v)
-end
-end 
-end 
-task.wait(1)
-end
-end)
+local Miscellaneous = Main:AddRightGroupbox("Miscellaneous")
+Miscellaneous:AddButton({
+Text = "Play Again",
+DoubleClick = true,
+Func = function()
+RemotesFolder.PlayAgain:FireServer()
+end}):AddButton({
+Text = "Lobby",
+DoubleClick = true,
+Func = function()
+RemotesFolder.PlayAgain:FireServer()
 end})
+Miscellaneous:AddButton({
+Text = "Leave",
+DoubleClick = true,
+Func = function()
+game:Shutdown()
+end}):AddButton({
+Text = "Revive",
+DoubleClick = true,
+Func = function()
+RemotesFolder.Revive:FireServer()
+end})
+Miscellaneous:AddButton({
+Text = "Reset Character",
+DoubleClick = true,
+Func = function()
+if replicatesignal then
+replicatesignal(game.Players.LocalPlayer.Kill)
+elseif Char:FindFirstChildWhichIsA("Humanoid") then
+Char:FindFirstChildWhichIsA("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+else
+Char:BreakJoints()
+end
+end})
+
+
+
 
 
 
