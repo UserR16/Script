@@ -34,7 +34,7 @@ MenuFadeTime = 0.2
 
 local function Notify(title, time)
 Notification:SendNotification("Warning", title, time or 5)
-wait(0.2)
+wait(0.25)
 for _,v in ipairs(game.CoreGui:GetDescendants()) do
 if v.Name == "Warning" then
 local UIStroke = Instance.new("UIStroke", v)
@@ -165,8 +165,8 @@ Default = false,
 Callback = function(v)
 _G.PlaySound = v
 end})
-Notifier:AddDivider()
 if not Floor.Value == "Fools" or not Floor.Value == "Rooms" or game.PlaceId == 110258689672367 then
+Notifier:AddDivider()
 Notifier:AddToggle("OxygenNotify",{
 Text = "Oxygen Notify",
 Default = false,
@@ -513,12 +513,25 @@ RemotesFolder.EBF:FireServer()
 end
 end)
 end})
-
-
-
-
-
-
+end
+local Items = Main:AddRightGroupbox("Items")
+game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(v)
+if _G.InfLockpick then
+if v.Name == "UnlockPrompt" or v.Name == "LockPrompt" or v.Name == "SkullPrompt" then 
+if Char:FindFirstChild("Lockpick") or Char:FindFirstChild("SkeletonKey") then 
+RemotesFolder.DropItem:FireServer(Char:FindFirstChild("Lockpick") or Char:FindFirstChild("SkeletonKey"))
+task.wait(0.6)
+fireproximityprompt(Char:FindFirstChild("Lockpick"):FindFirstChildWhichIsA("ProximityPrompt") or Char:FindFirstChild("SkeletonKey"):FindFirstChildWhichIsA("ProximityPrompt"))
+end
+end
+end
+end)
+Items:AddToggle("InfLockpick",{
+Text = "Infinite Lockpick",
+Default = false,
+Callback = function(v)
+_G.InfLockpick = v
+end})
 
 
 
