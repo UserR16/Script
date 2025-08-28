@@ -378,6 +378,54 @@ DisableWalkingSound:Disconnect()
 end
 end})
 World:AddDivider()
+World:AddDropdown('MaterialList',{
+	Values = {'Neon', 'ForceField', 'Plastic'},
+	Default = 1,
+	Multi = false,
+  Callback = function(v)
+_G.MaterialList = v
+end})
+World:AddToggle("ShowStartExitNodes",{
+Text = "Show Start/Exit Nodes",
+Default = false,
+Callback = function(v)
+if v then
+game:GetService("PathfindingService"):CreatePath({ WaypointSpacing = 2, AgentRadius = 0.6, AgentCanJump = false }):ComputeAsync(workspace.CurrentRooms[game:GetService("ReplicatedStorage").GameData.LatestRoom.Value].RoomEntrance.Position, workspace.CurrentRooms[game:GetService("ReplicatedStorage").GameData.LatestRoom.Value].RoomExit.Position)
+game:GetService("PathfindingService"):CreatePath({ WaypointSpacing = 2, AgentRadius = 0.6, AgentCanJump = false }):GetWaypoints()
+if game:GetService("PathfindingService"):CreatePath({ WaypointSpacing = 2, AgentRadius = 0.6, AgentCanJump = false }).Status ~= Enum.PathStatus.NoPath then
+for _, Waypoint in pairs(Waypoints) do
+local part = Instance.new("Part")
+part.Size = Vector3.new(1,1,1)
+part.Position = Waypoint.Position
+part.Shape = "Ball"
+part.Rotation = Vector3.new(0,0,90)
+part.Material = _G.MeterialList or "Neon"
+part.Anchored = true
+part.CanCollide = false
+part.Parent = workspace
+end
+end
+ShowStartExitNodes = workspace.CurrentRooms.ChildAdded:Connect(function(v) 
+game:GetService("PathfindingService"):CreatePath({ WaypointSpacing = 2, AgentRadius = 0.6, AgentCanJump = false }):ComputeAsync(workspace.CurrentRooms[game:GetService("ReplicatedStorage").GameData.LatestRoom.Value].RoomEntrance.Position, workspace.CurrentRooms[game:GetService("ReplicatedStorage").GameData.LatestRoom.Value].RoomExit.Position)
+game:GetService("PathfindingService"):CreatePath({ WaypointSpacing = 2, AgentRadius = 0.6, AgentCanJump = false }):GetWaypoints()
+if game:GetService("PathfindingService"):CreatePath({ WaypointSpacing = 2, AgentRadius = 0.6, AgentCanJump = false }).Status ~= Enum.PathStatus.NoPath then
+for _, Waypoint in pairs(Waypoints) do
+local part = Instance.new("Part")
+part.Size = Vector3.new(1,1,1)
+part.Position = Waypoint.Position
+part.Shape = "Ball"
+part.Rotation = Vector3.new(0,0,90)
+part.Material = _G.MeterialList or "Neon"
+part.Anchored = true
+part.CanCollide = false
+part.Parent = workspace
+end
+end
+end)
+else
+ShowStartExitNodes:Disconnect()
+end})
+World:AddDivider()
 World:AddToggle("ShowPathfindNodes",{
 Text = "Show Pathfind Nodes",
 Default = false,
@@ -386,7 +434,7 @@ if v then
 for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Parent.Name == "PathfindNodes" and v then
 local Part = Instance.new("Part",workspace)
-Part.Size = v.Size
+Part.Size = Vector3.new(1,1,1)
 Part.CFrame = v.CFrame
 Part.CanCollide = false
 Part.Shape = "Ball"
@@ -397,7 +445,7 @@ end
 ShowPathfindNodes = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
 if v.Parent.Name == "PathfindNodes" and v then
 local Part = Instance.new("Part",workspace)
-Part.Size = v.Size
+Part.Size = Vector3.new(1,1,1)
 Part.Name = "_PathfindNodes"
 Part.CFrame = v.CFrame
 Part.CanCollide = false
