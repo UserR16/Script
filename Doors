@@ -385,55 +385,6 @@ World:AddDropdown('MaterialList',{
   Callback = function(v)
 _G.MaterialList = v
 end})
-World:AddToggle("ShowStartExitNodes",{
-Text = "Show Start/Exit Nodes",
-Default = false,
-Callback = function(v)
-if v then
-game:GetService("PathfindingService"):CreatePath({ WaypointSpacing = 2, AgentRadius = 0.6, AgentCanJump = false }):ComputeAsync(workspace.CurrentRooms[game:GetService("ReplicatedStorage").GameData.LatestRoom.Value].RoomEntrance.Position, workspace.CurrentRooms[game:GetService("ReplicatedStorage").GameData.LatestRoom.Value].RoomExit.Position)
-game:GetService("PathfindingService"):CreatePath({ WaypointSpacing = 2, AgentRadius = 0.6, AgentCanJump = false }):GetWaypoints()
-if game:GetService("PathfindingService"):CreatePath({ WaypointSpacing = 2, AgentRadius = 0.6, AgentCanJump = false }).Status ~= Enum.PathStatus.NoPath then
-for _, Waypoint in pairs(Waypoints) do
-local part = Instance.new("Part")
-part.Size = Vector3.new(1,1,1)
-part.Position = Waypoint.Position
-part.Shape = "Ball"
-part.Rotation = Vector3.new(0,0,90)
-part.Material = _G.MeterialList or "Neon"
-part.Anchored = true
-part.Name = "_StartExitNodes"
-part.CanCollide = false
-part.Parent = workspace
-end
-end
-ShowStartExitNodes = workspace.CurrentRooms.ChildAdded:Connect(function(v) 
-game:GetService("PathfindingService"):CreatePath({ WaypointSpacing = 2, AgentRadius = 0.6, AgentCanJump = false }):ComputeAsync(workspace.CurrentRooms[game:GetService("ReplicatedStorage").GameData.LatestRoom.Value].RoomEntrance.Position, workspace.CurrentRooms[game:GetService("ReplicatedStorage").GameData.LatestRoom.Value].RoomExit.Position)
-game:GetService("PathfindingService"):CreatePath({ WaypointSpacing = 2, AgentRadius = 0.6, AgentCanJump = false }):GetWaypoints()
-if game:GetService("PathfindingService"):CreatePath({ WaypointSpacing = 2, AgentRadius = 0.6, AgentCanJump = false }).Status ~= Enum.PathStatus.NoPath then
-for _, Waypoint in pairs(Waypoints) do
-local part = Instance.new("Part")
-part.Size = Vector3.new(1,1,1)
-part.Position = Waypoint.Position
-part.Shape = "Ball"
-part.Rotation = Vector3.new(0,0,90)
-part.Material = _G.MeterialList or "Neon"
-part.Anchored = true
-part.Name = "_StartExitNodes"
-part.CanCollide = false
-part.Parent = workspace
-end
-end
-end)
-else
-ShowStartExitNodes:Disconnect()
-for _,v in ipairs(workspace:GetDescendants()) do
-if v.Name == "_StartExitNodes" then
-v:Destroy()
-end
-end
-end
-end})
-World:AddDivider()
 World:AddToggle("ShowPathfindNodes",{
 Text = "Show Pathfind Nodes",
 Default = false,
@@ -447,7 +398,7 @@ Part.CFrame = v.CFrame
 Part.CanCollide = false
 Part.Shape = "Ball"
 Part.Anchored = true
-Part.Material = "ForceField"
+Part.Material = _G.MaterialList or "Neon"
 end
 end
 ShowPathfindNodes = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
@@ -459,7 +410,7 @@ Part.CFrame = v.CFrame
 Part.CanCollide = false
 Part.Shape = "Ball"
 Part.Anchored = true
-Part.Material = "ForceField"
+Part.Material = _G.MaterialList or "Neon"
 end
 end)
 else
@@ -569,7 +520,20 @@ RemotesFolder.EBF:FireServer()
 end
 end)
 end})
+Gameplay:AddDivider()
+local EntityCanSpecting = workspace:FindFirstChild("RushMoving") or workspace:FindFirstChild("AmbushMoving") or workspace:FindFirstChild("A60") or workspace:FindFirstChild("A120") or workspace:FindFirstChild("BackdoorRush") or workspace:FindFirstChild("GlitchRush") or workspace:FindFirstChild("GlitchAmbush")
+
+RunService.Heartbeat:Connect(function()
+if Char:GetAttribute("Hiding") and _G.EntitySpectinghen
+workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, EntityCanSpecting:FindFirstChildOfClass("Part"))
 end
+end)
+Gameplay:AddToggle("EntitySpecting",{
+Text = "Entity Specting",
+Default = false,
+Callback = function(v)
+_G.EntitySpecting = v
+end})
 local Miscellaneous = Main:AddRightGroupbox("Miscellaneous")
 Miscellaneous:AddButton({
 Text = "Play Again",
