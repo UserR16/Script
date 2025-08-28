@@ -165,7 +165,7 @@ Default = false,
 Callback = function(v)
 _G.PlaySound = v
 end})
-if not Floor.Value == "Fools" or not Floor.Value == "Rooms" or game.PlaceId == 110258689672367 then
+if Floor.Value == "Hotel" or Floor.Value == "Mines" or Floor.Value == "Garden" then
 Notifier:AddDivider()
 Notifier:AddToggle("OxygenNotify",{
 Text = "Oxygen Notify",
@@ -521,11 +521,25 @@ end
 end)
 end})
 Gameplay:AddDivider()
-local EntityCanSpecting = workspace:FindFirstChild("RushMoving") or workspace:FindFirstChild("AmbushMoving") or workspace:FindFirstChild("A60") or workspace:FindFirstChild("A120") or workspace:FindFirstChild("BackdoorRush") or workspace:FindFirstChild("GlitchRush") or workspace:FindFirstChild("GlitchAmbush")
+local EntityCanSpecting = {"RushMoving","AmbushMoving","A60","A120","BackdoorRush","GlitchRush","GlitchAmbush"}
 
-RunService.Heartbeat:Connect(function()
-if Char:GetAttribute("Hiding") and _G.EntitySpecting then
-workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, EntityCanSpecting:FindFirstChildOfClass("Part").Position)
+local function Entity()
+for _,v in pairs(EntityCanSpecting) do
+local findentity = workapace:FindFirstChild(v)
+if findentity and findentity.PrimaryPart then
+return 
+end
+end
+end
+local function EntitySpecting()
+if Entity() and Char and Char:GetAttribute("Hiding") then
+workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, findentity.PrimaryPart.Position)
+end
+end
+
+RunService.RenderStepped:Connect(function()
+if _G.EntitySpecting then
+EntitySpecting()
 end
 end)
 Gameplay:AddToggle("EntitySpecting",{
