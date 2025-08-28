@@ -524,8 +524,8 @@ Gameplay:AddDivider()
 local EntityCanSpecting = workspace:FindFirstChild("RushMoving") or workspace:FindFirstChild("AmbushMoving") or workspace:FindFirstChild("A60") or workspace:FindFirstChild("A120") or workspace:FindFirstChild("BackdoorRush") or workspace:FindFirstChild("GlitchRush") or workspace:FindFirstChild("GlitchAmbush")
 
 RunService.Heartbeat:Connect(function()
-if Char:GetAttribute("Hiding") and _G.EntitySpectinghen
-workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, EntityCanSpecting:FindFirstChildOfClass("Part"))
+if Char:GetAttribute("Hiding") and _G.EntitySpecting then
+workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, EntityCanSpecting:FindFirstChildOfClass("Part").Position)
 end
 end)
 Gameplay:AddToggle("EntitySpecting",{
