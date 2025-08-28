@@ -393,7 +393,7 @@ if v then
 for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Parent.Name == "PathfindNodes" and v then
 local Part = Instance.new("Part",workspace)
-Part.Size = Vector3.new(1,1,1)
+Part.Size = Vector3.new(1.5,1.5,1.5)
 Part.CFrame = v.CFrame
 Part.CanCollide = false
 Part.Shape = "Ball"
@@ -404,7 +404,7 @@ end
 ShowPathfindNodes = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
 if v.Parent.Name == "PathfindNodes" and v then
 local Part = Instance.new("Part",workspace)
-Part.Size = Vector3.new(1,1,1)
+Part.Size = Vector3.new(1.5,1.5,1.5)
 Part.Name = "_PathfindNodes"
 Part.CFrame = v.CFrame
 Part.CanCollide = false
@@ -526,7 +526,7 @@ local EntityCanSpecting = {"RushMoving","AmbushMoving","A60","A120","BackdoorRus
 
 local function Entity()
 for _,v in pairs(EntityCanSpecting) do
-local findentity = workapace:FindFirstChild(v)
+local findentity = workspace:FindFirstChild(v)
 if findentity and findentity.PrimaryPart then
 return 
 end
