@@ -508,7 +508,7 @@ end
 end
 end
 end)
-end})
+end}) 
 Gameplay:AddToggle("AutoBreakerBox",{
 Text = "Auto Breaker Box",
 Default = false,
@@ -520,6 +520,7 @@ RemotesFolder.EBF:FireServer()
 end
 end)
 end})
+end
 Gameplay:AddDivider()
 local EntityCanSpecting = {"RushMoving","AmbushMoving","A60","A120","BackdoorRush","GlitchRush","GlitchAmbush"}
 
