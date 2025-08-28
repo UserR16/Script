@@ -379,9 +379,9 @@ end
 end})
 World:AddDivider()
 World:AddDropdown('MaterialList',{
-	Values = {'Neon', 'ForceField', 'Plastic'},
-	Default = 1,
-	Multi = false,
+  Values = {'Neon', 'ForceField', 'Plastic'},
+  Default = 1,
+  Multi = false,
   Callback = function(v)
 _G.MaterialList = v
 end})
@@ -401,6 +401,7 @@ part.Shape = "Ball"
 part.Rotation = Vector3.new(0,0,90)
 part.Material = _G.MeterialList or "Neon"
 part.Anchored = true
+part.Name = "_StartExitNodes"
 part.CanCollide = false
 part.Parent = workspace
 end
@@ -417,6 +418,7 @@ part.Shape = "Ball"
 part.Rotation = Vector3.new(0,0,90)
 part.Material = _G.MeterialList or "Neon"
 part.Anchored = true
+part.Name = "_StartExitNodes"
 part.CanCollide = false
 part.Parent = workspace
 end
@@ -424,6 +426,12 @@ end
 end)
 else
 ShowStartExitNodes:Disconnect()
+for _,v in ipairs(workspace:GetDescendants()) do
+if v.Name == "_StartExitNodes" then
+v:Destroy()
+end
+end
+end
 end})
 World:AddDivider()
 World:AddToggle("ShowPathfindNodes",{
