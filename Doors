@@ -166,7 +166,7 @@ Callback = function(v)
 _G.PlaySound = v
 end})
 if Floor.Value == "Hotel" or Floor.Value == "Mines" or Floor.Value == "Garden" then
-if not game.PlaceId == 110258689672367 then
+if not game.ReplicatedStorage:FindFirstChild("Bricks") then
 Notifier:AddDivider()
 Notifier:AddToggle("OxygenNotify",{
 Text = "Oxygen Notify",
@@ -439,7 +439,7 @@ end
 end)
 end
 if Floor.Value == "Hotel" or Floor.Value == "Fools" then
-if not game.PlaceId == 110258689672367 then
+if not game.ReplicatedStorage:FindFirstChild("Bricks") then
 Gameplay:AddToggle("AutoPadlockUnlock",{
 Text = "Auto Padlock Unlock",
 Default = false,
@@ -529,19 +529,19 @@ Gameplay:AddDivider()
 local function EntitySpecting()
 if Char:GetAttribute("Hiding") == true then
 if workspace:FindFirstChild("RushMoving") and (workspace:FindFirstChild("RushMoving"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
-workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("RushMoving"):FindFirstChildOfClass("Part").Position)
+workspace.CurrentCamera.CFrame = CFrame.lookAt(Head.Position, workspace:FindFirstChild("RushMoving"):FindFirstChildOfClass("Part").Position)
 elseif workspace:FindFirstChild("AmbushMoving") and (workspace:FindFirstChild("AmbushMoving"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
-workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("AmbushMoving"):FindFirstChildOfClass("Part").Position)
+workspace.CurrentCamera.CFrame = CFrame.lookAt(Head.Position, workspace:FindFirstChild("AmbushMoving"):FindFirstChildOfClass("Part").Position)
 elseif workspace:FindFirstChild("A60") and (workspace:FindFirstChild("A60"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
-workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("A60"):FindFirstChildOfClass("Part").Position)
+workspace.CurrentCamera.CFrame = CFrame.lookAt(Head.Position, workspace:FindFirstChild("A60"):FindFirstChildOfClass("Part").Position)
 elseif workspace:FindFirstChild("A120") and (workspace:FindFirstChild("A120"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
-workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("A120"):FindFirstChildOfClass("Part").Position)
+workspace.CurrentCamera.CFrame = CFrame.lookAt(Head.Position, workspace:FindFirstChild("A120"):FindFirstChildOfClass("Part").Position)
 elseif workspace:FindFirstChild("BackdoorRush") and (workspace:FindFirstChild("BackdoorRush"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
-workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("BackdoorRush"):FindFirstChildOfClass("Part").Position)
+workspace.CurrentCamera.CFrame = CFrame.lookAt(Head.Position, workspace:FindFirstChild("BackdoorRush"):FindFirstChildOfClass("Part").Position)
 elseif workspace:FindFirstChild("GlitchRush") and (workspace:FindFirstChild("GlitchRush"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
-workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("GlitchRush"):FindFirstChildOfClass("Part").Position)
+workspace.CurrentCamera.CFrame = CFrame.lookAt(Head.Position, workspace:FindFirstChild("GlitchRush"):FindFirstChildOfClass("Part").Position)
 elseif workspace:FindFirstChild("GlitchAmbush") and (workspace:FindFirstChild("GlitchAmbush"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
-workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("GlitchAmbush"):FindFirstChildOfClass("Part").Position)
+workspace.CurrentCamera.CFrame = CFrame.lookAt(Head.Position, workspace:FindFirstChild("GlitchAmbush"):FindFirstChildOfClass("Part").Position)
 end
 end
 end
@@ -592,7 +592,7 @@ Char:BreakJoints()
 end
 end})
 
-local Players = Tabs.Players:AddLeftGroupbox("Players")
+local Players = Players:AddLeftGroupbox("Players")
 game:GetService("RunService").RenderStepped:Connect(function()
 game.Players.LocalPlayer.Character:SetAttribute("SpeedBoostExtra", _G.SpeedBoost and _G.SpeedBoostSlider or 0)
 end)
