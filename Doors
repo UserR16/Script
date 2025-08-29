@@ -58,13 +58,14 @@ end
 end
 end
 
-local Main = Window:AddTab("Main")
-local Players = Window:AddTab("Players")
-local Exploits = Window:AddTab("Exploits")
-local Visual = Window:AddTab("Visual")
-local Config = Window:AddTab("Config")
-
-local Notifier = Main:AddLeftGroupbox("Notifier")
+local Tabs = {
+Main = Window:AddTab("Main"),
+Players = Window:AddTab("Players"),
+Exploits = Window:AddTab("Exploits"),
+Visual = Window:AddTab("Visual"),
+Config = Window:AddTab("Config")
+}
+local Notifier = Tabs.Main:AddLeftGroupbox("Notifier")
 
 Notifier:AddToggle("EntitiesNotify",{
 Text = "Entities Notify",
@@ -184,7 +185,7 @@ end
 end})
 end
 end
-local Doors = Main:AddRightGroupbox("Doors")
+local Doors = Tabs.Main:AddRightGroupbox("Doors")
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.ReachDoors then
 game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Door").ClientOpen:FireServer()
@@ -207,7 +208,7 @@ Callback = function(v)
 _G.FastDoors = v
 end})
 
-local ProximityPrompt = Main:AddRightGroupbox("Proximity Prompt")
+local ProximityPrompt = Tabs.Main:AddRightGroupbox("Proximity Prompt")
 workspace.CurrentRooms.DescendantAdded:Connect(function(v)
 if not _G.InstanceInteract then return end
 if not _G.ReachInteract then return end
@@ -278,7 +279,7 @@ end
 end
 end
 end})
-local World = Main:AddLeftGroupbox("World")
+local World = Tabs.Main:AddLeftGroupbox("World")
 game.Players.LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("MoveDirection"):Connect(function()
 if _G.ClosetsExitFix and game.Players.LocalPlayer.Character:GetAttribute("Hiding")==true then 
 RemotesFolder.CamLock:FireServer()
@@ -424,7 +425,7 @@ end
 end
 end})
 
-local Gameplay = Main:AddRightGroupbox("Gameplay")
+local Gameplay = Tabs.Main:AddRightGroupbox("Gameplay")
 if Floor.Value == "Mines" then
 Gameplay:AddButton("Notify Anchor Code", function()
 if GameData.LatestRoom < 50 then
@@ -557,7 +558,7 @@ Default = false,
 Callback = function(v)
 _G.EntitySpecting = v
 end})
-local Miscellaneous = Main:AddRightGroupbox("Miscellaneous")
+local Miscellaneous = Tabs.Main:AddRightGroupbox("Miscellaneous")
 Miscellaneous:AddButton({
 Text = "Play Again",
 DoubleClick = true,
@@ -593,7 +594,7 @@ Char:BreakJoints()
 end
 end})
 
-local Players = Players:AddLeftGroupbox("Players")
+local Players = Tabs.Players:AddLeftGroupbox("Players")
 game:GetService("RunService").RenderStepped:Connect(function()
 game.Players.LocalPlayer.Character:SetAttribute("SpeedBoostExtra", _G.SpeedBoost and _G.SpeedBoostSlider or 0)
 end)
@@ -731,7 +732,6 @@ if _G.NoclipBypass then
 Char.Humanoid.WalkSpeed = 2.9
 end
 end)
-end})
 end}):AddKeyPicker("AddNoclip", {
 Default = "V",
 Text = "Add Noclip",
@@ -780,7 +780,7 @@ end)
 end})
 end
 
-local LocalPlayer = Players:AddRightGroupbox("LocalPlayer")
+local LocalPlayer = Tabs.Players:AddRightGroupbox("LocalPlayer")
 if not game.ReplicatedStorage:FindFirstChild("Bricks") then
 LocalPlayer:AddToggle("AlwaysJump",{
 Text = "Always Jump",
@@ -823,7 +823,6 @@ end})
 LocalPlayer:AddDivider()
 local ClonedCollision = game:GetService("Players").LocalPlayer.Character.CollisionPart:Clone()
 ClonedCollision.Name = "_CollisionClone"
-ClonedCollision.Massless = true
 ClonedCollision.Parent = Char
 ClonedCollision.CanCollide = false
 task.spawn(function()
@@ -831,9 +830,9 @@ while true do
 if _G.SpeedBypass then
 if ClonedCollision then
 ClonedCollision.Massless = false
-task.wait(0.22456)
+task.wait(0.23456)
 ClonedCollision.Massless = true
-task.wait(0.22456)
+task.wait(0.23456)
 else
 break
 end
