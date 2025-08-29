@@ -722,14 +722,25 @@ end})
 Players:AddDivider()
 if not game.ReplicatedStorage:FindFirstChild("Bricks") then
 Players:AddToggle("NoclipBypass",{
-Text = _G.NoclipBypass and "Removal Bypass" or "Add Bypass",
+Text = "Noclip Bypass",
 Default = false,
 Callback = function(v)
 _G.NoclipBypass = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.NoclipBypass then
+Char.Humanoid.WalkSpeed = 2.9
+end
+end)
 end})
+end}):AddKeyPicker("AddNoclip", {
+Default = "V",
+Text = "Add Noclip",
+Mode = Library.IsMobile and "Toggle",
+SyncToggleState = Library.IsMobile
+})
 end
 Players:AddToggle("Noclip",{
-Text = _G.NoclipBypass and "Noclip Bypass" or "Noclip",
+Text = "Noclip",
 Default = false,
 Callback = function(v)
 if v then
@@ -754,6 +765,96 @@ Text = "Noclip",
 Mode = Library.IsMobile and "Toggle",
 SyncToggleState = Library.IsMobile
 })
+if not game.ReplicatedStorage:FindFirstChild("Bricks") then
+Players:AddDivider()
+Players:AddToggle("NoFootsteps",{
+Text = "No Footsteps",
+Default = false,
+Callback = function(v)
+_G.NoFootsteps = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game:FindFirstChild('Footsteps') then
+game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.Footsteps.Enabled = not _G.NoFootsteps
+end
+end)
+end})
+end
+
+local LocalPlayer = Players:AddRightGroupbox("LocalPlayer")
+if not game.ReplicatedStorage:FindFirstChild("Bricks") then
+LocalPlayer:AddToggle("AlwaysJump",{
+Text = "Always Jump",
+Default = false,
+Callback = function(v)
+_G.AlwaysJump = v
+game:GetService("RunService").RenderStepped:Connect(function()
+game.Players.LocalPlayer.Character:SetAttribute("CanJump", _G.AlwaysJump)
+end)
+end}):AddKeyPicker("AlwaysJump", {
+Default = "J",
+Text = "Always Jump ",
+Mode = Library.IsMobile and "Toggle",
+SyncToggleState = Library.IsMobile,
+})
+LocalPlayer:AddToggle("InfiniteJump",{
+Text = "Infinite Jump",
+Default = false,
+Callback = function(v)
+_G.InfiniteJump = v
+game:GetService("UserInputService").JumpRequest:connect(function()
+if _G.InfiniteJump then
+Char:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+end
+end)
+end})
+LocalPlayer:AddDivider()
+end
+LocalPlayer:AddToggle("CrouchSpoof",{
+Text = "Crouch Spoof",
+Default = false,
+Callback = function(v)
+_G.CrouchSpoof = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.CrouchSpoof then
+RemotesFolder.Crouch:FireServer(true)
+end
+end)
+end})
+LocalPlayer:AddDivider()
+local ClonedCollision = game:GetService("Players").LocalPlayer.Character.CollisionPart:Clone()
+ClonedCollision.Name = "_CollisionClone"
+ClonedCollision.Massless = true
+ClonedCollision.Parent = Char
+ClonedCollision.CanCollide = false
+ClonedCollision.CanQuery = false
+ClonedCollision.CustomPhysicalProperties = PhysicalProperties.new(0.01, 0.7, 0, 1, 1)
+task.spawn(function()
+while true do
+if _G.SpeedBypass then
+if ClonedCollision then
+ClonedCollision.Massless = false
+task.wait(0.22456)
+ClonedCollision.Massless = true
+task.wait(0.22456)
+else
+break
+end
+end
+wait()
+end
+end)
+LocalPlayer:AddToggle("SpeedBypass",{
+Text = "Speed Bypass",
+Default = false,
+Callback = function(v)
+_G.SpeedBypass = v
+end})
+
+
+
+
+
+
 
 
 
