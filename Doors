@@ -166,7 +166,7 @@ Callback = function(v)
 _G.PlaySound = v
 end})
 if Floor.Value == "Hotel" or Floor.Value == "Mines" or Floor.Value == "Garden" then
-if not game.RepliactedStorage:FindFirstChild("Bricks") then
+if not game.PlaceId == 110258689672367 then
 Notifier:AddDivider()
 Notifier:AddToggle("OxygenNotify",{
 Text = "Oxygen Notify",
@@ -439,7 +439,7 @@ end
 end)
 end
 if Floor.Value == "Hotel" or Floor.Value == "Fools" then
-if not game.ReplicatedStorage:FindFirstChild("Bricks") then
+if not game.PlaceId == 110258689672367 then
 Gameplay:AddToggle("AutoPadlockUnlock",{
 Text = "Auto Padlock Unlock",
 Default = false,
