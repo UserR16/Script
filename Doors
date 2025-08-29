@@ -522,22 +522,16 @@ end)
 end})
 end
 Gameplay:AddDivider()
-local EntityCanSpecting = {"RushMoving","AmbushMoving","A60","A120","BackdoorRush","GlitchRush","GlitchAmbush"}
-
-local function Entity()
-for _,v in pairs(EntityCanSpecting) do
-local findentity = workspace:FindFirstChild(v)
-if findentity and findentity.PrimaryPart then
-return 
-end
-end
-end
 local function EntitySpecting()
-if Entity() and Char and Char:GetAttribute("Hiding") then
-workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, findentity.PrimaryPart.Position)
-end
-end
+if workspace:FindFirstChild("RushMoving") and (workspace:FindFirstChild("RushMoving"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
+workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("RushMoving"):FindFirstChildOfClass("Part").Position)
+elseif workspace:FindFirstChild("AmbushMoving") and (workspace:FindFirstChild("AmbushMoving"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
+workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("AmbushMoving"):FindFirstChildOfClass("Part").Position)
+elseif workspace:FindFirstChild("A60") and (workspace:FindFirstChild("RushMoving"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
+workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("RushMoving"):FindFirstChildOfClass("Part").Position)
 
+end
+end
 RunService.RenderStepped:Connect(function()
 if _G.EntitySpecting then
 EntitySpecting()
