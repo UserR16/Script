@@ -729,7 +729,7 @@ Callback = function(v)
 _G.NoclipBypass = v
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.NoclipBypass then
-Char.Humanoid.WalkSpeed = 2.9
+Char.Humanoid.WalkSpeed = 1
 end
 end)
 end}):AddKeyPicker("AddNoclip", {
@@ -796,17 +796,6 @@ Text = "Always Jump ",
 Mode = Library.IsMobile and "Toggle",
 SyncToggleState = Library.IsMobile,
 })
-LocalPlayer:AddToggle("InfiniteJump",{
-Text = "Infinite Jump",
-Default = false,
-Callback = function(v)
-_G.InfiniteJump = v
-game:GetService("UserInputService").JumpRequest:connect(function()
-if _G.InfiniteJump then
-Char:FindFirstChildOfClass('Humanoid'):ChangeState("Jumping")
-end
-end)
-end})
 LocalPlayer:AddDivider()
 end
 LocalPlayer:AddToggle("CrouchSpoof",{
@@ -821,6 +810,7 @@ end
 end)
 end})
 LocalPlayer:AddDivider()
+if not game.ReplicatedStorage:FindFirstChild("Bricks") then
 local ClonedCollision = game:GetService("Players").LocalPlayer.Character.CollisionPart:Clone()
 ClonedCollision.Name = "_CollisionClone"
 ClonedCollision.Parent = Char
@@ -846,10 +836,87 @@ Default = false,
 Callback = function(v)
 _G.SpeedBypass = v
 end})
-
-
-
-
+end
+if Floor.Value == "Mines" then
+LocalPlayer:AddToggle("LadderBypass",{
+Text = "Ladder Bypass",
+Default = false,
+Callback = function(v)
+_G.LadderBypass = v
+task.spawn(function()
+while _G.LadderBypass do wait(1)
+if _G.LadderBypass and not workspace:FindFirstChild("Ladder_Bypass") then
+local progressPart = Instance.new("Part", workspace) do
+progressPart.Anchored = true
+progressPart.CanCollide = false
+progressPart.Name = "Ladder_Bypass"
+progressPart.Transparency = 1
+end
+if _G.LadderBypass and game.Players.LocalPlayer.Character:GetAttribute("Climbing") then
+task.wait(0.1)
+game.Players.LocalPlayer.Character:SetAttribute("Climbing", false)
+Notify("Now, you right find ladder")
+end
+else
+if workspace:FindFirstChild("Ladder_Bypass") then 
+workspace:FindFirstChild("Ladder_Bypass"):Destroy() 
+end
+end
+end
+end)
+end})
+end
+LocalPlayer:AddToggle("ManipulateBypass",{
+Text = "Manipulate Bypass",
+Default = false,
+Callback = function(v)
+_G.ManipulateBypass = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.ManipulateBypass then
+game.Players.LocalPlayer.Character:PivotTo(game.Players.LocalPlayer.Character:GetPivot() + workspace.CurrentCamera.CFrame.LookVector * Vector3.new(1, 0, 1) * -100)
+end
+end)
+end}):AddKeyPicker("ManipulateBypassKey", {
+Default = "B",
+Text = "Manipulate Bypass",
+Mode = Library.IsMobile and "Toggle",
+SyncToggleState = Library.IsMobile,
+})
+LocalPlayer:AddDivider()
+LocalPlayer:AddToggle("ChamsBody",{
+Text = "Chams Body",
+Default = false,
+Callback = function(v)
+_G.ChamsBody = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.ChamsBody then
+for _, part in pairs(Char:GetDescendants()) do
+if part:IsA("BasePart") then
+part.Material = "ForceField"
+end
+end
+end)
+end})
+LocalPlayer:AddToggle("HideBody",{
+Text = "Hide Body",
+Default = false,
+Callback = function(v)
+_G.HideBody = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.HideBody then
+for _, part in pairs(Char:GetDescendants()) do
+if part:IsA("BasePart") and part.Transparency == 0 then
+part.Transparency = 0.987
+end
+end
+else
+for _, part in pairs(Char:GetDescendants()) do
+if part:IsA("BasePart") and part.Transparency == 0.987 then
+part.Transparency = 0
+end
+end
+end)
+end})
 
 
 
