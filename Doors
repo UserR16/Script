@@ -765,20 +765,6 @@ Text = "Noclip",
 Mode = Library.IsMobile and "Toggle",
 SyncToggleState = Library.IsMobile
 })
-if not game.ReplicatedStorage:FindFirstChild("Bricks") then
-Players:AddDivider()
-Players:AddToggle("NoFootsteps",{
-Text = "No Footsteps",
-Default = false,
-Callback = function(v)
-_G.NoFootsteps = v
-game:GetService("RunService").RenderStepped:Connect(function()
-if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game:FindFirstChild('Footsteps') then
-game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.Footsteps.Enabled = not _G.NoFootsteps
-end
-end)
-end})
-end
 
 local LocalPlayer = Tabs.Players:AddRightGroupbox("LocalPlayer")
 if not game.ReplicatedStorage:FindFirstChild("Bricks") then
