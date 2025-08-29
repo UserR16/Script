@@ -613,12 +613,147 @@ Default = false,
 Callback = function(v)
 _G.SpeedBoost = v
 end})
+Players:AddSlider("SpeedFlySlider",{
+Text = "Speed Fly Slider",
+Default = 16,
+Min = 16,
+Max = _G.SpeedBypass and 50 or 21,
+Rounding = 1,
+Compact = true,
+Callback = function(v)
+_G.SpeedFlySlider = v or 16
+end})
+Players:AddToggle("Fly",{
+Text = "Fly",
+Default = false,
+Callback = function(v)
+_G.Fly = v
+if _G.Fly == false then
+if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") and game.Players.LocalPlayer.Character.Humanoid.RootPart and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("VelocityHandler") and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("GyroHandler") then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler:Destroy()
+game.Players.LocalPlayer.Character.HumanoidRootPart.GyroHandler:Destroy()
+game.Players.LocalPlayer.Character.Humanoid.PlatformStand = false
+end
+end
+while _G.Fly do
+if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") and game.Players.LocalPlayer.Character.Humanoid.RootPart and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("VelocityHandler") and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("GyroHandler") then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.MaxForce = Vector3.new(9e9,9e9,9e9)
+game.Players.LocalPlayer.Character.HumanoidRootPart.GyroHandler.MaxTorque = Vector3.new(9e9,9e9,9e9)
+game.Players.LocalPlayer.Character.Humanoid.PlatformStand = true
+game.Players.LocalPlayer.Character.HumanoidRootPart.GyroHandler.CFrame = Workspace.CurrentCamera.CoordinateFrame
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = Vector3.new()
+if require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().X > 0 then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity + game.Workspace.CurrentCamera.CFrame.RightVector * (require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().X * _G.SpeedFlySlider)
+end
+if require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().X < 0 then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity + game.Workspace.CurrentCamera.CFrame.RightVector * (require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().X * _G.SpeedFlySlider)
+end
+if require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().Z > 0 then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity - game.Workspace.CurrentCamera.CFrame.LookVector * (require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().Z * _G.SpeedFlySlider)
+end
+if require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().Z < 0 then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity - game.Workspace.CurrentCamera.CFrame.LookVector * (require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().Z * _G.SpeedFlySlider)
+end
+elseif game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") and game.Players.LocalPlayer.Character.Humanoid.RootPart and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("VelocityHandler") == nil and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("GyroHandler") == nil then
+local bv = Instance.new("BodyVelocity")
+local bg = Instance.new("BodyGyro")
 
+bv.Name = "VelocityHandler"
+bv.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
+bv.MaxForce = Vector3.new(0,0,0)
+bv.Velocity = Vector3.new(0,0,0)
 
-
-
-
-
+bg.Name = "GyroHandler"
+bg.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
+bg.MaxTorque = Vector3.new(0,0,0)
+bg.P = 1000
+bg.D = 50
+end
+task.wait()
+end
+end}):AddKeyPicker("Fly", {
+Default = "F",
+Text = "Fly",
+Mode = Library.IsMobile and "Toggle",
+SyncToggleState = Library.IsMobile
+})
+Players:AddDivider()
+if Floor.Value == "Hotel" or Floor.Value == "Mines" then
+if not game.ReplicatedStorage:FindFirstChild("Bricks") then
+Players:AddToggle("AlwaysEatCandy",{
+Text = "Always Eat Candy",
+Default = false,
+Callback = function(v)
+_G.AlwaysEatCandy = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if game.Players.LocalPlayer.Character:FindFirstChild("Candy",true) and _G.AlwaysEatCandy then
+if not game.Players.LocalPlayer.Character:FindFirstChild("Meshes/DOORS_EvilCandy_Cube", true) then
+game.Players.LocalPlayer.Character.Candy.Remote:FireServer()
+end
+end
+end)
+end})
+end
+end
+Players:AddToggle("NoAccessories",{
+Text = "No Accessories",
+Default = false,
+Callback = function(v)
+_G.NoAccessories = v
+game:GetService("RunService").RenderStepped:Connect(function()
+Char.Head.Massless = not _G.NoAccessories
+Char.LeftFoot.Massless = not _G.NoAccessories
+Char.LeftHand.Massless = not _G.NoAccessories
+Char.LeftLowerArm.Massless = not _G.NoAccessories
+Char.LeftLowerLeg.Massless = not _G.NoAccessories
+Char.LeftUpperArm.Massless = not _G.NoAccessories
+Char.LeftUpperLeg.Massless = not _G.NoAccessories
+Char.LowerTorso.Massless = not _G.NoAccessories
+Char.RightFoot.Massless = not _G.NoAccessories
+Char.RightFoot.Massless = not _G.NoAccessories
+Char.RightHand.Massless = not _G.NoAccessories
+Char.RightLowerArm.Massless = not _G.NoAccessories
+Char.RightLowerLeg.Massless = not _G.NoAccessories
+Char.RightUpperArm.Massless = not _G.NoAccessories
+Char.RightUpperLeg.Massless = not _G.NoAccessories
+Char.UpperTorso.Massless = not _G.NoAccessories
+end)
+end})
+Players:AddDivider()
+if not game.ReplicatedStorage:FindFirstChild("Bricks") then
+Players:AddToggle("NoclipBypass",{
+Text = _G.NoclipBypass and "Removal Bypass" or "Add Bypass",
+Default = false,
+Callback = function(v)
+_G.NoclipBypass = v
+end})
+end
+Players:AddToggle("Noclip",{
+Text = _G.NoclipBypass and "Noclip Bypass" or "Noclip",
+Default = false,
+Callback = function(v)
+if v then
+Noclip = game:GetService("RunService").RenderStepped:Connect(function()
+if LocalPlayer and Char then
+for _, part in pairs(Char:GetDescendants()) do
+if part:IsA("BasePart") then
+part.CanCollide = false
+end
+end
+end
+end)
+else
+if Noclip then
+Noclip:Disconnect()
+Noclip = nil
+end
+end
+end}):AddKeyPicker("Noclip", {
+Default = "N",
+Text = "Noclip",
+Mode = Library.IsMobile and "Toggle",
+SyncToggleState = Library.IsMobile
+})
 
 
 
