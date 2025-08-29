@@ -592,7 +592,26 @@ Char:BreakJoints()
 end
 end})
 
-
+local Players = Tabs.Players:AddLeftGroupbox("Players")
+game:GetService("RunService").RenderStepped:Connect(function()
+game.Players.LocalPlayer.Character:SetAttribute("SpeedBoostExtra", _G.SpeedBoost and _G.SpeedBoostSlider or 0)
+end)
+Players:AddSlider("SpeedBoostSlider",{
+Text = "Speed Boost Slider",
+Min = 1,
+Default = 1,
+Max = _G.SpeedBypass and 20 or 6,
+Rounding = 1,
+Compact = true,
+Callback = function(v)
+_G.SpeedBoostSlider = v or 1
+end})
+Players:AddToggle("SpeedBoost",{
+Text = "Speed Boost",
+Default = false,
+Callback = function(v)
+_G.SpeedBoost = v
+end})
 
 
 
