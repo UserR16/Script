@@ -527,9 +527,16 @@ if workspace:FindFirstChild("RushMoving") and (workspace:FindFirstChild("RushMov
 workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("RushMoving"):FindFirstChildOfClass("Part").Position)
 elseif workspace:FindFirstChild("AmbushMoving") and (workspace:FindFirstChild("AmbushMoving"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
 workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("AmbushMoving"):FindFirstChildOfClass("Part").Position)
-elseif workspace:FindFirstChild("A60") and (workspace:FindFirstChild("RushMoving"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
-workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("RushMoving"):FindFirstChildOfClass("Part").Position)
-
+elseif workspace:FindFirstChild("A60") and (workspace:FindFirstChild("A60"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
+workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("A60"):FindFirstChildOfClass("Part").Position)
+elseif workspace:FindFirstChild("A120") and (workspace:FindFirstChild("A120"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
+workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("A120"):FindFirstChildOfClass("Part").Position)
+elseif workspace:FindFirstChild("BackdoorRush") and (workspace:FindFirstChild("BackdoorRush"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
+workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("BackdoorRush"):FindFirstChildOfClass("Part").Position)
+elseif workspace:FindFirstChild("GlitchRush") and (workspace:FindFirstChild("GlitchRush"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
+workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("GlitchRush"):FindFirstChildOfClass("Part").Position)
+elseif workspace:FindFirstChild("GlitchAmbush") and (workspace:FindFirstChild("GlitchAmbush"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
+workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, workspace:FindFirstChild("GlitchAmbush"):FindFirstChildOfClass("Part").Position)
 end
 end
 RunService.RenderStepped:Connect(function()
