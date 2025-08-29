@@ -895,6 +895,7 @@ if part:IsA("BasePart") then
 part.Material = "ForceField"
 end
 end
+end
 end)
 end})
 LocalPlayer:AddToggle("HideBody",{
