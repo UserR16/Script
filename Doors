@@ -803,7 +803,7 @@ Callback = function(v)
 _G.InfiniteJump = v
 game:GetService("UserInputService").JumpRequest:connect(function()
 if _G.InfiniteJump then
-Char:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+Char:FindFirstChildOfClass('Humanoid'):ChangeState("Jumping")
 end
 end)
 end})
@@ -826,8 +826,6 @@ ClonedCollision.Name = "_CollisionClone"
 ClonedCollision.Massless = true
 ClonedCollision.Parent = Char
 ClonedCollision.CanCollide = false
-ClonedCollision.CanQuery = false
-ClonedCollision.CustomPhysicalProperties = PhysicalProperties.new(0.01, 0.7, 0, 1, 1)
 task.spawn(function()
 while true do
 if _G.SpeedBypass then
