@@ -526,6 +526,7 @@ end})
 end
 
 Gameplay:AddDivider()
+local Head = Char:FindFirstChild("Head")
 local function EntitySpecting()
 if Char:GetAttribute("Hiding") == true then
 if workspace:FindFirstChild("RushMoving") and (workspace:FindFirstChild("RushMoving"):FindFirstChildOfClass("Part").Position - Char:FindFirstChild("HumanoidRootPart").Position).Magnitude < 750 then
