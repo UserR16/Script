@@ -806,9 +806,9 @@ while true do
 if _G.SpeedBypass then
 if ClonedCollision then
 ClonedCollision.Massless = false
-task.wait(0.23456)
+task.wait(0.23)
 ClonedCollision.Massless = true
-task.wait(0.23456)
+task.wait(0.23)
 else
 break
 end
@@ -852,6 +852,7 @@ end
 end)
 end})
 end
+if not game.ReplicatedStorage:FindFirstChild("Bricks") then
 LocalPlayer:AddToggle("ManipulateBypass",{
 Text = "Manipulate Bypass",
 Default = false,
@@ -868,44 +869,288 @@ Text = "Manipulate Bypass",
 Mode = Library.IsMobile and "Toggle",
 SyncToggleState = Library.IsMobile,
 })
-LocalPlayer:AddDivider()
-LocalPlayer:AddToggle("ChamsBody",{
-Text = "Chams Body",
+end
+
+local Anti = Tabs.Exploits:AddLeftGroupbox("Anti")
+if not game.ReplicatedStorage:FindFirstChild("Bricks") then
+Anti:AddToggle("AntiSnare",{
+Text = "Anti Snare",
 Default = false,
 Callback = function(v)
-_G.ChamsBody = v
-game:GetService("RunService").RenderStepped:Connect(function()
-if _G.ChamsBody then
-for _, part in pairs(Char:GetDescendants()) do
-if part:IsA("BasePart") then
-part.Material = "ForceField"
+if v then
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
+if v.Name == "Snare" and v then
+v.Hitbox.CanTouch = false
 end
 end
+AntiSnare = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+if v.Name == "Snare" and v then
+v.Hitbox.CanTouch = false
 end
 end)
-end})
-LocalPlayer:AddToggle("HideBody",{
-Text = "Hide Body",
-Default = false,
-Callback = function(v)
-_G.HideBody = v
-game:GetService("RunService").RenderStepped:Connect(function()
-if _G.HideBody then
-for _, part in pairs(Char:GetDescendants()) do
-if part:IsA("BasePart") and part.Transparency == 0 then
-part.Transparency = 0.987
-end
-end
 else
-for _, part in pairs(Char:GetDescendants()) do
-if part:IsA("BasePart") and part.Transparency == 0.987 then
-part.Transparency = 0
+AntiSnare:Disconnect()
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
+if v.Name == "Snare" and v then
+v.Hitbox.CanTouch = true
+end
+end
+end
+end})
+Anti:AddToggle("AntiDupe",{
+Text = "Anti Dupe",
+Default = false,
+Callback = function(v)
+if v then
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "DoorFake" and v:IsA("Model") and v then
+v.Hidden.CanTouch = not _G.AntiDupe
+if v:FindFirstChild("LockPart") and v.LockPart:FindFirstChild("UnlockPrompt") then
+v.LockPart.UnlockPrompt.Enabled = not true
+end
+end
+end
+AntiDupe = workspace.CurrentRooms.ChildAdded:Connect(function()
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "DoorFake" and v:IsA("Model") and v then
+v.Hidden.CanTouch = not _G.AntiDupe
+if v:FindFirstChild("LockPart") and v.LockPart:FindFirstChild("UnlockPrompt") then
+v.LockPart.UnlockPrompt.Enabled = not true
+end
 end
 end
 end)
+else
+AntiDupe:Disconnect()
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "DoorFake" and v:IsA("Model") and v then
+v.Hidden.CanTouch = not false
+if v:FindFirstChild("LockPart") and v.LockPart:FindFirstChild("UnlockPrompt") then
+v.LockPart.UnlockPrompt.Enabled = not false
+end
+end
+end
+end
 end})
-
-
-
-
-
+Anti:AddToggle("AntiVacuum",{
+Text = "Anti Vacuum",
+Default = false,
+Callback = function(v)
+if v then
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
+if v.Name == "SideroomSpace" then
+for _,v2 in ipairs(v:GetChildren()) do
+if v2:IsA("BasePart") then
+v.CanTouch = false
+end
+end
+end
+end
+AntiVacuum = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+if v.Name == "SideroomSpace" then
+for _,v2 in ipairs(v:GetChildren()) do
+if v2:IsA("BasePart") then
+v.CanTouch = false
+end
+end
+end
+end)
+else
+AntiVacuum:Disconnect()
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
+if v.Name == "SideroomSpace" then
+for _,v2 in ipairs(v:GetChildren()) do
+if v2:IsA("BasePart") then
+v.CanTouch = true
+end
+end
+end
+end
+end
+end})
+game:GetService("RunService").RenderStepped:Connect(function()
+if not (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and game.Players.LocalPlayer.Character:FindFirstChild("CollisionPart")) then return end
+if workspace:FindFirstChild("BackdoorLookman") and _G.AntiLookman then
+for _, v in workspace:GetChildren() do
+if v.Name == "BackdoorLookman" and v:FindFirstChild("Core") and v.Core:FindFirstChild("Ambience") and v.Core.Ambience.Playing then
+RemotesFolder.MotorReplication:FireServer(-650)
+break
+end
+end
+end
+end)
+Anti:AddToggle("AntiLookman",{
+Text = "Anti Lookman",
+Default = false,
+Callback = function(v)
+_G.AntiLookman = v
+end})
+end
+game:GetService("RunService").RenderStepped:Connect(function()
+if not (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and game.Players.LocalPlayer.Character:FindFirstChild("CollisionPart")) then return end
+if workspace:FindFirstChild("Eyes") and _G.AntiEyes then
+if not Floor.Value == "Fools" and not game.ReplicatedStorage:FindFirstChild("Bricks") then
+for _, v in workspace:GetChildren() do
+if v.Name == "Eyes" and v:FindFirstChild("Core") and v.Core:FindFirstChild("Ambience") and v.Core.Ambience.Playing then
+RemotesFolder.MotorReplication:FireServer(-650)
+break
+end
+end
+end
+end
+if workspace:FindFirstChild("Eyes") and _G.AntiEyes then
+if Floor.Value == "Fools" and game.ReplicatedStorage:FindFirstChild("Bricks") then
+for _, v in workspace:GetChildren() do
+if v.Name == "Eyes" and v:FindFirstChild("Core") and v.Core:FindFirstChild("Ambience") and v.Core.Ambience.Playing then
+RemotesFolder.MotorReplication:FireServer(0,120,0,false)
+break
+end
+end
+end
+end
+end)
+Anti:AddToggle("AntiEyes",{
+Text = "Anti Eyes",
+Default = false,
+Callback = function(v)
+_G.AntiEyes = v
+end})
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AntiGiggle then
+for _, room in pairs(game.workspace.CurrentRooms[GameData.LatestRoom.Value]:GetChildren()) do
+if room.Name == "GiggleCeiling" and v then
+room.Hitbox.CanTouch = not _G.AntiGiggle
+end
+end
+for _, room in pairs(game.workspace.CurrentRooms[GameData.LatestRoom.Value + 1]:GetChildren()) do
+if room.Name == "GiggleCeiling" and v then
+room.Hitbox.CanTouch = not _G.AntiGiggle
+end
+end
+end
+end)
+Anti:AddToggle("AntiGiggle",{
+Text = "Anti Giggle",
+Default = false,
+Callback = function(v)
+_G.AntiGiggle = v
+end})
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AntiGloomEgg then
+for _,v in pairs(game.workspace.CurrentRooms[GameData.LatestRoom.Value]:GetChildren()) do
+if v.Name == "GloomPile" then
+for _,v2 in ipairs(v:GetDescendants()) do
+v2.GloomEgg.Egg.CanTouch = not _G.AntiGloomEgg
+end
+end
+for _,v in pairs(game.workspace.CurrentRooms[GameData.LatestRoom.Value + 1]:GetChildren()) do
+if v.Name == "GloomPile" then
+for _,v2 in ipairs(v:GetDescendants()) do
+v2.GloomEgg.Egg.CanTouch = not _G.AntiGloomEgg
+end
+end
+end
+end
+end)
+Anti:AddToggle("AntiGloomEgg",{
+Text = "Anti Gloom Egg",
+Default = false,
+Callback = function(v)
+_G.AntiGloomEgg = v
+end})
+if Floor.Value == "Retro" then
+Anti:AddDivider()
+Anti:AddToggle("AntiLava",{
+Text = "Anti Lava",
+Default = false,
+Callback = function(v)
+if v then
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "Lava" and v then
+v.CanTouch = false
+end
+end
+AntiLava = workspace.CurrentRooms.ChildAdded:Connect(function()
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "Lava" and v then
+v.CanTouch = false
+end
+end
+end)
+else
+AntiLava:Disconnect()
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "Lava" and v then
+v.CanTouch = true
+end
+end
+end
+end})
+Anti:AddToggle("AntiSeekWall",{
+Text = "Anti Seek Wall",
+Default = false,
+Callback = function(v)
+if v then
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "TheWall" and v then
+v.CanTouch = false
+end
+end
+AntiWall = workspace.CurrentRooms.ChildAdded:Connect(function(v)
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "TheWall" and v then
+v.CanTouch = false
+end
+end
+end)
+else
+AntiWall:Disconnect()
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "TheWall" and v then
+v.CanTouch = true
+end
+end
+end
+end})
+end
+if Floor.Value == "Fools" then
+Anti:AddDivider()
+Anti:AddToggle("AntiBanana",{
+Text = "Anti Banana",
+Default = false,
+Callback = function(v)
+if v then
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "BananaPeel" and v then
+v.CanTouch = false
+v:Destroy()
+end
+end
+AntiBanana = workspace.ChildAdded:Connect(function(v)
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "BananaPeel" and v then
+v.CanTouch = false
+v:Destroy()
+end
+end
+end)
+else
+AntiBanana:Disconnect()
+end
+end})
+end
+game:GetService("RunService").RenderStepped:Connect(function()
+Screech = hookmetamethod(game,"__namecall",newcclosure(function(v,...)
+if _G.AntiScreech and getnamecallmethod() == "FireServer" and v.Name == "Screech" then 
+return 
+end
+return 
+Screech(v,...)
+end))
+end)
+Anti:AddToggle("AntiScreech",{
+Text = "Anti Screech",
+Default = false,
+Callback = function(v)
+_G.AntiScreech = v
+end})
