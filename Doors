@@ -989,22 +989,10 @@ end
 game:GetService("RunService").RenderStepped:Connect(function()
 if not (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and game.Players.LocalPlayer.Character:FindFirstChild("CollisionPart")) then return end
 if workspace:FindFirstChild("Eyes") and _G.AntiEyes then
-if not Floor.Value == "Fools" and not game.ReplicatedStorage:FindFirstChild("Bricks") then
 for _, v in workspace:GetChildren() do
 if v.Name == "Eyes" and v:FindFirstChild("Core") and v.Core:FindFirstChild("Ambience") and v.Core.Ambience.Playing then
 RemotesFolder.MotorReplication:FireServer(-650)
 break
-end
-end
-end
-end
-if workspace:FindFirstChild("Eyes") and _G.AntiEyes then
-if Floor.Value == "Fools" and game.ReplicatedStorage:FindFirstChild("Bricks") then
-for _, v in workspace:GetChildren() do
-if v.Name == "Eyes" and v:FindFirstChild("Core") and v.Core:FindFirstChild("Ambience") and v.Core.Ambience.Playing then
-RemotesFolder.MotorReplication:FireServer(0,120,0,false)
-break
-end
 end
 end
 end
@@ -1152,4 +1140,52 @@ Text = "Anti Screech",
 Default = false,
 Callback = function(v)
 _G.AntiScreech = v
+end})
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AntiFireChandelier then 
+if game.workspace.CurrentRooms[GameData.LatestRoom.Value]:WaitForChild("Assets"):FindFirstChild("ChandelierObstruction") then 
+for _,v in pairs(game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Assets"):GetChildren()) do 
+if v.Name == "ChandelierObstruction" and v then 
+v.HurtPart.CanTouch = not _G.AntiFireChandelier
+end 
+end 
+end 
+if game.workspace.CurrentRooms[GameData.LatestRoom.Value + 1]:WaitForChild("Assets"):FindFirstChild("ChandelierObstruction") then 
+for _,v in pairs(game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Assets"):GetChildren()) do 
+if v.Name == "ChandelierObstruction" and v then 
+v.HurtPart.CanTouch = not _G.AntiFireChandelier
+end 
+end 
+end 
+end 
+end)
+Anti:AddToggle("AntiFireChandelier",{
+Text = "Anti Fire Chandelier",
+Default = false,
+Callback = function(v)
+_G.AntiChandelier = v
+end})
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AntiSeekArms then
+if game.workspace.CurrentRooms[GameData.LatestRoom.Value]:WaitForChild("Assets"):FindFirstChild("Seek_Arm") then
+for _,v in pairs(game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Assets"):GetChildren()) do 
+if v.Name == "Seek_Arm" and v then 
+v.AnimatorPart.CanTouch = not _G.AntiSeekArms
+end 
+end 
+end 
+if game.workspace.CurrentRooms[GameData.LatestRoom.Value + 1]:WaitForChild("Assets"):FindFirstChild("Seek_Arm") then
+for _,v in pairs(game.workspace.CurrentRooms[tostring(game:GetService("ReplicatedStorage").GameData.LatestRoom.Value)]:WaitForChild("Assets"):GetChildren()) do 
+if v.Name == "Seek_Arm" and v then 
+v.AnimatorPart.CanTouch = not _G.AntiSeekArms
+end 
+end 
+end 
+end 
+end)
+Anti:AddToggle("Anti-SeekArms",{
+Text = "Anti Seek Arms",
+Default = false,
+Callback = function(v)
+_G.AntiSeekArms = v
 end})
