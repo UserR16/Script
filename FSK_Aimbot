@@ -1,0 +1,31 @@
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "AimbotGUI"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = game.CoreGui
+
+local Button = Instance.new("TextButton")
+Button.Size = UDim2.new(0, 150, 0, 50)
+Button.Position = UDim2.new(0, 10, 0, 10)
+Button.BackgroundColor3 = Color3.fromRGB(5, 5, 7)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.Font = Enum.Font.RobotoMono
+Button.TextSize = 20
+Button.Text = "Aimbot : OFF"
+Button.TextScaled = true
+Button.Parent = ScreenGui
+
+local UICorner = Instance.new("UICorner")
+UICorner.Parent = Button
+
+local Default = false
+
+local function Toggle()
+Default = not Default
+if Default then
+Button.Text = "Aimbot : ON"
+Aimbot = true
+else
+Button.Text = "Aimbot : OFF"
+Aimbot = false
+end
+end
