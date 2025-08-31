@@ -25,7 +25,7 @@ Button.Position = UDim2.new(0.85, 0, 0, 10)
 Button.BackgroundColor3 = Color3.fromRGB(5, 5, 15)
 Button.TextColor3 = Color3.fromRGB(255, 255, 255)
 Button.Font = Enum.Font.RobotoMono
-Button.TextSize = 17.5
+Button.TextSize = 15
 Button.Text = "Aimbot : OFF"
 Button.Parent = ScreenGui
 
@@ -39,7 +39,7 @@ local UICornerButton = Instance.new("UICorner")
 UICornerButton.Parent = Button
 
 local UIStrokeFrame = Instance.new("UIStroke")
-UIStrokeFrame.Color = Color3.fromRGB(20,20,20)
+UIStrokeFrame.Color = Color3.fromRGB(10,10,10)
 UIStrokeFrame.Thickness = 3
 UIStrokeFrame.Parent = Frame
 
@@ -51,23 +51,17 @@ UIStrokeShadow.Parent = Shadow
 
 local Default = false
 
-game:GetService("RunService").RenderStepped:Connect(function()
-local Killers = workspace.Players:FindFirstChild("Killers"):FindFirstChildOfClass("Model")
-local Character = game.Players.LocalPlayer.Character
-if Aimbot and Killers and Character and not Killers:GetAttribute("Username", game.Players.LocalPlayer.Name) then
-Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.lookAt(Character:FindFirstChild("HumanoidRootPart").Position, Killers:FindFirstChild("HumanoidRootPart").Position)
-workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, Killers:FindFirstChild("HumanoidRootPart").Position)
-end
-end)
-
 Button.MouseButton1Click:Connect(function()
 Default = not Default
 if Default then
 Button.Text = "Aimbot : ON"
-Aimbot = true
+Aimbot = game:GetService("RunService").RenderStepped:Connect(function()
+game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.lookAt(game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position, Vector3.new(workspace.Players:FindFirstChild("Killers"):FindFirstChildOfClass("Model").HumanoidRootPart.Position.X, workspace.Players:FindFirstChild("Killers"):FindFirstChildOfClass("Model").HumanoidRootPart.Position.Y, workspace.Players:FindFirstChild("Killers"):FindFirstChildOfClass("Model").HumanoidRootPart.Position.Z))
+workspace.CurrentCamera.CFrame = CFrame.new(workspace.CurrentCamera.CFrame.Position, workspace.Players:FindFirstChild("Killers"):FindFirstChildOfClass("Model").HumanoidRootPart.Position)
+end)
 else
 Button.Text = "Aimbot : OFF"
-Aimbot = false
+Aimbot:Disconnect()
 end
 end)
 
