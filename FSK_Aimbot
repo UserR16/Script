@@ -9,7 +9,7 @@ Button.Position = UDim2.new(0, 10, 0, 10)
 Button.BackgroundColor3 = Color3.fromRGB(5, 5, 7)
 Button.TextColor3 = Color3.fromRGB(255, 255, 255)
 Button.Font = Enum.Font.RobotoMono
-Button.TextSize = 20
+Button.TextSize = 14
 Button.Text = "Aimbot : OFF"
 Button.TextScaled = true
 Button.Parent = ScreenGui
@@ -35,7 +35,7 @@ local Character = game.Players.LocalPlayer.Character
 
 game:GetService("RunService").RenderStepped:Connect(function()
 if Aimbot and Killers and Character then
-Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.lookAt(Character:FindFirstChild("HumanoidRootPart").Position, Killer:FindFirstChild("HumanoidRootPart").Position)
-workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, Killer:FindFirstChild("HumanoidRootPart").Position)
+Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.lookAt(Character:FindFirstChild("HumanoidRootPart").Position, Killers:FindFirstChild("HumanoidRootPart").Position)
+workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, Killers:FindFirstChild("HumanoidRootPart").Position)
 end
 end)
