@@ -19,7 +19,7 @@ UICorner.Parent = Button
 
 local Default = false
 
-local function Toggle()
+Button.MouseButton1Click:Connect(function()
 Default = not Default
 if Default then
 Button.Text = "Aimbot : ON"
@@ -28,4 +28,14 @@ else
 Button.Text = "Aimbot : OFF"
 Aimbot = false
 end
+end)
+
+local Killers = workspace.Players:FindFirstChild("Killers"):FindFirstChildOfClass("Model")
+local Character = game.Players.LocalPlayer.Character
+
+game:GetService("RunService").RenderStepped:Connect(function()
+if Aimbot and Killers and Character then
+Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.lookAt(Character:FindFirstChild("HumanoidRootPart").Position, Killer:FindFirstChild("HumanoidRootPart").Position)
+workspace.CurrentCamera.CFrame = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, Killer:FindFirstChild("HumanoidRootPart").Position)
 end
+end)
