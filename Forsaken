@@ -1,1 +1,109 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/Library-ui/refs/heads/main/Redzhubui"))()
 
+local Window = Library:MakeWindow({"Forsaken", "BETA", "testando-redzLibv5.json"})
+Window:AddMinimizeButton({
+Button = { ImageColor3 = Color3.fromRGB(90,0,255),Image = "rbxassetid://95869322194132", BackgroundColor3 = Color3.fromRGB(0,0,0), BackgroundTransparency = 0 },
+Corner = { CornerRadius = UDim.new(0, 5) }
+})
+Instance.new("UIStroke", game:GetService("CoreGui")["redz Library V5"].Hub).Color = Color3.fromRGB(90,0,255)
+Instance.new("UIStroke", game:GetService("CoreGui")["redz Library V5"].ImageButton).Color = Color3.fromRGB(90,0,255)
+local Tabs = {
+Main = Window:MakeTab({"Main", "Home"}),
+Players = Window:MakeTab({"Players", "User"}),
+Miscellaneous = Window:MakeTab({"Miscellaneous", "Book"}),
+Visual = Window:MakeTab({"Visual", "Camera"})
+}
+Tabs.Main:AddSection({"Generator"})
+Tabs.Main:AddDropdown({
+Name = "Select Fix Mode",
+Options = {"Fast", "Normal", "Slow"},
+MultiSelect = false,
+Default = {"Normal"},
+Callback = function(v)
+_G.SelectFixMode = v
+end})
+Tabs.Main:AddToggle({
+Name = "Always Fix Generator",
+Default = false,
+Callback = function(v)
+_G.AutoGenerator = v
+pcall(function()
+task.spawn(function()
+while _G.AutoGenerator do
+if _G.SelectFixMode == "Fast" and game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("PuzzleUI") then
+wait(1.75)
+for _,v in ipairs(workspace["Map"]["Ingame"]["Map"]:GetChildren()) do
+if v.Name == "Generator" then
+v.Remotes.RE:FireServer()
+end
+end
+elseif _G.SelectFixMode == "Normal" and game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("PuzzleUI") then
+wait(3.75)
+for _,v in ipairs(workspace["Map"]["Ingame"]["Map"]:GetChildren()) do
+if v.Name == "Generator" then
+v.Remotes.RE:FireServer()
+end
+end
+elseif _G.SelectFixMode == "Slow" and game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("PuzzleUI") then
+wait(5.75)
+for _,v in ipairs(workspace["Map"]["Ingame"]["Map"]:GetChildren()) do
+if v.Name == "Generator" then
+v.Remotes.RE:FireServer()
+end
+end
+end
+wait()
+end
+end)
+end)
+end})
+Tabs.Main:AddToggle({
+Name = "Always Hide Fix Ui",
+Default = false,
+Callback = function(v)
+_G.HideFixUi = v
+game:GetService("RunService").RenderStepped:Connect(function()
+game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("PuzzleUI").Enabled = not _G.HideFixUi
+end)
+end})
+Tabs.Main:AddToggle({
+Name = "Always Farm Generator",
+Default = false,
+Callback = function(v)
+_G.AutoFarm = v
+pcall(function()
+task.spawn(function()
+while _G.AutoFarm == true do
+for _,v in ipairs(workspace.Map.Ingame.Map:GetChildren()) do
+if v.Name == "Generator" and game.Players.LocalPlayer.Character:FindFirstChild("CollisionHitbox") then
+if v.Progress.Value < 100 and not game.Players.LocalPlayer.PlayerGui:FindFirstChild("PuzzleUI") then
+game.Players.LocalPlayer.Character.HumanoidRootPart.Position = v:FindFirstChild("Main").Position
+game.Players.LocalPlayer.Character:FindFirstChild("CollisionHitbox").Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+fireproximityprompt(v:FindFirstChild("Main").Prompt)
+end
+end
+end
+wait(1)
+end
+end)
+end)
+end})
+
+Tabs.Miscellaneous:AddSlider({
+Name = "Health Eat Pizza Limit",
+Min = 50,
+Max = 100,
+Increase = 1,
+Default = 50,
+Callback = function(v)
+_G.HealthEatPizzaLimit = v
+end})
+Tabs.Miscellaneous:AddSlider({
+Name = "Distance Eat Pizza Limit",
+Min = 10,
+Max = 50,
+Increase = 1,
+Default = 10,
+Callback = function(v)
+_G.HealthEatPizzaLimit = v
+end})
