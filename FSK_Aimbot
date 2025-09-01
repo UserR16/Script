@@ -1,5 +1,6 @@
 if game.CoreGui:FindFirstChild("AimbotGUI") then
-return
+Aimbot:Disconnect()
+game.CoreGui:FindFirstChild("AimbotGUI"):Destroy()
 end
 
 local ScreenGui = Instance.new("ScreenGui")
@@ -26,7 +27,7 @@ Button.BackgroundColor3 = Color3.fromRGB(5, 5, 15)
 Button.TextColor3 = Color3.fromRGB(255, 255, 255)
 Button.Font = Enum.Font.RobotoMono
 Button.TextSize = 15
-Button.Text = "Aimbot : OFF"
+Button.Text = "Aimbot : OFF 🔆"
 Button.Parent = ScreenGui
 
 local UICornerShadow = Instance.new("UICorner")
@@ -54,13 +55,14 @@ local Default = false
 Button.MouseButton1Click:Connect(function()
 Default = not Default
 if Default then
-Button.Text = "Aimbot : ON"
+Button.Text = "Aimbot : ON 🔆"
 Aimbot = game:GetService("RunService").RenderStepped:Connect(function()
+if not workspace.Players:FindFirstChild("Killers"):FindFirstChildOfClass("Model"):GetAttribute("Username") == game.Players.LocalPlayer.Name then
 game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.lookAt(game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position, Vector3.new(workspace.Players:FindFirstChild("Killers"):FindFirstChildOfClass("Model").HumanoidRootPart.Position.X, workspace.Players:FindFirstChild("Killers"):FindFirstChildOfClass("Model").HumanoidRootPart.Position.Y, workspace.Players:FindFirstChild("Killers"):FindFirstChildOfClass("Model").HumanoidRootPart.Position.Z))
-workspace.CurrentCamera.CFrame = CFrame.new(workspace.CurrentCamera.CFrame.Position, workspace.Players:FindFirstChild("Killers"):FindFirstChildOfClass("Model").HumanoidRootPart.Position)
+end
 end)
 else
-Button.Text = "Aimbot : OFF"
+Button.Text = "Aimbot : OFF 🔆"
 Aimbot:Disconnect()
 end
 end)
