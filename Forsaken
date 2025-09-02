@@ -89,9 +89,188 @@ end)
 end)
 end})
 
+Tabs.Players:AddSection({"Survivor"})
+StaminaScript = require(game:GetService("ReplicatedStorage").Systems.Character.Game.Sprinting)
+game:GetService("RunService").RenderStepped:Connect(function()
+for _,v in pairs(workspace.Players.Survivors:GetChildren()) do
+if v.Parent.Name == "Survivors" and v:GetAttribute("Username") == game.Players.LocalPlayer.Name then
+if _G.ApplyForSurvivor then
+StaminaScript.MaxStamina = _G.MaxStaminaSurvivor or 100
+StaminaScript.StaminaGain = _G.StaminaGainSurvivor or 30
+StaminaScript.StaminaLoss = _G.StaminaLossSurvivor or 10
+StaminaScript.SprintSpeed = _G.SprintSpeedSurvivor or 26
+end
+end
+end
+end)
+Tabs.Players:AddSlider({
+Name = "Max Stamina",
+Min = 100,
+Max = 5000,
+Increase = 1,
+Default = 100,
+Callback = function(v)
+_G.MaxStaminaSurvivor = v
+end})
+Tabs.Players:AddSlider({
+Name = "Stamina Gain",
+Min = 30,
+Max = 5000,
+Increase = 1,
+Default = 30,
+Callback = function(v)
+_G.StaminaGainSurvivor = v
+end})
+Tabs.Players:AddSlider({
+Name = "Stamina Loss",
+Min = 1,
+Max = 50,
+Increase = 1,
+Default = 10,
+Callback = function(v)
+_G.StaminaLossSurvivor = v
+end})
+Tabs.Players:AddSlider({
+Name = "Sprint Speed",
+Min = 26,
+Max = 32,
+Increase = 1,
+Default = 26,
+Callback = function(v)
+_G.SprintSpeedSurvivor = v
+end})
+Tabs.Players:AddToggle({
+Name = "Apply",
+Default = false,
+Callback = function(v)
+_G.ApplyForSurvivor = v
+end})
+Tabs.Players:AddSection({"Killer"})
+StaminaScript = require(game:GetService("ReplicatedStorage").Systems.Character.Game.Sprinting)
+game:GetService("RunService").RenderStepped:Connect(function()
+for _,v in pairs(workspace.Players.Survivors:GetChildren()) do
+if v.Parent.Name == "Killers" and v:GetAttribute("Username") == game.Players.LocalPlayer.Name then
+if _G.ApplyForKiller then
+StaminaScript.MaxStamina = _G.MaxStaminaKiller or 110
+StaminaScript.StaminaGain = _G.StaminaGainKiller or 31
+StaminaScript.StaminaLoss = _G.StaminaLossKiller or 10
+StaminaScript.SprintSpeed = _G.SprintSpeedKiller or 28
+end
+end
+end
+end)
+Tabs.Players:AddSlider({
+Name = "Max Stamina",
+Min = 100,
+Max = 5000,
+Increase = 1,
+Default = 100,
+Callback = function(v)
+_G.MaxStaminaKiller = v
+end})
+Tabs.Players:AddSlider({
+Name = "Stamina Gain",
+Min = 30,
+Max = 5000,
+Increase = 1,
+Default = 30,
+Callback = function(v)
+_G.StaminaGainKiller = v
+end})
+Tabs.Players:AddSlider({
+Name = "Stamina Loss",
+Min = 1,
+Max = 50,
+Increase = 1,
+Default = 10,
+Callback = function(v)
+_G.StaminaLossKiller = v
+end})
+Tabs.Players:AddSlider({
+Name = "Sprint Speed",
+Min = 26,
+Max = 32,
+Increase = 1,
+Default = 26,
+Callback = function(v)
+_G.SprintSpeedKiller = v
+end})
+Tabs.Players:AddToggle({
+Name = "Apply",
+Default = false,
+Callback = function(v)
+_G.ApplyForKiller = v
+end})
+Tabs.Players:AddSection({"Other"})
+Tabs.Players:AddToggle({
+Name = "Hide Survivor Bar",
+Default = false,
+Callback = function(v)
+_G.HideBar = v
+game:GetService("RunService").RenderStepped:Connect(function()
+game.Players.LocalPlayer.PlayerGui:FindFirstChild("TemporaryUI"):FindFirstChild("PlayerInfo").CurrentSurvivors.Visible = not _G.HideBar
+end)
+end})
+Tabs.Players:AddToggle({
+Name = "Invisible",
+Default = false,
+Callback = function(v)
+_G.Invisible = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.Invisible and game.Players.LocalPlayer.Character.Parent ~= workspace.Players.Spectating then
+local Animation = Instance.new("Animation")
+Animation.Name = "Invisible_Animation"
+Animation.AnimationId = "rbxassetid://75804462760596"
+local Load = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(Animation)
+Load:Play(0,1,1)
+Load:AdjustSpeed(0)
+else
+for i,v in next, game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks() do
+if v.Animation.Name == "Invisible_Animation" then
+v:Stop()
+end
+end
+end
+end)
+end})
+Tabs.Players:AddToggle({
+Name = "Spam Footstep (FE)",
+Default = false,
+Callback = function(v)
+_G.SpamFootstep = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.SpamFootstep then
+game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Network"):WaitForChild("UnreliableRemoteEvent"):FireServer("FootstepPlayed", 9)
+end
+end)
+end})
+Tabs.Players:AddToggle({
+Name = "No Blindness",
+Default = false,
+Callback = function(v)
+_G.NoBlindness = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.NoBlindness and game:GetService("ReplicatedStorage").Modules.StatusEffects:FindFirstChild("Blindness") then
+game:GetService("ReplicatedStorage").Modules.StatusEffects:FindFirstChild("Blindness"):Destroy()
+end
+end)
+end})
+Tabs.Players:AddToggle({
+Name = "No Slowness",
+Default = false,
+Callback = function(v)
+_G.NoSlowness = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.NoSlowness and game:GetService("ReplicatedStorage").Modules.StatusEffects:FindFirstChild("Slowness") then
+game:GetService("ReplicatedStorage").Modules.StatusEffects:FindFirstChild("Slowness"):Destroy()
+end
+end)
+end})
+
+Tabs.Miscellaneous:AddSection({"Health"})
 Tabs.Miscellaneous:AddSlider({
 Name = "Health Eat Pizza Limit",
-Min = 50,
+Min = 1,
 Max = 100,
 Increase = 1,
 Default = 50,
@@ -107,3 +286,269 @@ Default = 10,
 Callback = function(v)
 _G.HealthEatPizzaLimit = v
 end})
+
+_G.HealthEatPizzaLimit = 50
+_G.DistanceEatPizzaLimit = 10
+
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AlwaysEatPizza and workspace.Map.Ingame:FindFirstChild("Pizza") then
+if game.Players.LocalPlayer.Character.Humanoid.Health < _G.HealthEatPizzaLimit and (workspace.Map:FindFirstChild("Ingame"):FindFirstChild("Pizza").Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < _G.DistanceEatPizzaLimit then
+workspace.Map.Ingame:FindFirstChild("Pizza").Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+end
+end
+end)
+Tabs.Miscellaneous:AddToggle({
+Name = "Always Eat Pizza",
+Default = false,
+Callback = function(v)
+_G.AlwaysEatPizza = v
+end})
+Tabs.Miscellaneous:AddSection({"Skill"})
+Tabs.Miscellaneous:AddToggle({
+Name = "Auto Flip Coins",
+Default = false,
+Callback = function(v)
+_G.AutoFlipCoins = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AutoFlipCoins then
+game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Network"):WaitForChild("RemoteEvent"):FireServer("UseActorAbility", "CoinFlip")
+end
+end)
+end})
+
+Tabs.Visual:AddSection({"Camera"})
+Tabs.Visual:AddSlider({
+Name = "Field Of View",
+Min = 70,
+Max = 120,
+Increase = 1,
+Default = 70,
+Callback = function(v)
+_G.FieldOfViewValue = v
+end})
+Tabs.Visual:AddToggle({
+Name = "Field Of View",
+Default = false,
+Callback = function(v)
+_G.FieldOfView = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.FieldOfView then
+workspace.Camera.FieldOfView = _G.FieldOfViewValue or 80
+end
+end)
+end})
+Tabs.Visual:AddToggle({
+Name = "Fullbright",
+Default = false,
+Callback = function(v)
+_G.Fullbright = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.Fullbright then
+game.Lighting.OutdoorAmbient = Color3.fromRGB(255,255,255)
+game.Lighting.Brightness = 1.5
+game.Lighting.GlobalShadows = false
+else
+game.Lighting.OutdoorAmbient = Color3.fromRGB(55,55,55)
+game.Lighting.Brightness = 1.5
+game.Lighting.GlobalShadows = true
+end
+end)
+end})
+Tabs.Visual:AddToggle({
+Name = "Removal Fog",
+Default = false,
+Callback = function(v)
+_G.NoFog = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if not game.Lighting:GetAttribute("FogStart") then game.Lighting:SetAttribute("FogStart", game.Lighting.FogStart) end
+if not game.Lighting:GetAttribute("FogEnd") then game.Lighting:SetAttribute("FogEnd", game.Lighting.FogEnd) end
+game.Lighting.FogStart = _G.NoFog and 0 or game.Lighting:GetAttribute("FogStart")
+game.Lighting.FogEnd = _G.NoFog and math.huge or game.Lighting:GetAttribute("FogEnd")
+local fog = game.Lighting:FindFirstChildOfClass("Atmosphere")
+if fog then
+if not fog:GetAttribute("Density") then fog:SetAttribute("Density", fog.Density) end
+fog.Density = _G.NoFog and 0 or fog:GetAttribute("Density")
+end
+end)
+end})
+Tabs.Visual:AddSection({"ESP"})
+--// Create Text \\
+local function Text(target, title, color, fontsize, name)
+local Billboard = Instance.new("BillboardGui", target)
+local TextLabel = Instance.new("TextLabel", Billboard)
+local UIStroke = Instance.new("UIStroke", TextLabel)
+--// Billboard \\
+Billboard.AlwaysOnTop = true
+Billboard.Size = UDim2.new(0,400,0,100)
+Billboard.Name = name
+Billboard.Active = true
+--// TextLabel \\
+TextLabel.AnchorPoint = Vector2.new(0.5,0.5)
+TextLabel.BackgroundTransparency = 1
+TextLabel.BackgroundColor3 = Color3.new(0,0,0)
+TextLabel.TextColor3 = color
+TextLabel.Font = "RobotoMono"
+TextLabel.TextSize = fontsize
+TextLabel.TextTransparency = 0
+TextLabel.Visible = true
+TextLabel.Text = title
+TextLabel.Size = UDim2.new(1,0,0,0)
+TextLabel.Position = UDim2.new(0.5,0,0.7,-25)
+--// UIStroke \\
+UIStroke.Thickness = 1
+UIStroke.Color = Color3.new()
+UIStroke.Transparency = 0
+end
+--// Create Highlight \\
+local function Highlight(target, color, name)
+task.wait(0.25)
+local Highlight = Instance.new('Highlight', target)
+--// Highlight \\
+Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+Highlight.FillColor = color
+Highlight.OutlineColor = color
+Highlight.FillTransparency = 0.65
+Highlight.OutlineTransparency =  0
+Highlight.Name = name
+end
+--// Disable Text & Highlight \\
+local function Disable(name)
+for _,v in ipairs(workspace:GetDescendants()) do
+if v.Name == name then
+v:Destroy()
+end
+end
+end
+Tabs.Visual:AddToggle({
+Name = "Killers ESP",
+Default = false,
+Callback = function(v)
+if v then
+for _, v in pairs(workspace.Players.Killers:GetChildren()) do
+if v:IsA("Model") and v.Parent.Name == "Killers" then
+Text(v.HumanoidRootPart, v.Name .. "\n" .. v:GetAttribute("SkinNameDisplay"), Color3.new(1), 14, "Killer_ESP")
+Highlight(v, Color3.new(1), "Killer_ESP")
+elseif v.Parent.Name == "Killers" and v:GetAttribute("Username") == game.Players.LocalPlayer.Name then
+v:FindFirstChild("Killer_ESP"):Destroy()
+end
+end
+KillerESP = workspace.Players.Killers.ChildAdded:Connect(function(v)
+wait(2)
+if v:IsA("Model") and v.Parent.Name == "Killers" then
+Text(v.HumanoidRootPart, v.Name .. "\n\nSkin : " .. v:GetAttribute("SkinNameDisplay"), Color3.new(1), 14, "Killer_ESP")
+Highlight(v, Color3.new(1), "Killer_ESP")
+elseif v.Parent.Name == "Killers" and v:GetAttribute("Username") == game.Players.LocalPlayer.Name then
+v:FindFirstChild("Killer_ESP"):Destroy()
+end
+end)
+else
+KillerESP:Disconnect()
+Disable("Killer_ESP")
+end
+end})
+Tabs.Visual:AddToggle({
+Name = "Survivor ESP",
+Default = false,
+Callback = function(v)
+if v then
+for _, v in ipairs(workspace.Players.Survivors:GetChildren()) do
+if v:IsA("Model") and v.Parent.Name == "Survivors" then
+Text(v.HumanoidRootPart, v.Name, Color3.new(0,1), 14, "Survivor_ESP")
+Highlight(v, Color3.new(0,1), "Survivor_ESP")
+elseif v.Parent.Name == "Survivors" and v:GetAttribute("Username") == game.Players.LocalPlayer.Name then
+v:FindFirstChild("Survivor_ESP"):Destroy()
+end
+end
+SurvivalESP = workspace.Players.Survivors.ChildAdded:Connect(function(v)
+wait(2)
+if v:IsA("Model") and v.Parent.Name == "Survivors" then
+Text(v.HumanoidRootPart, v.Name, Color3.new(0,1), 14, "Survivor_ESP")
+Highlight(v, Color3.new(0,1), "Survivor_ESP")
+elseif v.Parent.Name == "Survivors" and v:GetAttribute("Username") == game.Players.LocalPlayer.Name then
+v:FindFirstChild("Survivor_ESP"):Destroy()
+end
+end)
+else
+SurvivalESP:Disconnect()
+Disable("Survivor_ESP")
+end
+end})
+Tabs.Visual:AddToggle({
+Name = "Items ESP",
+Default = false,
+Callback = function(v)
+if v then
+for _, v in ipairs(workspace:GetDescendants()) do
+if v:IsA("Model") and v.Name == "BloxyCola" and not v:FindFirstChild("Items_ESP") then
+Text(v, v.Name, Color3.new(1,1), 14, "Items_ESP")
+Highlight(v, Color3.new(1,1), "Items_ESP")
+elseif v:IsA("Model") and v.Name == "Medkit" and not v:FindFirstChild("Items_ESP") then
+Text(v, v.Name, Color3.new(1), 14, "Items_ESP")
+Highlight(v, Color3.new(1), "Items_ESP")
+end
+end
+ItemsESP = workspace.Map.Ingame.DescendantAdded:Connect(function(v)
+if v:IsA("Model") and v then
+if v.Name == "BloxyCola" and not v:FindFirstChild("Items_ESP") then
+Text(v, v.Name, Color3.new(1,1), 14, "Items_ESP")
+Highlight(v, Color3.new(1,1), "Items_ESP")
+elseif v.Name == "Medkit" and not v:FindFirstChild("Items_ESP") then
+Text(v, v.Name, Color3.new(1), 14, "Items_ESP")
+Highlight(v, Color3.new(1), "Items_ESP")
+end
+end
+end)
+else
+ItemsESP:Disconnect()
+Disable("Items_ESP")
+end
+end})
+Tabs.Visual:AddToggle({
+Name = "Generator ESP",
+Default = false,
+Callback = function(v)
+if v then
+for _, v in ipairs(workspace:GetDescendants()) do
+if v:IsA("Model") and v.Parent.Name == "Map" and v.Name == "Generator" and not v:FindFirstChild("Generator_ESP") then
+Text(v, v.Name, Color3.new(0,0,1), 14, "Generator_ESP")
+Highlight(v, Color3.new(0,0,1), "Generator_ESP")
+end
+end
+GeneratorESP = workspace.Map.Ingame.Map.DescendantAdded:Connect(function(v)
+if v:IsA("Model") and v.Parent.Name == "Map" and v.Name == "Generator" and not v:FindFirstChild("Generator_ESP") then
+Text(v, v.Name, Color3.new(0,0,1), 14, "Generator_ESP")
+Highlight(v, Color3.new(0,0,1), "Generator_ESP")
+end
+end)
+else
+GeneratorESP:Disconnect()
+Disable("Generator_ESP")
+end
+end})
+Tabs.Visual:AddToggle({
+Name = "Subspace Tripmine ESP",
+Default = false,
+Callback = function(v)
+if v then
+for _, v in ipairs(workspace:GetDescendants()) do
+if v:IsA("Model") and v.Name == "SubspaceTripmine" and not v:FindFirstChild("SubspaceTripmine_ESP") then
+Text(v, v.Name, Color3.new(1,0,1), 14, "SSTM_ESP")
+Highlight(v, Color3.new(1,0,1), "SSTM_ESP")
+end
+end
+SubspaceTripmineESP = workspace.Map.Ingame.DescendantAdded:Connect(function(v)
+wait(1)
+if v:IsA("Model") and v.Name == "SubspaceTripmine" and not v:FindFirstChild("SubspaceTripmine_ESP") then
+Text(v, v.Name, Color3.new(1,0,1), 14, "SSTm_ESP")
+Highlight(v, Color3.new(1,0,1), "SSTM_ESP")
+end
+end)
+else
+SubspaceTripmineESP:Disconnect()
+Disable("SSTM_ESP")
+end
+end})
+
+
+
+
