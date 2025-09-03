@@ -18,7 +18,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GameData = ReplicatedStorage:WaitForChild("GameData")
 local Floor = GameData:WaitForChild("Floor")
 
-if game.PlaceId == 110258689672367 then
+if game.ReplicatedStorage:FindFirstChild("Bricks") then
 RemotesFolder = ReplicatedStorage.Bricks
 else
 RemotesFolder = ReplicatedStorage.RemotesFolder
@@ -873,6 +873,7 @@ end
 
 local Anti = Tabs.Exploits:AddLeftGroupbox("Anti")
 if not game.ReplicatedStorage:FindFirstChild("Bricks") then
+if Floor.Value == "Fools" or Floor.Value == "Garden" or Floor.Value == "Mines" or Floor.Value == "Hotel" then
 Anti:AddToggle("AntiSnare",{
 Text = "Anti Snare",
 Default = false,
@@ -897,6 +898,8 @@ end
 end
 end
 end})
+end
+if Floor.Value == "Fools" or Floor.Value == "Hotel" or Floor.Value == "Mines" then
 Anti:AddToggle("AntiDupe",{
 Text = "Anti Dupe",
 Default = false,
@@ -904,18 +907,18 @@ Callback = function(v)
 if v then
 for _,v in pairs(workspace:GetDescendants()) do
 if v.Name == "DoorFake" and v:IsA("Model") and v then
-v.Hidden.CanTouch = not _G.AntiDupe
+v.Hidden.CanTouch = false
 if v:FindFirstChild("LockPart") and v.LockPart:FindFirstChild("UnlockPrompt") then
-v.LockPart.UnlockPrompt.Enabled = not true
+v.LockPart.UnlockPrompt.Enabled = false
 end
 end
 end
 AntiDupe = workspace.CurrentRooms.ChildAdded:Connect(function()
 for _,v in pairs(workspace:GetDescendants()) do
 if v.Name == "DoorFake" and v:IsA("Model") and v then
-v.Hidden.CanTouch = not _G.AntiDupe
+v.Hidden.CanTouch = false
 if v:FindFirstChild("LockPart") and v.LockPart:FindFirstChild("UnlockPrompt") then
-v.LockPart.UnlockPrompt.Enabled = not true
+v.LockPart.UnlockPrompt.Enabled = false
 end
 end
 end
@@ -924,14 +927,16 @@ else
 AntiDupe:Disconnect()
 for _,v in pairs(workspace:GetDescendants()) do
 if v.Name == "DoorFake" and v:IsA("Model") and v then
-v.Hidden.CanTouch = not false
+v.Hidden.CanTouch = true
 if v:FindFirstChild("LockPart") and v.LockPart:FindFirstChild("UnlockPrompt") then
-v.LockPart.UnlockPrompt.Enabled = not false
+v.LockPart.UnlockPrompt.Enabled = true
 end
 end
 end
 end
 end})
+end
+if Floor.Value == "Hotel" or Floor.Value == "Mines" or Floor.Value == "Backdoors" then
 Anti:AddToggle("AntiVacuum",{
 Text = "Anti Vacuum",
 Default = false,
@@ -941,7 +946,7 @@ for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "SideroomSpace" then
 for _,v2 in ipairs(v:GetChildren()) do
 if v2:IsA("BasePart") then
-v.CanTouch = false
+v2.CanTouch = false
 end
 end
 end
@@ -950,7 +955,7 @@ AntiVacuum = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
 if v.Name == "SideroomSpace" then
 for _,v2 in ipairs(v:GetChildren()) do
 if v2:IsA("BasePart") then
-v.CanTouch = false
+v2.CanTouch = false
 end
 end
 end
@@ -961,13 +966,15 @@ for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
 if v.Name == "SideroomSpace" then
 for _,v2 in ipairs(v:GetChildren()) do
 if v2:IsA("BasePart") then
-v.CanTouch = true
+v2.CanTouch = true
 end
 end
 end
 end
 end
 end})
+end
+if Floor.Value == "Backdoors" or Floor.Value == "Hotel" or Floor.Value == "Mines" or Floor.Value == "Garden" then
 game:GetService("RunService").RenderStepped:Connect(function()
 if not (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and game.Players.LocalPlayer.Character:FindFirstChild("CollisionPart")) then return end
 if workspace:FindFirstChild("BackdoorLookman") and _G.AntiLookman then
@@ -986,6 +993,7 @@ Callback = function(v)
 _G.AntiLookman = v
 end})
 end
+if Floor.Value == "Backdoors" or Floor.Value == "Hotel" or Floor.Value == "Mines" or Floor.Value == "Garden" then
 game:GetService("RunService").RenderStepped:Connect(function()
 if not (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and game.Players.LocalPlayer.Character:FindFirstChild("CollisionPart")) then return end
 if workspace:FindFirstChild("Eyes") and _G.AntiEyes then
@@ -1003,6 +1011,8 @@ Default = false,
 Callback = function(v)
 _G.AntiEyes = v
 end})
+end
+if Floor.Value == "Hotel" or Floor.Value == "Mines" then
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.AntiGiggle then
 for _, v in pairs(game.workspace.CurrentRooms[GameData.LatestRoom.Value]:GetChildren()) do
@@ -1023,6 +1033,8 @@ Default = false,
 Callback = function(v)
 _G.AntiGiggle = v
 end})
+end
+if Floor.Value == "Hotel" or Floor.Value == "Mines" then
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.AntiGloomEgg then
 for _,v in pairs(game.workspace.CurrentRooms[GameData.LatestRoom.Value]:GetChildren()) do
@@ -1047,6 +1059,7 @@ Default = false,
 Callback = function(v)
 _G.AntiGloomEgg = v
 end})
+end
 if Floor.Value == "Retro" then
 Anti:AddDivider()
 Anti:AddToggle("AntiLava",{
@@ -1112,22 +1125,62 @@ if v then
 for _,v in pairs(workspace:GetDescendants()) do
 if v.Name == "BananaPeel" and v then
 v.CanTouch = false
-v:Destroy()
 end
 end
 AntiBanana = workspace.ChildAdded:Connect(function(v)
 for _,v in pairs(workspace:GetDescendants()) do
 if v.Name == "BananaPeel" and v then
 v.CanTouch = false
-v:Destroy()
 end
 end
 end)
 else
 AntiBanana:Disconnect()
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "BananaPeel" and v then
+v.CanTouch = true
+end
+end
+end
+end})
+Anti:AddToggle("AntiJeff",{
+Text = "Anti Jeff",
+Default = false,
+Callback = function(v)
+if v then
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
+if v.Name == "JeffTheKiller" and v then
+for _,v2 in ipairs(v:GetChildren()) do
+if v2:IsA("BasePart") then
+v2.CanTouch = false
+end
+end
+end
+end
+AntiJeff = workspace.CurrentRooms.DescendantAdded:Connect(function(v)
+if v.Name == "JeffTheKiller" and v then
+for _,v2 in ipairs(v:GetChildren()) do
+if v2:IsA("BasePart") then
+v2.CanTouch = false
+end
+end
+end
+end)
+else
+AntiJeff:Disconnect()
+for _,v in ipairs(workspace.CurrentRooms:GetDescendants()) do
+if v.Name == "JeffTheKiller" and v then
+for _,v2 in ipairs(v:GetChildren()) do
+if v2:IsA("BasePart") then
+v2.CanTouch = true
+end
+end
+end
+end
 end
 end})
 end
+if Floor.Value == "Screech" or Floor.Value == "Fools" or Floor.Value == "Hotel" or Floor.Value == "Mines" then
 Screech = hookmetamethod(game,"__namecall",newcclosure(function(v,...)
 if _G.AntiScreech and getnamecallmethod() == "FireServer" and v.Name == "Screech" then 
 return 
@@ -1141,6 +1194,80 @@ Default = false,
 Callback = function(v)
 _G.AntiScreech = v
 end})
+end
+if Floor.Value == "Garden" or Floor.Value == "Hotel" or Floor.Value == "Mines" then
+A90 = hookmetamethod(game,"__namecall",newcclosure(function(v,...)
+if _G.AntiA90 and getnamecallmethod() == "FireServer" and v.Name == "A90" then 
+return 
+end
+return 
+A90(v,...)
+end))
+Anti:AddToggle("AntiA90",{
+Text = "Anti A90",
+Default = false,
+Callback = function(v)
+_G.AntiA90 = v
+end})
+end
+if Floor.Value == "Garden" then
+Surge = hookmetamethod(game,"__namecall",newcclosure(function(v,...)
+if _G.AntiSurge and getnamecallmethod() == "FireServer" and v.Name == "SurgeRemote" then 
+return 
+end
+return 
+Surge(v,...)
+end))
+Anti:AddToggle("AntiSurge",{
+Text = "Anti Surge",
+Default = false,
+Callback = function(v)
+_G.AntiSurge = v
+end})
+end
+Anti:AddToggle("AntiNanner",{
+Text = "Anti Nanner",
+Default = false,
+Callback = function(v)
+if v then
+for _,v in ipairs(workspace:GetChildren()) do
+if v.Name == "NannerPeel" and v then 
+v.CanTouch = false
+v:WaitForChild("Hitbox").CanTouch = false 
+end 
+end
+AntiNanner = workspace.DescendantAdded:Connect(function(v)
+if v.Name == "NannerPeel" and v then 
+v.CanTouch = false
+v:WaitForChild("Hitbox").CanTouch = false 
+end 
+end)
+else
+AntiNanner:Disconnect()
+for _,v in ipairs(workspace:GetChildren()) do
+if v.Name == "NannerPeel" and v then 
+v.CanTouch = true
+v:WaitForChild("Hitbox").CanTouch = true
+end 
+end
+end
+end})
+if Floor.Value == "Hotel" or Floor.Value == "Mines" then
+Heartbeat = hookmetamethod(game,"__namecall",newcclosure(function(v,...)
+if _G.AntiHeartbeat and getnamecallmethod() == "FireServer" and v.Name == "ClutchHeartbeat" then 
+return 
+end
+return 
+Heartbeat(v,...)
+end))
+Anti:AddToggle("AntiHeartbeat",{
+Text = "Anti Heartbeat Minigame",
+Default = false,
+Callback = function(v)
+_G.AntiHeartbeat = v
+end})
+end
+if Floor.Value == "Fools" or Floor.Value == "Hotel" then
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.AntiFireChandelier then 
 if game.workspace.CurrentRooms[GameData.LatestRoom.Value]:WaitForChild("Assets"):FindFirstChild("ChandelierObstruction") then 
@@ -1189,3 +1316,161 @@ Default = false,
 Callback = function(v)
 _G.AntiSeekArms = v
 end})
+end
+
+local Removal = Tabs.Exploits:AddRightGroupbox("Removal")
+if not game.ReplicatedStorage:FindFirstChild("Bricks") then
+Removal:AddToggle("RemoveA90",{
+Text = "Remove A90",
+Default = false,
+Callback = function(v)
+_G.RemoveA90 = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.RemoveA90 then
+if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules:FindFirstChild("A90") then
+game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules.A90.Name = "_A90"
+end
+else
+if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules:FindFirstChild("_A90") then
+game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules._A90.Name = "A90"
+end
+end
+end)
+end})
+Removal:AddToggle("RemoveFiredamp",{
+Text = "Remove Firedamp",
+Default = false,
+Callback = function(v)
+_G.RemoveFiredamp = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.RemoveFiredamp then
+if workspace.Camera:FindFirstChild("LiveFiredamp") then
+workspace.Camera.LiveFiredamp:Destroy()
+end
+end
+end)
+end})
+end
+Removal:AddToggle("RemoveScreech",{
+Text = "Remove Screech",
+Default = false,
+Callback = function(v)
+_G.RemoveScreech = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.RemoveScreech then
+if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules:FindFirstChild("Screech") then
+game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules.Screech.Name = "_Screech"
+end
+else
+if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules:FindFirstChild("_Screech") then
+game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules._Screech.Name = "Screech"
+end
+end
+end)
+end})
+Removal:AddToggle("RemoveHalt",{
+Text = "Remove Halt",
+Default = false,
+Callback = function(v)
+_G.RemoveHalt = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.RemoveHalt then
+ReplicatedStorage.ClientModules.EntityModules:FindFirstChild("Shade").Parent = workspace
+else
+workspace:FindFirstChild("Shade").Parent = ReplicatedStorage.ClientModules.EntityModules
+end
+end)
+end})
+Removal:AddToggle("RemoveHalt",{
+Text = "Remove Void",
+Default = false,
+Callback = function(v)
+_G.RemoveVoid = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.RemoveVoid then
+ReplicatedStorage.ClientModules.EntityModules:FindFirstChild("Void").Parent = workspace
+else
+workspace:FindFirstChild("Void").Parent = ReplicatedStorage.ClientModules.EntityModules
+end
+end)
+end})
+Removal:AddToggle("RemoveHalt",{
+Text = "Remove Glitch",
+Default = false,
+Callback = function(v)
+_G.RemoveGlitch = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.RemoveGlitch then
+ReplicatedStorage.ClientModules.EntityModules:FindFirstChild("Glitch").Parent = workspace
+else
+workspace:FindFirstChild("Glitch").Parent = ReplicatedStorage.ClientModules.EntityModules
+end
+end)
+end})
+if not Floor.Value == "Fools" then
+if not game.ReplicatedStorage:FindFirstChild("Bricks") then
+Removal:AddToggle("RemoveDread",{
+Text = "Remove Dread",
+Default = false,
+Callback = function(v)
+_G.RemoveDread = v
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.RemoveDread then
+if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules:FindFirstChild("Dread") then
+game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules.Dread.Name = "_Dread"
+end
+else
+if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules:FindFirstChild("_Dread") then
+game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules._Dread.Name = "Dread"
+end
+end
+end)
+end})
+end
+end
+if Floor.Value == "Retro" then
+Removal:AddDivider()
+Removal:AddToggle("RemoveDrakoBloxxer",{
+Text = "Remove DrakoBloxxer",
+Default = false,
+Callback = function(v)
+if v then
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "Drakobloxxer" and v then
+v:Destroy()
+end
+end
+AntiDrakobloxxer = workspace.ChildAdded:Connect(function()
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "Drakobloxxer" and v then
+v:Destroy()
+end
+end
+end)
+else
+AntiDrakobloxxer:Disconnect()
+end
+end})
+end
+if Floor.Value == "Fools" then
+Removal:AddDivider()
+Removal:AddToggle("RemoveJeffTheKiller",{
+Text = "Remove Jeff",
+Default = false,
+Callback = function(v)
+if v then
+for _,v in pairs(workspace:GetDescendants()) do
+if v.Name == "JeffTheKiller" and v then
+v:Destroy()
+end
+end
+AntiJeff = workspace.CurrentRooms.DescendantAdded:Connect(function()
+if v.Name == "JeffTheKiller" and v then
+v:Destroy()
+end
+end)
+else
+AntiJeff:Disconnect()
+end
+end})
+end
