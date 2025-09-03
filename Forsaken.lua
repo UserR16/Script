@@ -15,7 +15,7 @@ local Window = Library:CreateWindow({
 	Center = true,
 	AutoShow = true,
 	Resizable = true,
-  Font = Enum.Font.RobotoMono,
+    Font = Enum.Font.RobotoMono,
 	ShowCustomCursor = true,
 	NotifySide = "Right",
 	TabPadding = 8,
@@ -23,7 +23,7 @@ local Window = Library:CreateWindow({
 })
 
 local Tabs = {
-	Main = Window:AddTab("Main"),
+  Main = Window:AddTab("Main"),
   Players = Window:AddTab("Players"),
   Visual = Window:AddTab("Visual"),
   Setting = Window:AddTab("Setting")
@@ -344,5 +344,228 @@ end)
 end})
 
 local ESP = Tabs.Visual:AddRightGroupbox("ESP", "boxes")
+--// Create Text \\
+local function Text(target, title, color, fontsize, name)
+local Billboard = Instance.new("BillboardGui", target)
+local TextLabel = Instance.new("TextLabel", Billboard)
+local UIStroke = Instance.new("UIStroke", TextLabel)
+--// Billboard \\
+Billboard.AlwaysOnTop = true
+Billboard.Size = UDim2.new(0,400,0,100)
+Billboard.Name = name
+Billboard.Active = true
+--// TextLabel \\
+TextLabel.AnchorPoint = Vector2.new(0.5,0.5)
+TextLabel.BackgroundTransparency = 1
+TextLabel.BackgroundColor3 = Color3.new(0,0,0)
+TextLabel.TextColor3 = color
+TextLabel.Font = "RobotoMono"
+TextLabel.TextSize = fontsize
+TextLabel.TextTransparency = 0
+TextLabel.Visible = true
+TextLabel.Text = title
+TextLabel.Size = UDim2.new(1,0,0,0)
+TextLabel.Position = UDim2.new(0.5,0,0.7,-25)
+--// UIStroke \\
+UIStroke.Thickness = 1
+UIStroke.Color = Color3.new()
+UIStroke.Transparency = 0
+end
+--// Create Highlight \\
+local function Highlight(target, color, name)
+task.wait(0.25)
+local Highlight = Instance.new('Highlight', target)
+--// Highlight \\
+Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+Highlight.FillColor = color
+Highlight.OutlineColor = color
+Highlight.FillTransparency = 0.65
+Highlight.OutlineTransparency =  0
+Highlight.Name = name
+end
+--// Disable Text & Highlight \\
+local function Disable(name)
+for _,v in ipairs(workspace:GetDescendants()) do
+if v.Name == name then
+v:Destroy()
+end
+end
+end
+ESP:AddToggle("KillerESP",{
+    Text = "Killer ESP",
+    Default = false,
+    Callback = function(v)
+if v then
+for _, v in pairs(workspace.Players.Killers:GetChildren()) do
+if v:IsA("Model") and v.Parent.Name == "Killers" then
+Text(v.HumanoidRootPart, v.Name .. "\n" .. v:GetAttribute("SkinNameDisplay"), Color3.new(1), 14, "Killer_ESP")
+Highlight(v, Color3.new(1), "Killer_ESP")
+end
+end
+KillerESP = workspace.Players.Killers.ChildAdded:Connect(function(v)
+wait(2)
+if v:IsA("Model") and v.Parent.Name == "Killers" then
+Text(v.HumanoidRootPart, v.Name .. "\n" .. v:GetAttribute("SkinNameDisplay"), Color3.new(1), 14, "Killer_ESP")
+Highlight(v, Color3.new(1), "Killer_ESP")
+end
+end)
+else
+KillerESP:Disconnect()
+Disable("Killer_ESP")
+end
+end})
+ESP:AddToggle("SurvivorESP",{
+    Text = "Survivor ESP",
+    Default = false,
+    Callback = function(v)
+if v then
+for _, v in ipairs(workspace.Players.Survivors:GetChildren()) do
+if v:IsA("Model") and v.Parent.Name == "Survivors" then
+Text(v.HumanoidRootPart, v.Name, Color3.new(0,1), 14, "Survivor_ESP")
+Highlight(v, Color3.new(0,1), "Survivor_ESP")
+end
+end
+SurvivalESP = workspace.Players.Survivors.ChildAdded:Connect(function(v)
+wait(2)
+if v:IsA("Model") and v.Parent.Name == "Survivors" then
+Text(v.HumanoidRootPart, v.Name, Color3.new(0,1), 14, "Survivor_ESP")
+Highlight(v, Color3.new(0,1), "Survivor_ESP")
+end
+end)
+else
+SurvivalESP:Disconnect()
+Disable("Survivor_ESP")
+end
+end})
+ESP:AddToggle("ItemsESP",{
+    Text = "Items ESP",
+    Default = false,
+    Callback = function(v)
+if v then
+for _, v in ipairs(workspace:GetDescendants()) do
+if v:IsA("Model") and v.Name == "BloxyCola" and not v:FindFirstChild("Items_ESP") then
+Text(v, v.Name, Color3.new(1,1), 14, "Items_ESP")
+Highlight(v, Color3.new(1,1), "Items_ESP")
+elseif v:IsA("Model") and v.Name == "Medkit" and not v:FindFirstChild("Items_ESP") then
+Text(v, v.Name, Color3.new(1), 14, "Items_ESP")
+Highlight(v, Color3.new(1), "Items_ESP")
+end
+end
+ItemsESP = workspace.Map.Ingame.DescendantAdded:Connect(function(v)
+if v:IsA("Model") and v then
+if v.Name == "BloxyCola" and not v:FindFirstChild("Items_ESP") then
+Text(v, v.Name, Color3.new(1,1), 14, "Items_ESP")
+Highlight(v, Color3.new(1,1), "Items_ESP")
+elseif v.Name == "Medkit" and not v:FindFirstChild("Items_ESP") then
+Text(v, v.Name, Color3.new(1), 14, "Items_ESP")
+Highlight(v, Color3.new(1), "Items_ESP")
+end
+end
+end)
+else
+ItemsESP:Disconnect()
+Disable("Items_ESP")
+end
+end})
+ESP:AddToggle("GeneratorESP",{
+    Text = "Generator ESP",
+    Default = false,
+    Callback = function(v)
+if v then
+for _, v in ipairs(workspace:GetDescendants()) do
+if v:IsA("Model") and v.Parent.Name == "Map" and v.Name == "Generator" and not v:FindFirstChild("Generator_ESP") then
+Text(v, v.Name, Color3.new(0,0,1), 14, "Generator_ESP")
+Highlight(v, Color3.new(0,0,1), "Generator_ESP")
+end
+end
+GeneratorESP = workspace.Map.Ingame.Map.DescendantAdded:Connect(function(v)
+if v:IsA("Model") and v.Parent.Name == "Map" and v.Name == "Generator" and not v:FindFirstChild("Generator_ESP") then
+Text(v, v.Name, Color3.new(0,0,1), 14, "Generator_ESP")
+Highlight(v, Color3.new(0,0,1), "Generator_ESP")
+end
+end)
+else
+GeneratorESP:Disconnect()
+Disable("Generator_ESP")
+end
+end})
+ESP:AddToggle("SubspaceTripmineESP",{
+    Text = "Subspace Tripmine ESP",
+    Default = false,
+    Callback = function(v)
+if v then
+for _, v in ipairs(workspace:GetDescendants()) do
+if v:IsA("Model") and v.Name == "SubspaceTripmine" and not v:FindFirstChild("SubspaceTripmine_ESP") then
+Text(v, v.Name, Color3.new(1,0,1), 14, "SubspaceTripmine_ESP")
+Highlight(v, Color3.new(1,0,1), "SubspaceTripmine_ESP")
+end
+end
+SubspaceTripmineESP = workspace.Map.Ingame.DescendantAdded:Connect(function(v)
+wait(1)
+if v:IsA("Model") and v.Name == "SubspaceTripmine" and not v:FindFirstChild("SubspaceTripmine_ESP") then
+Text(v, v.Name, Color3.new(1,0,1), 14, "SubspaceTripmine_ESP")
+Highlight(v, Color3.new(1,0,1), "SubspaceTripmine_ESP")
+end
+end)
+else
+SubspaceTripmineESP:Disconnect()
+Disable("SubspaceTripmine_ESP")
+end
+end})
 
+local MenuGroup = Tabs.Setting:AddLeftGroupbox("Menu", "wrench")
 
+MenuGroup:AddToggle("KeybindMenuOpen", {
+	Default = Library.KeybindFrame.Visible,
+	Text = "Open Keybind Menu",
+	Callback = function(value)
+		Library.KeybindFrame.Visible = value
+	end,
+})
+MenuGroup:AddToggle("ShowCustomCursor", {
+	Text = "Custom Cursor",
+	Default = true,
+	Callback = function(Value)
+		Library.ShowCustomCursor = Value
+	end,
+})
+MenuGroup:AddDropdown("NotificationSide", {
+	Values = { "Left", "Right" },
+	Default = "Right",
+
+	Text = "Notification Side",
+
+	Callback = function(Value)
+		Library:SetNotifySide(Value)
+	end,
+})
+MenuGroup:AddDropdown("DPIDropdown", {
+	Values = { "50%", "75%", "100%", "125%", "150%", "175%", "200%" },
+	Default = "100%",
+
+	Text = "DPI Scale",
+
+	Callback = function(Value)
+		Value = Value:gsub("%%", "")
+		local DPI = tonumber(Value)
+
+		Library:SetDPIScale(DPI)
+	end,
+})
+MenuGroup:AddDivider()
+MenuGroup:AddLabel("Menu bind")
+	:AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
+
+MenuGroup:AddButton("Unload", function()
+	Library:Unload()
+end)
+
+Library.ToggleKeybind = Options.MenuKeybind
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({ "MenuKeybind" })
+ThemeManager:SetFolder("MyScriptHub")
+SaveManager:SetFolder("MyScriptHub/specific-game")
+SaveManager:SetSubFolder("specific-game")
+SaveManager:BuildConfigSection(Tabs.Setting)
+ThemeManager:ApplyToTab(Tabs.Setting)
+SaveManager:LoadAutoloadConfig()
