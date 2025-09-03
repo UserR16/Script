@@ -435,7 +435,7 @@ end
 KillerESP = workspace.Players.Killers.ChildAdded:Connect(function(v)
 wait(2)
 if v:IsA("Model") and v.Parent.Name == "Killers" then
-Text(v.HumanoidRootPart, v.Name .. "\n\nSkin : " .. v:GetAttribute("SkinNameDisplay"), Color3.new(1), 14, "Killer_ESP")
+Text(v.HumanoidRootPart, v.Name .. "\n" .. v:GetAttribute("SkinNameDisplay"), Color3.new(1), 14, "Killer_ESP")
 Highlight(v, Color3.new(1), "Killer_ESP")
 elseif v.Parent.Name == "Killers" and v:GetAttribute("Username") == game.Players.LocalPlayer.Name then
 v:FindFirstChild("Killer_ESP"):Destroy()
