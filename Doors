@@ -1,7 +1,7 @@
-local repo = "https://raw.githubusercontent.com/UserR16/Library/refs/heads/main/"
-local Library = loadstring(game:HttpGet(repo .. "Library"))()
-local SaveManager = loadstring(game:HttpGet(repo .. "SaveManager"))()
-local SaveManager = loadstring(game:HttpGet(repo .. "ThemeManager"))()
+local repo = "https://raw.githubusercontent.com/mstudio45/LinoriaLib/refs/heads/main/"
+local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
 
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/IceMinisterq/Notification-Library/Main/Library.lua"))()
 
@@ -1005,14 +1005,14 @@ _G.AntiEyes = v
 end})
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.AntiGiggle then
-for _, room in pairs(game.workspace.CurrentRooms[GameData.LatestRoom.Value]:GetChildren()) do
-if room.Name == "GiggleCeiling" and v then
-room.Hitbox.CanTouch = not _G.AntiGiggle
+for _, v in pairs(game.workspace.CurrentRooms[GameData.LatestRoom.Value]:GetChildren()) do
+if v.Name == "GiggleCeiling" and v then
+v.Hitbox.CanTouch = not _G.AntiGiggle
 end
 end
-for _, room in pairs(game.workspace.CurrentRooms[GameData.LatestRoom.Value + 1]:GetChildren()) do
-if room.Name == "GiggleCeiling" and v then
-room.Hitbox.CanTouch = not _G.AntiGiggle
+for _, v in pairs(game.workspace.CurrentRooms[GameData.LatestRoom.Value + 1]:GetChildren()) do
+if v.Name == "GiggleCeiling" and v then
+v.Hitbox.CanTouch = not _G.AntiGiggle
 end
 end
 end
@@ -1026,14 +1026,14 @@ end})
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.AntiGloomEgg then
 for _,v in pairs(game.workspace.CurrentRooms[GameData.LatestRoom.Value]:GetChildren()) do
-if v.Name == "GloomPile" then
+if v.Name == "GloomPile" and v then
 for _,v2 in ipairs(v:GetDescendants()) do
 v2.GloomEgg.Egg.CanTouch = not _G.AntiGloomEgg
 end
 end
 end
 for _,v in pairs(game.workspace.CurrentRooms[GameData.LatestRoom.Value + 1]:GetChildren()) do
-if v.Name == "GloomPile" then
+if v.Name == "GloomPile" and v then
 for _,v2 in ipairs(v:GetDescendants()) do
 v2.GloomEgg.Egg.CanTouch = not _G.AntiGloomEgg
 end
