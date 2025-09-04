@@ -38,6 +38,7 @@ Generator:AddDropdown('SelectFixMode',{
     Callback = function(v)
 _G.SelectFixMode = v or "Normal"
 end})
+_G.SelectFixMode = "Normal"
 Generator:AddToggle("AutoGenerator",{
     Text = "Auto Generator",
     Default = false,
@@ -363,7 +364,7 @@ TextLabel.AnchorPoint = Vector2.new(0.5,0.5)
 TextLabel.BackgroundTransparency = 1
 TextLabel.BackgroundColor3 = Color3.new(0,0,0)
 TextLabel.TextColor3 = color
-TextLabel.Font = "Oswald"
+TextLabel.Font = "Roboto"
 TextLabel.TextSize = fontsize
 TextLabel.TextTransparency = 0
 TextLabel.Visible = true
@@ -383,8 +384,8 @@ local Highlight = Instance.new('Highlight', target)
 Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 Highlight.FillColor = color
 Highlight.OutlineColor = color
-Highlight.FillTransparency = 0.65
-Highlight.OutlineTransparency =  0
+Highlight.FillTransparency = 1
+Highlight.OutlineTransparency =  0.25
 Highlight.Name = name
 end
 --// Disable Text & Highlight \\
@@ -482,7 +483,7 @@ Text(v, v.Name, Color3.new(0,0,1), 14, "Generator_ESP")
 Highlight(v, Color3.new(0,0,1), "Generator_ESP")
 end
 end
-GeneratorESP = workspace.Map.Ingame.Map.DescendantAdded:Connect(function(v)
+GeneratorESP = workspace.Map.Ingame.DescendantAdded:Connect(function(v)
 if v:IsA("Model") and v.Parent.Name == "Map" and v.Name == "Generator" and not v:FindFirstChild("Generator_ESP") then
 Text(v, v.Name, Color3.new(0,0,1), 14, "Generator_ESP")
 Highlight(v, Color3.new(0,0,1), "Generator_ESP")
