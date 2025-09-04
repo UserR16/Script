@@ -77,7 +77,9 @@ Other:AddToggle("HidingGeneratorUi",{
     Callback = function(v)
 _G.HidingGeneratorUi = v
 game:GetService("RunService").RenderStepped:Connect(function()
+if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("PuzzleUI") then
 game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("PuzzleUI").Enabled = not _G.HidingGeneratorUi
+end
 end)
 end})
 Other:AddToggle("HidingSurvivorBar",{
@@ -86,14 +88,16 @@ Other:AddToggle("HidingSurvivorBar",{
     Callback = function(v)
 _G.HidingSurvivorBar = v
 game:GetService("RunService").RenderStepped:Connect(function()
-game.Players.LocalPlayer.PlayerGui:FindFirstChild("TemporaryUI"):FindFirstChild("PlayerInfo").CurrentSurvivors.Visible = not _G.HidingSurvivorBar
+if game.Players.LocalPlayer.PlayerGui:FindFirstChild("TemporaryUI"):FindFirstChild("PlayerInfo"):FindFirstChild("CurrentSurvivors") then
+game.Players.LocalPlayer.PlayerGui:FindFirstChild("TemporaryUI"):FindFirstChild("PlayerInfo"):FindFirstChild("CurrentSurvivors").Visible = not _G.HidingSurvivorBar
+end
 end)
 end})
 
 local Miscellaneous = Tabs.Main:AddLeftGroupbox("Miscellaneous", "boxes")
 game:GetService("RunService").RenderStepped:Connect(function()
 if _G.AutoEatPizza and workspace.Map.Ingame:FindFirstChild("Pizza") then
-if game.Players.LocalPlayer.Character.Humanoid.Health < game.Players.LocalPlayer.Character.Humanoid.MaxHealth and (workspace.Map:FindFirstChild("Ingame"):FindFirstChild("Pizza").Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 15 then
+if game.Players.LocalPlayer.Character.Humanoid.Health < game.Players.LocalPlayer.Character.Humanoid.MaxHealth and (workspace.Map:FindFirstChild("Ingame"):FindFirstChild("Pizza").Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 20 then
 workspace.Map.Ingame:FindFirstChild("Pizza").Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
 end
 end
@@ -359,7 +363,7 @@ TextLabel.AnchorPoint = Vector2.new(0.5,0.5)
 TextLabel.BackgroundTransparency = 1
 TextLabel.BackgroundColor3 = Color3.new(0,0,0)
 TextLabel.TextColor3 = color
-TextLabel.Font = "RobotoMono"
+TextLabel.Font = "Oswald"
 TextLabel.TextSize = fontsize
 TextLabel.TextTransparency = 0
 TextLabel.Visible = true
