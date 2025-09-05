@@ -34,7 +34,7 @@ Generator:AddDropdown('SelectFixMode',{
     Text = "Select Fix Mode",
     Values = {"Fast", "Normal", "Slow"},
     Default = 2,
-  	Multi = true,
+  	Multi = false,
     Callback = function(v)
 _G.SelectFixMode = v or "Normal"
 end})
@@ -564,7 +564,6 @@ MenuGroup:AddButton("Unload", function()
 	Library:Unload()
 end)
 
-Library.ToggleKeybind = Options.MenuKeybind
 SaveManager:IgnoreThemeSettings()
 SaveManager:SetIgnoreIndexes({ "MenuKeybind" })
 ThemeManager:SetFolder("MyScriptHub")
