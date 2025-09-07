@@ -12,21 +12,14 @@ Library.NotifySide = "Right"
 
 local Window = Library:CreateWindow({
 	Title = "Forsaken",
-	Center = true,
-	AutoShow = true,
-	Resizable = true,
     Font = Enum.Font.RobotoMono,
-	ShowCustomCursor = true,
-	NotifySide = "Right",
-	TabPadding = 8,
-	MenuFadeTime = 0
+	NotifySide = "Right"
 })
 
 local Tabs = {
   Main = Window:AddTab("Main"),
   Players = Window:AddTab("Players"),
-  Visual = Window:AddTab("Visual"),
-  Setting = Window:AddTab("Setting")
+  Visual = Window:AddTab("Visual")
 }
 
 local Generator = Tabs.Main:AddLeftGroupbox("Generator", "boxes")
@@ -501,14 +494,14 @@ ESP:AddToggle("SubspaceTripmineESP",{
 if v then
 for _, v in ipairs(workspace:GetDescendants()) do
 if v:IsA("Model") and v.Name == "SubspaceTripmine" and not v:FindFirstChild("SubspaceTripmine_ESP") then
-Text(v, v.Name, Color3.new(1,0,1), 14, "SubspaceTripmine_ESP")
+Text(v, "Trap", Color3.new(1,0,1), 14, "SubspaceTripmine_ESP")
 Highlight(v, Color3.new(1,0,1), "SubspaceTripmine_ESP")
 end
 end
 SubspaceTripmineESP = workspace.Map.Ingame.DescendantAdded:Connect(function(v)
 wait(1)
 if v:IsA("Model") and v.Name == "SubspaceTripmine" and not v:FindFirstChild("SubspaceTripmine_ESP") then
-Text(v, v.Name, Color3.new(1,0,1), 14, "SubspaceTripmine_ESP")
+Text(v, "Trap", Color3.new(1,0,1), 14, "SubspaceTripmine_ESP")
 Highlight(v, Color3.new(1,0,1), "SubspaceTripmine_ESP")
 end
 end)
@@ -518,57 +511,6 @@ Disable("SubspaceTripmine_ESP")
 end
 end})
 
-local MenuGroup = Tabs.Setting:AddLeftGroupbox("Menu", "wrench")
 
-MenuGroup:AddToggle("KeybindMenuOpen", {
-	Default = Library.KeybindFrame.Visible,
-	Text = "Open Keybind Menu",
-	Callback = function(value)
-		Library.KeybindFrame.Visible = value
-	end,
-})
-MenuGroup:AddToggle("ShowCustomCursor", {
-	Text = "Custom Cursor",
-	Default = true,
-	Callback = function(Value)
-		Library.ShowCustomCursor = Value
-	end,
-})
-MenuGroup:AddDropdown("NotificationSide", {
-	Values = { "Left", "Right" },
-	Default = "Right",
 
-	Text = "Notification Side",
 
-	Callback = function(Value)
-		Library:SetNotifySide(Value)
-	end,
-})
-MenuGroup:AddDropdown("DPIDropdown", {
-	Values = { "50%", "75%", "100%", "125%", "150%", "175%", "200%" },
-	Default = "100%",
-
-	Text = "DPI Scale",
-
-	Callback = function(Value)
-		Value = Value:gsub("%%", "")
-		local DPI = tonumber(Value)
-
-		Library:SetDPIScale(DPI)
-	end,
-})
-MenuGroup:AddDivider()
-MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
-
-MenuGroup:AddButton("Unload", function()
-	Library:Unload()
-end)
-
-SaveManager:IgnoreThemeSettings()
-SaveManager:SetIgnoreIndexes({ "MenuKeybind" })
-ThemeManager:SetFolder("MyScriptHub")
-SaveManager:SetFolder("MyScriptHub/specific-game")
-SaveManager:SetSubFolder("specific-game")
-SaveManager:BuildConfigSection(Tabs.Setting)
-ThemeManager:ApplyToTab(Tabs.Setting)
-SaveManager:LoadAutoloadConfig()
