@@ -106,39 +106,32 @@ end})
 local Players = Tabs.Players:AddLeftGroupbox("Players", "boxes")
 StaminaScript = require(game:GetService("ReplicatedStorage").Systems.Character.Game.Sprinting)
 game:GetService("RunService").RenderStepped:Connect(function()
-for _,v in pairs(workspace.Players.Survivors:GetChildren()) do
-if v.Parent.Name == "Survivors" and v:GetAttribute("Username") == game.Players.LocalPlayer.Name then
-if _G.ApplyForSurvivor then
-StaminaScript.MaxStamina = _G.MaxStaminaSurvivor or 100
-StaminaScript.StaminaGain = _G.StaminaGainSurvivor or 30
-StaminaScript.StaminaLoss = _G.StaminaLossSurvivor or 10
-StaminaScript.SprintSpeed = _G.SprintSpeedSurvivor or 26
-end
-end
-end
+StaminaScript.MaxStamina = _G.MaxStamina or 100
+StaminaScript.StaminaGain = _G.StaminaGain or 30
+StaminaScript.StaminaLoss = _G.StaminaLoss or 10
+StaminaScript.SprintSpeed = _G.SprintSpeed or 27.5
 end)
-Players:AddLabel("Survivor")
-Players:AddSlider("MaxStaminaSurvivor",{
+Players:AddSlider("MaxStamina",{
     Text = "Max Stamina",
     Default = 100,
     Min = 100,
     Max = 5000,
-    Rounding = 1,
+    Rounding = 0,
     Compact = false,
     Callback = function(v)
-_G.MaxStaminaSurvivor = v
+_G.MaxStamina = v
 end})
-Players:AddSlider("StaminaGainSurvivor",{
+Players:AddSlider("StaminaGain",{
     Text = "Stamina Gain",
     Default = 30,
     Min = 30,
     Max = 5000,
-    Rounding = 1,
+    Rounding = 0,
     Compact = false,
     Callback = function(v)
-_G.StaminaGainSurvivor = v
+_G.StaminaGain = v
 end})
-Players:AddSlider("StaminaLossSurvivor",{
+Players:AddSlider("StaminaLoss",{
     Text = "Stamina Loss",
     Default = 10,
     Min = 1,
@@ -146,84 +139,19 @@ Players:AddSlider("StaminaLossSurvivor",{
     Rounding = 1,
     Compact = false,
     Callback = function(v)
-_G.StaminaLossSurvivor = v
+_G.StaminaLoss = v
 end})
-Players:AddSlider("SprintSpeedSurvivor",{
+Players:AddSlider("SprintSpeed",{
     Text = "Sprint Speed",
-    Default = 26,
-    Min = 26,
+    Default = 27.5,
+    Min = 27.5,
     Max = 32,
     Rounding = 1,
     Compact = false,
     Callback = function(v)
-_G.SprintSpeedSurvivor = v
+_G.SprintSpeed = v
 end})
-Players:AddToggle("ApplyForSurvivor",{
-    Text = "Apply",
-    Default = false,
-    Callback = function(v)
-_G.ApplyForSurvivor = v
-end})
-Players:AddDivider()
-game:GetService("RunService").RenderStepped:Connect(function()
-for _,v in pairs(workspace.Players.Killers:GetChildren()) do
-if v.Parent.Name == "Killers" and v:GetAttribute("Username") == game.Players.LocalPlayer.Name then
-if _G.ApplyForKiller then
-StaminaScript.MaxStamina = _G.MaxStaminaKiller or 110
-StaminaScript.StaminaGain = _G.StaminaGainKiller or 30
-StaminaScript.StaminaLoss = _G.StaminaLossKiller or 10
-StaminaScript.SprintSpeed = _G.SprintSpeedKiller or 28
-end
-end
-end
-end)
-Players:AddLabel("Killer")
-Players:AddSlider("MaxStaminaKiller",{
-    Text = "Max Stamina",
-    Default = 110,
-    Min = 110,
-    Max = 5000,
-    Rounding = 1,
-    Compact = false,
-    Callback = function(v)
-_G.MaxStaminaKiller = v
-end})
-Players:AddSlider("StaminaGainKiller",{
-    Text = "Stamina Gain",
-    Default = 30,
-    Min = 30,
-    Max = 5000,
-    Rounding = 1,
-    Compact = false,
-    Callback = function(v)
-_G.StaminaGainKiller = v
-end})
-Players:AddSlider("StaminaLossKiller",{
-    Text = "Stamina Loss",
-    Default = 10,
-    Min = 1,
-    Max = 10,
-    Rounding = 1,
-    Compact = false,
-    Callback = function(v)
-_G.StaminaLossKiller = v
-end})
-Players:AddSlider("SprintSpeedKiller",{
-    Text = "Sprint Speed",
-    Default = 28,
-    Min = 28,
-    Max = 32,
-    Rounding = 1,
-    Compact = false,
-    Callback = function(v)
-_G.SprintSpeedKiller = v
-end})
-Players:AddToggle("ApplyForKiller",{
-    Text = "Apply",
-    Default = false,
-    Callback = function(v)
-_G.ApplyForKiller = v
-end})
+
 
 local Cheater = Tabs.Players:AddRightGroupbox("Cheater", "boxes")
 Cheater:AddToggle("Invisible",{
@@ -378,7 +306,7 @@ Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 Highlight.FillColor = color
 Highlight.OutlineColor = color
 Highlight.FillTransparency = 1
-Highlight.OutlineTransparency =  0.25
+Highlight.OutlineTransparency =  0.8
 Highlight.Name = name
 end
 --// Disable Text & Highlight \\
