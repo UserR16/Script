@@ -3,14 +3,6 @@ Aimbot:Disconnect()
 game.CoreGui:FindFirstChild("AimbotGUI"):Destroy()
 end
 
-
-
-
-
-
-
-
-
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "AimbotGUI"
 ScreenGui.ResetOnSpawn = false
@@ -33,7 +25,7 @@ Button.Size = UDim2.new(0, 150, 0, 50)
 Button.Position = UDim2.new(0.85, 0, 0, 10)
 Button.BackgroundColor3 = Color3.fromRGB(5, 5, 15)
 Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-Button.Font = Enum.Font.RobotoMono
+Button.Font = Enum.Font.SourceSans
 Button.TextSize = 14
 Button.Text = "Chance Aimbot : OFF"
 Button.Parent = ScreenGui
