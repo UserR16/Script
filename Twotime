@@ -1,0 +1,70 @@
+if game.CoreGui:FindFirstChild("AimbotGUI") then
+Aimbot:Disconnect()
+game.CoreGui:FindFirstChild("AimbotGUI"):Destroy()
+end
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "AimbotGUI"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = game.CoreGui
+
+local Shadow = Instance.new("Frame")
+Shadow.Size = UDim2.new(0, 150, 0, 50)
+Shadow.Position = UDim2.new(0.85, 0, 0, 10)
+Shadow.BackgroundTransparency = 1
+Shadow.Parent = ScreenGui
+
+local Frame = Instance.new("Frame")
+Frame.Parent = ScreenGui
+Frame.Size = UDim2.new(0, 150, 0, 50)
+Frame.Position = UDim2.new(0.85, 0, 0, 10)
+Frame.BackgroundTransparency = 1
+
+local Button = Instance.new("TextButton")
+Button.Size = UDim2.new(0, 150, 0, 50)
+Button.Position = UDim2.new(0.85, 0, 0, 10)
+Button.BackgroundColor3 = Color3.fromRGB(5, 5, 15)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.Font = Enum.Font.SourceSans
+Button.TextSize = 14
+Button.Text = "Twotime Aimbot : OFF"
+Button.Parent = ScreenGui
+
+local UICornerShadow = Instance.new("UICorner")
+UICornerShadow.Parent = Shadow
+
+local UICornerFrame = Instance.new("UICorner")
+UICornerFrame.Parent = Frame
+
+local UICornerButton = Instance.new("UICorner")
+UICornerButton.Parent = Button
+
+local UIStrokeFrame = Instance.new("UIStroke")
+UIStrokeFrame.Color = Color3.fromRGB(20,20,20)
+UIStrokeFrame.Thickness = 3
+UIStrokeFrame.Parent = Frame
+
+local UIStrokeShadow = Instance.new("UIStroke")
+UIStrokeShadow.Color = Color3.fromRGB(0,0,0)
+UIStrokeShadow.Thickness = 7.5
+UIStrokeShadow.Transparency = 0.8
+UIStrokeShadow.Parent = Shadow
+
+local Default = false
+
+Button.MouseButton1Click:Connect(function()
+Default = not Default
+if Default then
+Button.Text = "Twotime Aimbot : ON"
+Aimbot = game:GetService("RunService").RenderStepped:Connect(function()
+local Killers = workspace.Players.Killers:FindFirstChildOfClass("Model")
+local Character = game.Players.LocalPlayer.Character
+if Character.HumanoidRootPart:FindFirstChild("rbxassetid://86710781315432") or Character.HumanoidRootPart:FindFirstChild("rbxassetid://80521472651047") or Character.HumanoidRootPart:FindFirstChild("rbxassetid://2920960") or Character.HumanoidRootPart:FindFirstChild("rbxassetid://74027282199279") then
+game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = CFrame.lookAt(game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position, Vector3.new(Killers.HumanoidRootPart.Position.X, Killers.HumanoidRootPart.Position.Y, Killers.HumanoidRootPart.Position.Z))
+end
+end)
+else
+Button.Text = "Twotime Aimbot : OFF"
+Aimbot:Disconnect()
+end
+end)
