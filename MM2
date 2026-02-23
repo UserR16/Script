@@ -1,0 +1,150 @@
+local Players = game:GetService("Players")
+local LP = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local CoreGui = game:GetService("CoreGui")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Roles = { Murderer = nil, Sheriff = nil }
+local playerData = {} -- Khởi tạo bảng rỗng để tránh lỗi nil
+
+-- 1. HÀM TÌM NGƯỜI GẦN NHẤT
+local function GetClosestPlayer()
+    local target, dist = nil, math.huge
+    for _, v in ipairs(Players:GetPlayers()) do
+        if v ~= LP and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+            local d = (LP.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).Magnitude
+            if d < dist then
+                dist = d
+                target = v
+            end
+        end
+    end
+    return target
+end
+
+-- 2. HÀM ESP (Đã fix logic highlight)
+local function ApplyESP(char, color)
+    if not char then return end
+    local hl = char:FindFirstChild("EliteHighlight") or Instance.new("Highlight", char)
+    hl.Name = "EliteHighlight"
+    hl.OutlineColor = color
+    hl.FillTransparency = 1
+    hl.OutlineTransparency = 0
+end
+
+-- 3. FIX LỖI NHẬN DIỆN ROLE
+local function GetMurderer()
+    for id, data in pairs(playerData) do
+        if data.Role == "Murderer" then
+            return Players:FindFirstChild(id)
+        end
+    end
+    return nil
+end
+
+local function GetSheriff()
+    for id, data in pairs(playerData) do
+        if data.Role == "Sheriff" then
+            return Players:FindFirstChild(id)
+        end
+    end
+    return nil
+end
+
+local function UpdateESP()
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player.Character then
+            if player == GetMurderer() then
+                ApplyESP(player.Character, Color3.fromRGB(255, 0, 0))
+                Roles.Murderer = player
+            elseif player == GetSheriff() then
+                ApplyESP(player.Character, Color3.fromRGB(0, 160, 255))
+                Roles.Sheriff = player
+            else
+                ApplyESP(player.Character, Color3.fromRGB(0, 255, 100))
+            end
+        end
+    end
+end
+
+-- Lắng nghe dữ liệu từ Game
+local remote = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Gameplay"):WaitForChild("PlayerDataChanged", 5)
+if remote then
+    remote.OnClientEvent:Connect(function(data)
+        playerData = data
+        UpdateESP()
+    end)
+end
+
+-- 4. AUTO SHOOT & SPEED (Mượt mà)
+RunService.Heartbeat:Connect(function()
+    local char = LP.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+
+    char.Humanoid.WalkSpeed = 21
+
+    local tool = char:FindFirstChildOfClass("Tool")
+    if tool then
+        if tool.Name == "Gun" and Roles.Murderer and Roles.Murderer.Character then
+            local mRoot = Roles.Murderer.Character:FindFirstChild("HumanoidRootPart")
+            if mRoot then
+                tool.Shoot:FireServer(char.HumanoidRootPart.CFrame, mRoot.CFrame)
+            end
+        elseif tool.Name == "Knife" then
+            tool.Stab:FireServer("Slash")
+        end
+    end
+end)
+
+-- 5. GUI (Giữ nguyên style của bạn)
+local MainGui = Instance.new("ScreenGui", CoreGui)
+
+local ThrowBtn = Instance.new("TextButton", MainGui)
+ThrowBtn.Size = UDim2.new(0, 80, 0, 80)
+ThrowBtn.Position = UDim2.new(0.85, 0, 0.45, 0)
+ThrowBtn.Text = "Throw"
+ThrowBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+Instance.new("UICorner", ThrowBtn).CornerRadius = UDim.new(1, 0)
+local UiStroke = Instance.new("UIStroke", ThrowBtn)
+UiStroke.Color = Color3.fromRGB(255, 50, 50)
+UiStroke.Transparency = 0.3
+ThrowBtn.MouseButton1Click:Connect(function()
+    local knife = LP.Character:FindFirstChild("Knife") or LP.Backpack:FindFirstChild("Knife")
+    if knife then
+        knife.Parent = LP.Character
+        local target = GetClosestPlayer()
+        if target and target.Character then
+            knife.Events.KnifeThrown:FireServer(LP.Character.HumanoidRootPart.CFrame, target.Character.HumanoidRootPart.CFrame)
+        end
+    end
+end)
+
+local GrabBtn = Instance.new("TextButton", MainGui)
+GrabBtn.Size = UDim2.new(0, 100, 0, 40)
+GrabBtn.Position = UDim2.new(0.85, -10, 0.1, 0)
+GrabBtn.Text = "Grab Gun"
+Instance.new("UICorner", GrabBtn)
+local UiStroke = Instance.new("UIStroke", GrabBtn)
+UiStroke.Color = Color3.fromRGB(255, 50, 50)
+UiStroke.Transparency = 0.3
+GrabBtn.MouseButton1Click:Connect(function()
+local drop = workspace:FindFirstChild("GunDrop", true)
+if drop then
+local hrp = LP.Character.HumanoidRootPart
+local old = hrp.CFrame
+hrp.CFrame = drop.CFrame
+task.wait(0.2)
+hrp.CFrame = old
+end
+end)
+
+-- 6. COINS (Tối ưu vòng lặp)
+local function ResizeCoins(v)
+    if v.Name == "Coin_Server" then
+        v.Size = Vector3.new(15, 15, 15)
+        v.CanCollide = false
+    end
+end
+
+for _, v in ipairs(workspace:GetDescendants()) do ResizeCoins(v) end
+workspace.DescendantAdded:Connect(ResizeCoins)
