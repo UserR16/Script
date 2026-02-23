@@ -77,11 +77,11 @@ if remote then
 end
 
 -- 4. AUTO SHOOT & SPEED (Mượt mà)
-RunService.Heartbeat:Connect(function()
+RunService.RenderStepped:Connect(function()
     local char = LP.Character
     if not char or not char:FindFirstChild("HumanoidRootPart") then return end
 
-    char.Humanoid.WalkSpeed = 21
+    char.Humanoid.WalkSpeed = 20
 
     local tool = char:FindFirstChildOfClass("Tool")
     if tool then
@@ -130,6 +130,7 @@ Instance.new("UICorner", GrabBtn)
 local UiStroke = Instance.new("UIStroke", GrabBtn)
 UiStroke.Color = Color3.fromRGB(0,0,0)
 UiStroke.Transparency = 0.3
+UiStroke.Thickness = 5
 GrabBtn.MouseButton1Click:Connect(function()
 local drop = workspace:FindFirstChild("GunDrop", true)
 if drop then
@@ -144,7 +145,7 @@ end)
 -- 6. COINS (Tối ưu vòng lặp)
 local function ResizeCoins(v)
     if v.Name == "Coin_Server" then
-        v.Size = Vector3.new(15, 15, 15)
+        v.Size = Vector3.new(20,20,20)
         v.CanCollide = false
     end
 end
