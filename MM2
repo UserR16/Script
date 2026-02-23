@@ -110,6 +110,17 @@ local UiStroke = Instance.new("UIStroke", ThrowBtn)
 UiStroke.Color = Color3.fromRGB(255, 50, 50)
 UiStroke.Transparency = 0.3
 ThrowBtn.MouseButton1Click:Connect(function()
+local humanoid = LP.Character:WaitForChild("Humanoid")
+
+local throwAnim = Instance.new("Animation")
+throwAnim.AnimationId = "rbxassetid://507768375"
+
+local animTrack = humanoid:LoadAnimation(throwAnim)
+animTrack.Priority = Enum.AnimationPriority.Action
+
+animTrack:Play()
+animTrack:AdjustSpeed(1.2)
+wait(0.7)
     local knife = LP.Character:FindFirstChild("Knife") or LP.Backpack:FindFirstChild("Knife")
     if knife then
         knife.Parent = LP.Character
