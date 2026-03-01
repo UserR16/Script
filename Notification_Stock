@@ -1,0 +1,168 @@
+-- Original UI Version: Obsidian Notification System
+local Obsidian = {
+    Notifications = {}
+}
+
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Hàm chính: add:notify
+
+local notifyGui = LocalPlayer.PlayerGui:FindFirstChild("ObsidianNotify") or Instance.new("ScreenGui", LocalPlayer.PlayerGui)
+    notifyGui.Name = "ObsidianNotify"
+    notifyGui.IgnoreGuiInset = true
+
+local holder = notifyGui:FindFirstChild("NotifyHolder") or Instance.new("Frame", notifyGui)
+if not notifyGui:FindFirstChild("NotifyHolder") then
+    holder.Name = "NotifyHolder"
+    holder.Size = UDim2.new(0, 320, 1, 0)
+    holder.Position = UDim2.new(1, -330, 0, 0) -- Nằm bên phải màn hình
+    holder.BackgroundTransparency = 1
+    
+    -- UIListLayout: Tự động đẩy các thông báo lên trên
+    local layout = Instance.new("UIListLayout", holder)
+    layout.VerticalAlignment = Enum.VerticalAlignment.Bottom -- Hiện ở dưới cùng
+    layout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    layout.Padding = UDim.new(0, 10) -- Khoảng cách giữa các notify là 10px
+    layout.SortOrder = Enum.SortOrder.LayoutOrder
+end
+
+function Obsidian:Notification(config)
+    local title = config.Title or "NOTIFICATION"
+    local content = config.Content or "No message provided."
+    local imageId = config.Image or "rbxassetid://6031068421" -- Default icon
+    local duration = config.Duration or 5
+    local accentColor = config.Color or Color3.fromRGB(100, 100, 255)
+
+    -- Main Notify Frame
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Name = "NotifyFrame"
+    mainFrame.Size = UDim2.new(0, 300, 0, 70)
+    mainFrame.Position = UDim2.new(1, 20, 0.8, 0) -- Xuất phát từ bên ngoài
+    mainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    mainFrame.BackgroundTransparency = 0.1
+    mainFrame.BorderSizePixel = 0
+    mainFrame.Parent = holder
+
+    -- UICorner: Bo góc
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = mainFrame
+
+    -- Image: Chỗ để hình
+    local icon = Instance.new("ImageLabel")
+    icon.Name = "NotifyIcon"
+    icon.Size = UDim2.new(0, 40, 0, 40)
+    icon.Position = UDim2.new(0, 12, 0.5, -20)
+    icon.Image = imageId
+    icon.BackgroundTransparency = 1
+    icon.Parent = mainFrame
+
+    -- Divider: Thanh dọc Obsidian
+    local divider = Instance.new("Frame")
+    divider.Name = "ObsidianDivider"
+    divider.Size = UDim2.new(0, 2, 0, 35)
+    divider.Position = UDim2.new(0, 62, 0.5, -17.5)
+    divider.BackgroundColor3 = accentColor
+    divider.BorderSizePixel = 0
+    divider.Parent = mainFrame
+
+    -- Title (Label functional)
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Text = title:upper()
+    titleLabel.Size = UDim2.new(1, -80, 0, 20)
+    titleLabel.Position = UDim2.new(0, 72, 0.2, 0)
+    titleLabel.TextColor3 = accentColor
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextSize = 13
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.Parent = mainFrame
+
+    -- Content (Label functional)
+    local contentLabel = Instance.new("TextLabel")
+    contentLabel.Text = content
+    contentLabel.Size = UDim2.new(1, -80, 0, 30)
+    contentLabel.Position = UDim2.new(0, 72, 0.45, 2)
+    contentLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
+    contentLabel.Font = Enum.Font.GothamMedium
+    contentLabel.TextSize = 14
+    contentLabel.BackgroundTransparency = 1
+    contentLabel.TextXAlignment = Enum.TextXAlignment.Left
+    contentLabel.TextWrapped = true
+    contentLabel.Parent = mainFrame
+
+    -- Slider/Progress Bar (Thanh chạy thời gian ở dưới)
+    local progressBar = Instance.new("Frame")
+    progressBar.Name = "TimerBar"
+    progressBar.Size = UDim2.new(1, 0, 0, 3)
+    progressBar.Position = UDim2.new(0, 0, 1, -3)
+    progressBar.BackgroundColor3 = accentColor
+    progressBar.BorderSizePixel = 0
+    progressBar.Parent = mainFrame
+    
+    local barCorner = Instance.new("UICorner")
+    barCorner.CornerRadius = UDim.new(0, 8)
+    barCorner.Parent = progressBar
+
+    -- Animation trượt vào
+    mainFrame:TweenPosition(UDim2.new(1, -320, 0.8, 0), "Out", "Quart", 0.5, true)
+    
+    -- Animation thanh Progress chạy lùi
+    TweenService:Create(progressBar, TweenInfo.new(duration, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 3)}):Play()
+
+    -- Tự động xóa
+    task.delay(duration, function()
+        mainFrame:TweenPosition(UDim2.new(1, 20, 0.8, 0), "In", "Quart", 0.5, true)
+        task.wait(0.5)
+        mainFrame:Destroy()
+    end)
+end
+local Notification = {
+Carrot = false,
+Corn = false,
+Onion = false,
+Strawberry = false,
+Mushroom = false,
+Beetroot = false,
+Tomato = false,
+Apple = true,
+Rose = false,
+Wheat = true,
+Banana = false,
+Plum = true,
+Potato = false,
+Cabbage = true,
+Cherry = true
+}
+function stock(seed, color)
+if Notification[seed] then
+game:GetService("Players").LocalPlayer.PlayerGui.SeedShop.Frame.ScrollingFrame[seed].MainInfo.NoStock:GetPropertyChangedSignal("Visible"):Connect(function()
+if game:GetService("Players").LocalPlayer.PlayerGui.SeedShop.Frame.ScrollingFrame[seed].MainInfo.NoStock.Visible == true then
+Obsidian:Notification({
+Title = "STOCK - ĐANG BÁN",
+Content = game:GetService("Players").LocalPlayer.PlayerGui.SeedShop.Frame.ScrollingFrame[seed].MainInfo.StockText.Text .. " " .. seed .. " đã hết hàng trong shop!",
+Image = game:GetService("Players").LocalPlayer.PlayerGui.SeedShop.Frame.ScrollingFrame[seed].MainInfo.SeedBox.ImageWrapper.SeedImage.Image
+Duration = 15,
+Color = color
+})
+end
+end)
+end
+end
+stock("Carrot", Color3.new(100,100,255))
+stock("Corn", Color3.new(100,100,255))
+stock("Onion", Color3.new(0,255,100))
+stock("Strawberry", Color3.new(0,255,100))
+stock("Mushroom", Color3.new(0,255,100))
+stock("Beetroot", Color3.new(255,0,100))
+stock("Tomato", Color3.new(255,0,100))
+stock("Apple", Color3.new(255,0,100))
+stock("Rose", Color3.new(255,0,100))
+stock("Wheat", Color3.new(255,0,255))
+stock("Banana", Color3.new(255,0,255))
+stock("Plum", Color3.new(255,0,255))
+stock("Potato", Color3.new(255,0,255))
+stock("Cabbage", Color3.new(255,200,0))
+stock("Cherry", Color3.new(255,200,0))
