@@ -1,0 +1,95 @@
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/thanhdatbeo456-afk/Script/refs/heads/main/Redz"))()
+
+redzlib:MakeLoading({
+Title = "Bee Swarm Simulator | v0.1",
+Duration = 5
+})
+redzlib:MakeNotification({
+Title = "Alert",
+Description = "Loaded",
+Duration = 3
+})
+local Window = redzlib:MakeWindow({
+  Title = "Bee Swarm Simulator",
+  SubTitle = "v0.1",
+  SaveFolder = "Redz | redz lib v5.lua"
+})
+
+Window:AddMinimizeButton({
+    Button = { Image = "", BackgroundTransparency = 0 },
+    Corner = { CornerRadius = UDim.new(0, 5) },
+})
+
+local Tabs = {
+Main = Window:MakeTab({"Main", "home"}),
+Players = Window:MakeTab({"Player", "user"}),
+Visual = Window:MakeTab({"Visual", "eye"}),
+}
+Tabs.Main:AddSection({"Farm"})
+Tabs.Main:AddCheckbox({
+  Name = "Auto Electrical Box",
+  Default = false,
+  Callback = function(v)
+_G.AutoElectricalBox = v
+game:GetService("RunService").Stepped:Connect(function()
+if _G.AutoElectricalBox then
+for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Electrical:GetChildren()) do
+if v.Name == "ElectricalBox" then
+v.Remote:FireServer()
+end
+end
+end
+end)
+end})
+Tabs.Main:AddCheckbox({
+  Name = "Auto Bluetooth",
+  Default = false,
+  Callback = function(v)
+_G.AutoBluetooth = v
+game:GetService("RunService").Stepped:Connect(function()
+if _G.AutoBlueTooth then
+for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Bluetooth:GetChildren()) do
+if v.Name == "BluetoothDevice" then
+v.Remote:FireServer()
+end
+end
+end
+end)
+end})
+Tabs.Players:AddSection({"Players"})
+Tabs.Main:AddCheckbox({
+  Name = "Always Run",
+  Default = false,
+  Callback = function(v)
+_G.AlwaysRun = v
+game:GetService("RunService").Stepped:Connect(function()
+if _G.AlwaysRun then
+game:GetService("Players").LocalPlayer:WaitForChild("Character").Humanoid.WalkSpeed = 35
+end
+end)
+end})
+
+Tabs.Visual:AddSection({"Lighting"})
+Tabs.Visual:AddCheckbox({
+  Name = "Fullbright",
+  Default = false,
+  Callback = function(v)
+_G.fb = v
+game:GetService("RunService").Stepped:Connect(function()
+if _G.fb then
+game.Lighting.GlobalShadows = false
+game.Lighting.OutdoorAmbient = Color3.new(1,1,1)
+else
+game.Lighting.GlobalShadows = true
+game.Lighting.OutdoorAmbient = Color3.fromRGB(33,33,33)
+end
+end)
+end})
+Tabs.Visual:AddSection({"ESP"})
+
+
+
+
+
+
+
