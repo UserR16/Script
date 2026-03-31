@@ -221,7 +221,6 @@ local function process(obj)
 end
 
 for _, d in pairs(workspace:GetDescendants()) do process(d) end
-workspace.DescendantAdded:Connect(process)
 end})
 Tabs.Visual:AddSection({"ESP"})
 Tabs.Visual:AddCheckbox({
