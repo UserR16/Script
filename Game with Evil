@@ -134,6 +134,7 @@ if char then char:SetAttribute("WalkSpeed",16) end
 end
 end)
 end})
+--[[
 Tabs.Players:AddSlider({
   Name = "Distance (Extend Hitbox)",
   Min = 5,
@@ -163,20 +164,8 @@ game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Velocity = vel
 end
 until _G.ExtendHitbox == false
 end
-end})
+end})]]--
 Tabs.Visual:AddSection({"Camera"})
-Tabs.Visual:AddSlider({
-  Name = "Field Of View",
-  Min = 70,
-  Max = 120,
-  Increase = 1,
-  Default = 70,
-  Callback = function(v)
-_G.fov = v
-end})
-game:GetService("RunService").Stepped:Connect(function()
-workspace.CurrentCamera.FieldOfView = _G.fov
-end)
 
 Tabs.Visual:AddCheckbox({
   Name = "Fullbright",
