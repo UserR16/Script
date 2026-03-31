@@ -119,6 +119,15 @@ end
 end
 end)
 end})
+Tabs.Visual:AddSlider({
+  Name = "Speed (Auto Run)",
+  Min = 70,
+  Max = 120,
+  Increase = 1,
+  Default = 70,
+  Callback = function(v)
+_G.speedautorun = v
+end})
 Tabs.Players:AddCheckbox({
   Name = "Always Run",
   Default = false,
@@ -127,15 +136,57 @@ _G.A_run = v
 game:GetService("RunService").Stepped:Connect(function()
 if _G.A_run then
 local char = game:GetService("Players").LocalPlayer.Character
-if char then char:SetAttribute("WalkSpeed",30) end
+if char then char:SetAttribute("WalkSpeed",_G.speedautorun or 30) end
 else
 local char = game:GetService("Players").LocalPlayer.Character
 if char then char:SetAttribute("WalkSpeed",16) end
 end
 end)
 end})
+Tabs.Players:AddSlider({
+  Name = "Distance (Extend Hitbox)",
+  Min = 5,
+  Max = 25,
+  Increase = 1,
+  Default = 5,
+  Callback = function(v)
+_G.DistanceExtendHitbox = v
+end})
+Tabs.Players:AddCheckbox({
+  Name = "Extend Hitbox",
+  Default = false,
+  Callback = function(v)
+_G.ExtendHitbox = v
+if _G.ExtendHitbox == true then
+local distance = _G.DistanceExtendHitbox or 10
+repeat game:GetService("RunService").Heartbeat:Wait()
+local vel, movel = nil, 0.1
+while not (game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character.Parent and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Parent) do
+game:GetService("RunService").Heartbeat:Wait()
+end
+vel = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Velocity
+game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Velocity = vel * distance + (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * distance)
+game:GetService("RunService").RenderStepped:Wait()
+if (game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character.Parent and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Parent) then
+game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Velocity = vel
+end
+until _G.ExtendHitbox == false
+end
+end})
+Tabs.Visual:AddSection({"Camera"})
+Tabs.Visual:AddSlider({
+  Name = "Field Of View",
+  Min = 70,
+  Max = 120,
+  Increase = 1,
+  Default = 70,
+  Callback = function(v)
+_G.fov = v
+end})
+game:GetService("RunService").Stepped:Connect(function()
+workspace.CurrentCamera.FieldOfView = _G.fov
+end)
 
-Tabs.Visual:AddSection({"Lighting"})
 Tabs.Visual:AddCheckbox({
   Name = "Fullbright",
   Default = false,
@@ -288,7 +339,7 @@ Billboard.Active = true
 TextLabel.AnchorPoint = Vector2.new(0.5,0.5)
 TextLabel.BackgroundTransparency = 1
 TextLabel.BackgroundColor3 = Color3.new(0,0,0)
-TextLabel.TextColor3 = color
+TextLabel.TextColor3 = Color3.new(1,1,1)
 TextLabel.Font = "SourceSans"
 TextLabel.TextSize = 15
 TextLabel.TextTransparency = 0
