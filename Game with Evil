@@ -152,7 +152,7 @@ lighting.OutdoorAmbient = Color3.fromRGB(33,33,33)
 end
 end)
 end})
-Tabs.Visual:AddButton("Low Graphics", function()
+Tabs.Visual:AddButton({"Low Graphics", function()
 local decalsYeeted = true
 local workspace = game:GetService("Workspace")
 local lighting = game:GetService("Lighting")
@@ -173,7 +173,7 @@ lighting.GlobalShadows = false
 lighting.FogEnd = 9e9
 lighting.Brightness = 0
 settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
-
+wait(1)
 local function process(obj)
     if obj:IsA("BasePart") and not obj:IsA("MeshPart") then
         obj.Material = Enum.Material.Plastic
@@ -191,6 +191,7 @@ local function process(obj)
         obj.Material = Enum.Material.Plastic
         obj.Reflectance = 0
         obj.TextureID = ""
+        wait(1)
     elseif obj:IsA("SpecialMesh") and decalsYeeted then
         obj.TextureId = ""
     elseif obj:IsA("ShirtGraphic") and decalsYeeted then
@@ -204,7 +205,7 @@ end
 
 for _, d in pairs(workspace:GetDescendants()) do process(d) end
 workspace.DescendantAdded:Connect(process)
-end)
+end})
 Tabs.Visual:AddSection({"ESP"})
 Tabs.Visual:AddCheckbox({
   Name = "Electrical Box ESP",
