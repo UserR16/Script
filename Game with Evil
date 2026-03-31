@@ -33,9 +33,13 @@ Tabs.Main:AddCheckbox({
 _G.AutoElectricalBox = v
 game:GetService("RunService").Stepped:Connect(function()
 if _G.AutoElectricalBox then
-for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Electrical:GetChildren()) do
+local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:GetService("Workspace").Live:FindFirstChild("Map") and game:GetService("Workspace").Live.Map:FindFirstChild("MapModel") and game:GetService("Workspace").Live.Map.MapModel:FindFirstChild("ActiveObjectives")
+if activeObjs and activeObjs:FindFirstChild("Electrical") then
+for _,v in ipairs(activeObjs.Electrical:GetChildren()) do
 if v.Parent.Name == "Electrical" and v.Name == "ElectricalBox" then
-v.Remote:FireServer()
+local remote = v:FindFirstChild("Remote")
+if remote then remote:FireServer() end
+end
 end
 end
 end
@@ -48,9 +52,14 @@ Tabs.Main:AddCheckbox({
 _G.AutoPage = v
 game:GetService("RunService").Stepped:Connect(function()
 if _G.AutoPage then
-for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Pages:GetChildren()) do
+local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:GetService("Workspace").Live:FindFirstChild("Map") and game:GetService("Workspace").Live.Map:FindFirstChild("MapModel") and game:GetService("Workspace").Live.Map.MapModel:FindFirstChild("ActiveObjectives")
+if activeObjs and activeObjs:FindFirstChild("Pages") then
+for _,v in ipairs(activeObjs.Pages:GetChildren()) do
 if v.Parent.Name == "Pages" and v.Name == "Page" then
-fireproximityprompt(v.Paper.Attachment.Prompt)
+local paper = v:FindFirstChild("Paper")
+local prompt = paper and paper:FindFirstChild("Attachment") and paper.Attachment:FindFirstChild("Prompt")
+if prompt then fireproximityprompt(prompt) end
+end
 end
 end
 end
@@ -63,9 +72,13 @@ Tabs.Main:AddCheckbox({
 _G.AutoGen = v
 game:GetService("RunService").Stepped:Connect(function()
 if _G.AutoGen then
-for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Generators:GetChildren()) do
+local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:GetService("Workspace").Live:FindFirstChild("Map") and game:GetService("Workspace").Live.Map:FindFirstChild("MapModel") and game:GetService("Workspace").Live.Map.MapModel:FindFirstChild("ActiveObjectives")
+if activeObjs and activeObjs:FindFirstChild("Generators") then
+for _,v in ipairs(activeObjs.Generators:GetChildren()) do
 if v.Parent.Name == "Generators" and v.Name == "Generator" then
-v.Remote:FireServer(2)
+local remote = v:FindFirstChild("Remote")
+if remote then remote:FireServer(2) end
+end
 end
 end
 end
@@ -78,9 +91,13 @@ Tabs.Main:AddCheckbox({
 _G.AutoBluetooth = v
 game:GetService("RunService").Stepped:Connect(function()
 if _G.AutoBlueTooth then
-for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Bluetooth:GetChildren()) do
+local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:GetService("Workspace").Live:FindFirstChild("Map") and game:GetService("Workspace").Live.Map:FindFirstChild("MapModel") and game:GetService("Workspace").Live.Map.MapModel:FindFirstChild("ActiveObjectives")
+if activeObjs and activeObjs:FindFirstChild("Bluetooth") then
+for _,v in ipairs(activeObjs.Bluetooth:GetChildren()) do
 if v.Parent.Name == "Bluetooth" and v.Name == "BluetoothDevice" then
-v.Remote:FireServer()
+local remote = v:FindFirstChild("Remote")
+if remote then remote:FireServer() end
+end
 end
 end
 end
@@ -102,7 +119,7 @@ v.HoldDuration = 0
 end
 end)
 else
-ii:Disconnect()
+if ii then ii:Disconnect() end
 end
 end})
 Tabs.Players:AddSection({"Players"})
@@ -113,20 +130,12 @@ Tabs.Players:AddCheckbox({
 _G.InfStamina = v
 game:GetService("RunService").Stepped:Connect(function()
 if _G.InfStamina then
-game:GetService("Players").LocalPlayer.Character:SetAttribute("MaxStamina",9e9)
-game:GetService("Players").LocalPlayer.Character:SetAttribute("Stamina",9e9)
-game:GetService("Players").LocalPlayer.Character:SetAttribute("StaminaGain",9e9)
+local char = game:GetService("Players").LocalPlayer.Character
+if char then
+char:SetAttribute("MaxStamina",9e9)
+char:SetAttribute("Stamina",9e9)
+char:SetAttribute("StaminaGain",9e9)
 end
-end)
-end})
-Tabs.Players:AddCheckbox({
-  Name = "Invincible",
-  Default = false,
-  Callback = function(v)
-_G.Invincible = v
-game:GetService("RunService").Stepped:Connect(function()
-if _G.Invincible then
-game:GetService("Players").LocalPlayer.Character:SetAttribute("Invincible",true)
 end
 end)
 end})
@@ -134,10 +143,11 @@ Tabs.Players:AddCheckbox({
   Name = "Always Run",
   Default = false,
   Callback = function(v)
-_G.AlwaysRun = v
+_G.A_run = v
 game:GetService("RunService").Stepped:Connect(function()
-if _G.AlwaysRun then
-game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = 30
+if _G.A_run then
+local char = game:GetService("Players").LocalPlayer.Character
+if char then char:SetAttribute("WalkSpeed",30) end
 end
 end)
 end})
@@ -149,12 +159,13 @@ Tabs.Visual:AddCheckbox({
   Callback = function(v)
 _G.fb = v
 game:GetService("RunService").Stepped:Connect(function()
+local lighting = game:GetService("Lighting")
 if _G.fb then
-game.Lighting.GlobalShadows = false
-game.Lighting.OutdoorAmbient = Color3.new(1,1,1)
+lighting.GlobalShadows = false
+lighting.OutdoorAmbient = Color3.new(1,1,1)
 else
-game.Lighting.GlobalShadows = true
-game.Lighting.OutdoorAmbient = Color3.fromRGB(33,33,33)
+lighting.GlobalShadows = true
+lighting.OutdoorAmbient = Color3.fromRGB(33,33,33)
 end
 end)
 end})
@@ -166,17 +177,19 @@ Tabs.Visual:AddCheckbox({
 _G.eb_esp = v
 if _G.eb_esp then
 eb_esp = game:GetService("RunService").Stepped:Connect(function()
-for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Electrical:GetChildren()) do
+local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:GetService("Workspace").Live:FindFirstChild("Map") and game:GetService("Workspace").Live.Map:FindFirstChild("MapModel") and game:GetService("Workspace").Live.Map.MapModel:FindFirstChild("ActiveObjectives")
+if activeObjs and activeObjs:FindFirstChild("Electrical") then
+for _,v in ipairs(activeObjs.Electrical:GetChildren()) do
 if v.Parent.Name == "Electrical" and v.Name == "ElectricalBox" and not v:FindFirstChild("eb_esp") then
 local h = Instance.new("Highlight",v)
 h.Name = "eb_esp"
 h.FillTransparency = 1
 end
 end
+end
 end)
 else
-eb_esp:Disconnect()
-h:Destroy()
+if eb_esp then eb_esp:Disconnect() end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -186,17 +199,19 @@ Tabs.Visual:AddCheckbox({
 _G.b_esp = v
 if _G.b_esp then
 b_esp = game:GetService("RunService").Stepped:Connect(function()
-for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Bluetooth:GetChildren()) do
+local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:GetService("Workspace").Live:FindFirstChild("Map") and game:GetService("Workspace").Live.Map:FindFirstChild("MapModel") and game:GetService("Workspace").Live.Map.MapModel:FindFirstChild("ActiveObjectives")
+if activeObjs and activeObjs:FindFirstChild("Bluetooth") then
+for _,v in ipairs(activeObjs.Bluetooth:GetChildren()) do
 if v.Parent.Name == "Bluetooth" and v.Name == "BluetoothDevice" and not v:FindFirstChild("b_esp") then
 local h = Instance.new("Highlight",v)
 h.Name = "b_esp"
 h.FillTransparency = 1
 end
 end
+end
 end)
 else
-b_esp:Disconnect()
-h:Destroy()
+if b_esp then b_esp:Disconnect() end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -206,17 +221,19 @@ Tabs.Visual:AddCheckbox({
 _G.p_esp = v
 if _G.p_esp then
 p_esp = game:GetService("RunService").Stepped:Connect(function()
-for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Pages:GetChildren()) do
-if v.Parent.Name == "Pages" and v.Name == "Page" and not v:FindFirstChild("eb_esp") then
+local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:GetService("Workspace").Live:FindFirstChild("Map") and game:GetService("Workspace").Live.Map:FindFirstChild("MapModel") and game:GetService("Workspace").Live.Map.MapModel:FindFirstChild("ActiveObjectives")
+if activeObjs and activeObjs:FindFirstChild("Pages") then
+for _,v in ipairs(activeObjs.Pages:GetChildren()) do
+if v.Parent.Name == "Pages" and v.Name == "Page" and not v:FindFirstChild("p_esp") then
 local h = Instance.new("Highlight",v)
 h.Name = "p_esp"
 h.FillTransparency = 1
 end
 end
+end
 end)
 else
-p_esp:Disconnect()
-h:Destroy()
+if p_esp then p_esp:Disconnect() end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -226,17 +243,19 @@ Tabs.Visual:AddCheckbox({
 _G.g_esp = v
 if _G.g_esp then
 g_esp = game:GetService("RunService").Stepped:Connect(function()
-for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Generators:GetChildren()) do
+local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:GetService("Workspace").Live:FindFirstChild("Map") and game:GetService("Workspace").Live.Map:FindFirstChild("MapModel") and game:GetService("Workspace").Live.Map.MapModel:FindFirstChild("ActiveObjectives")
+if activeObjs and activeObjs:FindFirstChild("Generators") then
+for _,v in ipairs(activeObjs.Generators:GetChildren()) do
 if v.Parent.Name == "Generators" and v.Name == "Generator" and not v:FindFirstChild("g_esp") then
 local h = Instance.new("Highlight",v)
 h.Name = "g_esp"
 h.FillTransparency = 1
 end
 end
+end
 end)
 else
-g_esp:Disconnect()
-h:Destroy()
+if g_esp then g_esp:Disconnect() end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -250,14 +269,13 @@ for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
 if v:IsA("Model") and v:GetAttribute("KillerName") and not v:FindFirstChild("k_esp") then
 local h = Instance.new("Highlight",v)
 h.Name = "k_esp"
-h.OutlineColor3 = Color3.new(1)
+h.OutlineColor3 = Color3.new(1,0,0)
 h.FillTransparency = 1
 end
 end
 end)
 else
-k_esp:Disconnect()
-h:Destroy()
+if k_esp then k_esp:Disconnect() end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -268,22 +286,17 @@ _G.s_esp = v
 if _G.s_esp then
 s_esp = game:GetService("RunService").Stepped:Connect(function()
 for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
-if v:IsA("Model") and v.Character and not v:FindFirstChild("s_esp") then
+if v:IsA("Model") and v:FindFirstChild("Humanoid") and not v:FindFirstChild("s_esp") then
+if game:GetService("Players"):GetPlayerFromCharacter(v) ~= game:GetService("Players").LocalPlayer then
 local h = Instance.new("Highlight",v)
 h.Name = "s_esp"
-h.OutlineColor3 = Color3.new(0,1)
+h.OutlineColor3 = Color3.new(0,1,0)
 h.FillTransparency = 1
+end
 end
 end
 end)
 else
-s_esp:Disconnect()
-h:Destroy()
+if s_esp then s_esp:Disconnect() end
 end
 end})
-
-
-
-
-
-
