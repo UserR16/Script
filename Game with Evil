@@ -2,7 +2,7 @@ local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/thanh
 
 redzlib:MakeLoading({
 Title = "Game with Evil 🧊",
-Duration = 5
+Duration = 2
 })
 redzlib:MakeNotification({
 Title = "Alert",
@@ -174,6 +174,59 @@ lighting.OutdoorAmbient = Color3.fromRGB(33,33,33)
 end
 end)
 end})
+Tabs.Visual:AddButton("Low Graphics", function()
+local decalsYeeted = true
+local workspace = game:GetService("Workspace")
+local lighting = game:GetService("Lighting")
+local terrain = workspace.Terrain
+
+sethiddenproperty(lighting, "Technology", 2)
+sethiddenproperty(terrain, "Decoration", false)
+
+local terrainSettings = {
+    WaterWaveSize = 0,
+    WaterWaveSpeed = 0,
+    WaterReflectance = 0,
+    WaterTransparency = 0,
+}
+for s, v in pairs(terrainSettings) do terrain[s] = v end
+
+lighting.GlobalShadows = false
+lighting.FogEnd = 9e9
+lighting.Brightness = 0
+settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+
+local function process(obj)
+    if obj:IsA("BasePart") and not obj:IsA("MeshPart") then
+        obj.Material = Enum.Material.Plastic
+        obj.Reflectance = 0
+    elseif obj:IsA("Decal") or obj:IsA("Texture") then
+        if decalsYeeted then obj.Transparency = 1 end
+    elseif obj:IsA("ParticleEmitter") or obj:IsA("Trail") then
+        obj.Lifetime = NumberRange.new(0)
+    elseif obj:IsA("Explosion") then
+        obj.BlastPressure = 1
+        obj.BlastRadius = 1
+    elseif obj:IsA("Fire") or obj:IsA("SpotLight") or obj:IsA("Smoke") or obj:IsA("Sparkles") then
+        obj.Enabled = false
+    elseif obj:IsA("MeshPart") and decalsYeeted then
+        obj.Material = Enum.Material.Plastic
+        obj.Reflectance = 0
+        obj.TextureID = ""
+    elseif obj:IsA("SpecialMesh") and decalsYeeted then
+        obj.TextureId = ""
+    elseif obj:IsA("ShirtGraphic") and decalsYeeted then
+        obj.Graphic = ""
+    elseif obj:IsA("Shirt") and decalsYeeted then
+        obj.ShirtTemplate = ""
+    elseif obj:IsA("Pants") and decalsYeeted then
+        obj.PantsTemplate = ""
+    end
+end
+
+for _, d in pairs(workspace:GetDescendants()) do process(d) end
+workspace.DescendantAdded:Connect(process)
+end)
 Tabs.Visual:AddSection({"ESP"})
 Tabs.Visual:AddCheckbox({
   Name = "Electrical Box ESP",
@@ -230,7 +283,7 @@ local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:
 if activeObjs and activeObjs:FindFirstChild("Pages") then
 for _,v in ipairs(activeObjs.Pages:GetChildren()) do
 if v.Parent.Name == "Pages" and v.Name == "Page" and not v:FindFirstChild("p_esp") then
-local h = Instance.new("BillboardGui")
+local billboard = Instance.new("BillboardGui")
             billboard.Parent = v
             billboard.Name = "p_esp"
             billboard.Adornee = v
@@ -254,7 +307,7 @@ local h = Instance.new("BillboardGui")
    end
 end)
 else
-if p_esp:Disconnect() h:Destroy() end
+if p_esp then p_esp:Disconnect() billboard:Destroy() end
 end
 end})
 Tabs.Visual:AddCheckbox({
