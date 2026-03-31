@@ -119,15 +119,6 @@ end
 end
 end)
 end})
-Tabs.Visual:AddSlider({
-  Name = "Speed (Auto Run)",
-  Min = 70,
-  Max = 120,
-  Increase = 1,
-  Default = 70,
-  Callback = function(v)
-_G.speedautorun = v
-end})
 Tabs.Players:AddCheckbox({
   Name = "Always Run",
   Default = false,
@@ -136,7 +127,7 @@ _G.A_run = v
 game:GetService("RunService").Stepped:Connect(function()
 if _G.A_run then
 local char = game:GetService("Players").LocalPlayer.Character
-if char then char:SetAttribute("WalkSpeed",_G.speedautorun or 30) end
+if char then char:SetAttribute("WalkSpeed",30) end
 else
 local char = game:GetService("Players").LocalPlayer.Character
 if char then char:SetAttribute("WalkSpeed",16) end
@@ -329,7 +320,7 @@ local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:
 if activeObjs and activeObjs:FindFirstChild("Pages") then
 for _,v in ipairs(activeObjs.Pages:GetChildren()) do
 if v.Parent.Name == "Pages" and v.Name == "Page" and not v:FindFirstChild("p_esp") then
-local Billboard = Instance.new("BillboardGui", v)
+local Billboard = Instance.new("BillboardGui", v.Paper)
 local TextLabel = Instance.new("TextLabel", Billboard)
 local UIStroke = Instance.new("UIStroke", TextLabel)
 Billboard.AlwaysOnTop = true
