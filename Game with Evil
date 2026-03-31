@@ -57,8 +57,10 @@ if activeObjs and activeObjs:FindFirstChild("Pages") then
 for _,v in ipairs(activeObjs.Pages:GetChildren()) do
 if v.Parent.Name == "Pages" and v.Name == "Page" then
 local paper = v:FindFirstChild("Paper")
-local prompt = paper and paper:FindFirstChild("Attachment") and paper.Attachment:FindFirstChild("Prompt")
+if (paper.Position - game.Players.LocalPlayer.Character.Head.Position).Magnitude < 15 then
+local prompt = paper and paper:FindFirstChild("Attachment") and paper.Attachment:FindFirstChildWhichIsA("ProximityPrompt")
 if prompt then fireproximityprompt(prompt) end
+end
 end
 end
 end
@@ -90,7 +92,7 @@ Tabs.Main:AddCheckbox({
   Callback = function(v)
 _G.AutoBluetooth = v
 game:GetService("RunService").Stepped:Connect(function()
-if _G.AutoBlueTooth then
+if _G.AutoBluetooth then
 local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:GetService("Workspace").Live:FindFirstChild("Map") and game:GetService("Workspace").Live.Map:FindFirstChild("MapModel") and game:GetService("Workspace").Live.Map.MapModel:FindFirstChild("ActiveObjectives")
 if activeObjs and activeObjs:FindFirstChild("Bluetooth") then
 for _,v in ipairs(activeObjs.Bluetooth:GetChildren()) do
@@ -148,6 +150,9 @@ game:GetService("RunService").Stepped:Connect(function()
 if _G.A_run then
 local char = game:GetService("Players").LocalPlayer.Character
 if char then char:SetAttribute("WalkSpeed",30) end
+else
+local char = game:GetService("Players").LocalPlayer.Character
+if char then char:SetAttribute("WalkSpeed",16) end
 end
 end)
 end})
@@ -189,7 +194,7 @@ end
 end
 end)
 else
-if eb_esp then eb_esp:Disconnect() end
+if eb_esp then eb_esp:Disconnect() h:Destroy() end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -211,7 +216,7 @@ end
 end
 end)
 else
-if b_esp then b_esp:Disconnect() end
+if b_esp then b_esp:Disconnect() h:Destroy() end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -225,15 +230,31 @@ local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:
 if activeObjs and activeObjs:FindFirstChild("Pages") then
 for _,v in ipairs(activeObjs.Pages:GetChildren()) do
 if v.Parent.Name == "Pages" and v.Name == "Page" and not v:FindFirstChild("p_esp") then
-local h = Instance.new("Highlight",v)
-h.Name = "p_esp"
-h.FillTransparency = 1
-end
-end
-end
+local h = Instance.new("BillboardGui")
+            billboard.Parent = v
+            billboard.Name = "p_esp"
+            billboard.Adornee = v
+            billboard.Size = UDim2.new(0.4, 0, 0.5, 0) -- slightly taller to fit health bar
+            billboard.StudsOffset = Vector3.new(0, 3.5, 0)
+            billboard.AlwaysOnTop = true
+            billboard.MaxDistance = math.huge
+ 
+            local nameLabel = Instance.new("TextLabel")
+            nameLabel.Parent = billboard
+            nameLabel.Size = UDim2.new(1, 0, 0.5, 0)
+            nameLabel.Position = UDim2.new(0, 0, 0, 0)
+            nameLabel.BackgroundTransparency = 1
+            nameLabel.TextColor3 = Color3.new(1,1,1)
+            nameLabel.TextStrokeTransparency = 0
+            nameLabel.Text = "Hidden page"
+            nameLabel.Font = Enum.Font.GothamBold
+            nameLabel.TextScaled = true
+         end
+      end
+   end
 end)
 else
-if p_esp then p_esp:Disconnect() end
+if p_esp:Disconnect() h:Destroy() end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -250,12 +271,13 @@ if v.Parent.Name == "Generators" and v.Name == "Generator" and not v:FindFirstCh
 local h = Instance.new("Highlight",v)
 h.Name = "g_esp"
 h.FillTransparency = 1
+h.OutlineColor = Color3.new(0,0,1)
 end
 end
 end
 end)
 else
-if g_esp then g_esp:Disconnect() end
+if g_esp then g_esp:Disconnect() h:Destroy() end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -269,13 +291,13 @@ for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
 if v:IsA("Model") and v:GetAttribute("KillerName") and not v:FindFirstChild("k_esp") then
 local h = Instance.new("Highlight",v)
 h.Name = "k_esp"
-h.OutlineColor3 = Color3.new(1,0,0)
+h.OutlineColor = Color3.new(1,0,0)
 h.FillTransparency = 1
 end
 end
 end)
 else
-if k_esp then k_esp:Disconnect() end
+if k_esp then k_esp:Disconnect() h:Destroy() end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -290,13 +312,13 @@ if v:IsA("Model") and v:FindFirstChild("Humanoid") and not v:FindFirstChild("s_e
 if game:GetService("Players"):GetPlayerFromCharacter(v) ~= game:GetService("Players").LocalPlayer then
 local h = Instance.new("Highlight",v)
 h.Name = "s_esp"
-h.OutlineColor3 = Color3.new(0,1,0)
+h.OutlineColor = Color3.new(0,1,0)
 h.FillTransparency = 1
 end
 end
 end
 end)
 else
-if s_esp then s_esp:Disconnect() end
+if s_esp then s_esp:Disconnect() h:Destroy() end
 end
 end})
