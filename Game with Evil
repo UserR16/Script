@@ -1,7 +1,7 @@
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/thanhdatbeo456-afk/Script/refs/heads/main/Redz"))()
 
 redzlib:MakeLoading({
-Title = "Bee Swarm Simulator | v0.1",
+Title = "Game with Evil 🧊",
 Duration = 5
 })
 redzlib:MakeNotification({
@@ -10,8 +10,8 @@ Description = "Loaded",
 Duration = 3
 })
 local Window = redzlib:MakeWindow({
-  Title = "Bee Swarm Simulator",
-  SubTitle = "v0.1",
+  Title = "Game with Evil",
+  SubTitle = "BETA TEST",
   SaveFolder = "Redz | redz lib v5.lua"
 })
 
@@ -42,6 +42,36 @@ end
 end)
 end})
 Tabs.Main:AddCheckbox({
+  Name = "Auto Page",
+  Default = false,
+  Callback = function(v)
+_G.AutoPage = v
+game:GetService("RunService").Stepped:Connect(function()
+if _G.AutoPage then
+for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Pages:GetChildren()) do
+if v.Parent.Name == "Pages" and v.Name == "Page" then
+fireproximityprompt(v.Paper.Attachment.Prompt)
+end
+end
+end
+end)
+end})
+Tabs.Main:AddCheckbox({
+  Name = "Auto Perfect Generator",
+  Default = false,
+  Callback = function(v)
+_G.AutoGen = v
+game:GetService("RunService").Stepped:Connect(function()
+if _G.AutoGen then
+for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Generators:GetChildren()) do
+if v.Parent.Name == "Generators" and v.Name == "Generator" then
+v.Remote:FireServer(2)
+end
+end
+end
+end)
+end})
+Tabs.Main:AddCheckbox({
   Name = "Auto Bluetooth",
   Default = false,
   Callback = function(v)
@@ -57,7 +87,7 @@ end
 end)
 end})
 Tabs.Main:AddCheckbox({
-  Name = "Instance Pages",
+  Name = "Instance Interact",
   Default = false,
   Callback = function(v)
 if v then
@@ -66,24 +96,48 @@ if v:IsA("ProximityPrompt") then
 v.HoldDuration = 0
 end
 end
-ips = workspace.DescendantAdded:Connect(function(v)
+ii = workspace.DescendantAdded:Connect(function(v)
 if v:IsA("ProximityPrompt") then
 v.HoldDuration = 0
 end
 end)
 else
-ips:Disconnect()
+ii:Disconnect()
 end
 end})
 Tabs.Players:AddSection({"Players"})
-Tabs.Main:AddCheckbox({
+Tabs.Players:AddCheckbox({
+  Name = "Inf Stamina",
+  Default = false,
+  Callback = function(v)
+_G.InfStamina = v
+game:GetService("RunService").Stepped:Connect(function()
+if _G.InfStamina then
+game:GetService("Players").LocalPlayer.Character:SetAttribute("MaxStamina",9e9)
+game:GetService("Players").LocalPlayer.Character:SetAttribute("Stamina",9e9)
+game:GetService("Players").LocalPlayer.Character:SetAttribute("StaminaGain",9e9)
+end
+end)
+end})
+Tabs.Players:AddCheckbox({
+  Name = "Invincible",
+  Default = false,
+  Callback = function(v)
+_G.Invincible = v
+game:GetService("RunService").Stepped:Connect(function()
+if _G.Invincible then
+game:GetService("Players").LocalPlayer.Character:SetAttribute("Invincible",true)
+end
+end)
+end})
+Tabs.Players:AddCheckbox({
   Name = "Always Run",
   Default = false,
   Callback = function(v)
 _G.AlwaysRun = v
 game:GetService("RunService").Stepped:Connect(function()
 if _G.AlwaysRun then
-game:GetService("Players").LocalPlayer:WaitForChild("Character").Humanoid.WalkSpeed = 35
+game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = 30
 end
 end)
 end})
@@ -122,11 +176,109 @@ end
 end)
 else
 eb_esp:Disconnect()
-for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Electrical:GetChildren()) do
-if v.Parent.Name == "Electrical" and v.Name == "ElectricalBox" and v:FindFirstChild("eb_esp") then
 h:Destroy()
 end
+end})
+Tabs.Visual:AddCheckbox({
+  Name = "Bluetooth ESP",
+  Default = false,
+  Callback = function(v)
+_G.b_esp = v
+if _G.b_esp then
+b_esp = game:GetService("RunService").Stepped:Connect(function()
+for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Bluetooth:GetChildren()) do
+if v.Parent.Name == "Bluetooth" and v.Name == "BluetoothDevice" and not v:FindFirstChild("b_esp") then
+local h = Instance.new("Highlight",v)
+h.Name = "b_esp"
+h.FillTransparency = 1
 end
+end
+end)
+else
+b_esp:Disconnect()
+h:Destroy()
+end
+end})
+Tabs.Visual:AddCheckbox({
+  Name = "Pages ESP",
+  Default = false,
+  Callback = function(v)
+_G.p_esp = v
+if _G.p_esp then
+p_esp = game:GetService("RunService").Stepped:Connect(function()
+for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Pages:GetChildren()) do
+if v.Parent.Name == "Pages" and v.Name == "Page" and not v:FindFirstChild("eb_esp") then
+local h = Instance.new("Highlight",v)
+h.Name = "p_esp"
+h.FillTransparency = 1
+end
+end
+end)
+else
+p_esp:Disconnect()
+h:Destroy()
+end
+end})
+Tabs.Visual:AddCheckbox({
+  Name = "Generator ESP",
+  Default = false,
+  Callback = function(v)
+_G.g_esp = v
+if _G.g_esp then
+g_esp = game:GetService("RunService").Stepped:Connect(function()
+for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Generators:GetChildren()) do
+if v.Parent.Name == "Generators" and v.Name == "Generator" and not v:FindFirstChild("g_esp") then
+local h = Instance.new("Highlight",v)
+h.Name = "g_esp"
+h.FillTransparency = 1
+end
+end
+end)
+else
+g_esp:Disconnect()
+h:Destroy()
+end
+end})
+Tabs.Visual:AddCheckbox({
+  Name = "Killers ESP",
+  Default = false,
+  Callback = function(v)
+_G.k_esp = v
+if _G.k_esp then
+k_esp = game:GetService("RunService").Stepped:Connect(function()
+for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
+if v:IsA("Model") and v:GetAttribute("KillerName") and not v:FindFirstChild("k_esp") then
+local h = Instance.new("Highlight",v)
+h.Name = "k_esp"
+h.OutlineColor3 = Color3.new(1)
+h.FillTransparency = 1
+end
+end
+end)
+else
+k_esp:Disconnect()
+h:Destroy()
+end
+end})
+Tabs.Visual:AddCheckbox({
+  Name = "Survivors ESP",
+  Default = false,
+  Callback = function(v)
+_G.s_esp = v
+if _G.s_esp then
+s_esp = game:GetService("RunService").Stepped:Connect(function()
+for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
+if v:IsA("Model") and v.Character and not v:FindFirstChild("s_esp") then
+local h = Instance.new("Highlight",v)
+h.Name = "s_esp"
+h.OutlineColor3 = Color3.new(0,1)
+h.FillTransparency = 1
+end
+end
+end)
+else
+s_esp:Disconnect()
+h:Destroy()
 end
 end})
 
