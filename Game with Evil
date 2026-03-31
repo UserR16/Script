@@ -46,28 +46,6 @@ end
 end)
 end})
 Tabs.Main:AddCheckbox({
-  Name = "Auto Page",
-  Default = false,
-  Callback = function(v)
-_G.AutoPage = v
-game:GetService("RunService").Stepped:Connect(function()
-if _G.AutoPage then
-local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:GetService("Workspace").Live:FindFirstChild("Map") and game:GetService("Workspace").Live.Map:FindFirstChild("MapModel") and game:GetService("Workspace").Live.Map.MapModel:FindFirstChild("ActiveObjectives")
-if activeObjs and activeObjs:FindFirstChild("Pages") then
-for _,v in ipairs(activeObjs.Pages:GetChildren()) do
-if v.Parent.Name == "Pages" and v.Name == "Page" then
-local paper = v:FindFirstChild("Paper")
-if (paper.Position - game.Players.LocalPlayer.Character.Head.Position).Magnitude < 15 then
-local prompt = paper and paper:FindFirstChild("Attachment") and paper.Attachment:FindFirstChildWhichIsA("ProximityPrompt")
-if prompt then fireproximityprompt(prompt) end
-end
-end
-end
-end
-end
-end)
-end})
-Tabs.Main:AddCheckbox({
   Name = "Auto Perfect Generator",
   Default = false,
   Callback = function(v)
