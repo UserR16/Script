@@ -34,7 +34,7 @@ _G.AutoElectricalBox = v
 game:GetService("RunService").Stepped:Connect(function()
 if _G.AutoElectricalBox then
 for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Electrical:GetChildren()) do
-if v.Name == "ElectricalBox" then
+if v.Parent.Name == "Electrical" and v.Name == "ElectricalBox" then
 v.Remote:FireServer()
 end
 end
@@ -49,12 +49,31 @@ _G.AutoBluetooth = v
 game:GetService("RunService").Stepped:Connect(function()
 if _G.AutoBlueTooth then
 for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Bluetooth:GetChildren()) do
-if v.Name == "BluetoothDevice" then
+if v.Parent.Name == "Bluetooth" and v.Name == "BluetoothDevice" then
 v.Remote:FireServer()
 end
 end
 end
 end)
+end})
+Tabs.Main:AddCheckbox({
+  Name = "Instance Pages",
+  Default = false,
+  Callback = function(v)
+if v then
+for _,v in ipairs(workspace:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+v.HoldDuration = 0
+end
+end
+ips = workspace.DescendantAdded:Connect(function(v)
+if v:IsA("ProximityPrompt") then
+v.HoldDuration = 0
+end
+end)
+else
+ips:Disconnect()
+end
 end})
 Tabs.Players:AddSection({"Players"})
 Tabs.Main:AddCheckbox({
@@ -86,7 +105,30 @@ end
 end)
 end})
 Tabs.Visual:AddSection({"ESP"})
-
+Tabs.Visual:AddCheckbox({
+  Name = "Electrical Box ESP",
+  Default = false,
+  Callback = function(v)
+_G.eb_esp = v
+if _G.eb_esp then
+eb_esp = game:GetService("RunService").Stepped:Connect(function()
+for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Electrical:GetChildren()) do
+if v.Parent.Name == "Electrical" and v.Name == "ElectricalBox" and not v:FindFirstChild("eb_esp") then
+local h = Instance.new("Highlight",v)
+h.Name = "eb_esp"
+h.FillTransparency = 1
+end
+end
+end)
+else
+eb_esp:Disconnect()
+for _,v in ipairs(game:GetService("Workspace").Live.Map.MapModel.ActiveObjectives.Electrical:GetChildren()) do
+if v.Parent.Name == "Electrical" and v.Name == "ElectricalBox" and v:FindFirstChild("eb_esp") then
+h:Destroy()
+end
+end
+end
+end})
 
 
 
