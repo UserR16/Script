@@ -127,13 +127,14 @@ _G.A_run = v
 game:GetService("RunService").Stepped:Connect(function()
 if _G.A_run then
 local char = game:GetService("Players").LocalPlayer.Character
-if char then char:SetAttribute("WalkSpeed",30) end
+if char then char:SetAttribute("WalkSpeed",35) end
 else
 local char = game:GetService("Players").LocalPlayer.Character
 if char then char:SetAttribute("WalkSpeed",16) end
 end
 end)
 end})
+
 --[[
 Tabs.Players:AddSlider({
   Name = "Distance (Extend Hitbox)",
@@ -309,7 +310,7 @@ local live = workspace:FindFirstChild("Live")
 local activeObjs = live and live:FindFirstChild("Map") and live.Map:FindFirstChild("MapModel") and live.Map.MapModel:FindFirstChild("ActiveObjectives")
 if activeObjs and activeObjs:FindFirstChild("Pages") then
 for _, v in ipairs(activeObjs.Pages:GetChildren()) do
-if v.Name == "Page" and v:FindFirstChild("Paper") and not v.Paper:FindFirstChild("p_esp_gui") then
+if v.Name == "Page" and v:FindFirstChild("Paper") and not v:FindFirstChild("p_esp_gui") then
 local Billboard = Instance.new("BillboardGui")
 Billboard.Name = "p_esp_gui"
 Billboard.Parent = v
@@ -382,7 +383,7 @@ _G.k_esp = v
 if _G.k_esp then
 k_esp = game:GetService("RunService").Stepped:Connect(function()
 for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
-if v:IsA("Model") and v.Humanoid.Health > 250 and not v:FindFirstChild("k_esp") then
+if v:IsA("Model") and v:FindFirstChild("Humanoid").MaxHealth > 650 and not v:FindFirstChild("k_esp") then
 local h = Instance.new("Highlight",v)
 h.Name = "k_esp"
 h.OutlineColor = Color3.new(1,0,0)
@@ -402,7 +403,7 @@ _G.s_esp = v
 if _G.s_esp then
 s_esp = game:GetService("RunService").Stepped:Connect(function()
 for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
-if v:IsA("Model") and v:FindFirstChild("Humanoid") and not v:FindFirstChild("s_esp") then
+if v:IsA("Model") and v:FindFirstChild("Humanoid").MaxHealth < 650 and not v:FindFirstChild("s_esp") then
 if game:GetService("Players"):GetPlayerFromCharacter(v) ~= game:GetService("Players").LocalPlayer then
 local h = Instance.new("Highlight",v)
 h.Name = "s_esp"
