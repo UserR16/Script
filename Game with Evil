@@ -304,38 +304,51 @@ Tabs.Visual:AddCheckbox({
   Callback = function(v)
 _G.p_esp = v
 if _G.p_esp then
-p_esp = game:GetService("RunService").Stepped:Connect(function()
-local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:GetService("Workspace").Live:FindFirstChild("Map") and game:GetService("Workspace").Live.Map:FindFirstChild("MapModel") and game:GetService("Workspace").Live.Map.MapModel:FindFirstChild("ActiveObjectives")
+_G.p_esp_connection = game:GetService("RunService").Stepped:Connect(function()
+local live = workspace:FindFirstChild("Live")
+local activeObjs = live and live:FindFirstChild("Map") and live.Map:FindFirstChild("MapModel") and live.Map.MapModel:FindFirstChild("ActiveObjectives")
 if activeObjs and activeObjs:FindFirstChild("Pages") then
-for _,v in ipairs(activeObjs.Pages:GetChildren()) do
-if v.Parent.Name == "Pages" and v.Name == "Page" and not v:FindFirstChild("p_esp") then
-local Billboard = Instance.new("BillboardGui", v.Paper)
-local TextLabel = Instance.new("TextLabel", Billboard)
-local UIStroke = Instance.new("UIStroke", TextLabel)
+for _, v in ipairs(activeObjs.Pages:GetChildren()) do
+if v.Name == "Page" and v:FindFirstChild("Paper") and not v.Paper:FindFirstChild("p_esp_gui") then
+local Billboard = Instance.new("BillboardGui")
+Billboard.Name = "p_esp_gui"
+Billboard.Parent = v
 Billboard.AlwaysOnTop = true
-Billboard.Size = UDim2.new(0,400,0,100)
-Billboard.Name = "p_esp"
-Billboard.Active = true
-TextLabel.AnchorPoint = Vector2.new(0.5,0.5)
+Billboard.Size = UDim2.new(0, 200, 0, 50)
+Billboard.Adornee = v
+Billboard.MaxDistance = 5000
+local TextLabel = Instance.new("TextLabel")
+TextLabel.Parent = Billboard
+TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 TextLabel.BackgroundTransparency = 1
-TextLabel.BackgroundColor3 = Color3.new(0,0,0)
-TextLabel.TextColor3 = Color3.new(1,1,1)
-TextLabel.Font = "SourceSans"
-TextLabel.TextSize = 15
-TextLabel.TextTransparency = 0
-TextLabel.Visible = true
+TextLabel.TextColor3 = Color3.new(1, 1, 1)
+TextLabel.Font = Enum.Font.SourceSansBold
+TextLabel.TextSize = 16
 TextLabel.Text = "Hidden Page"
-TextLabel.Size = UDim2.new(1,0,0,0)
-TextLabel.Position = UDim2.new(0.5,0,0.7,-35)
+TextLabel.Size = UDim2.new(1, 0, 1, 0)
+TextLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Parent = TextLabel
 UIStroke.Thickness = 1
-UIStroke.Color = Color3.new()
-UIStroke.Transparency = 0
+UIStroke.Color = Color3.new(0, 0, 0)
 end
 end
 end
 end)
 else
-if p_esp then p_esp:Disconnect() Billboard:Destroy() end
+if _G.p_esp_connection then
+_G.p_esp_connection:Disconnect()
+_G.p_esp_connection = nil
+end
+local live = workspace:FindFirstChild("Live")
+local activeObjs = live and live:FindFirstChild("Map") and live.Map:FindFirstChild("MapModel") and live.Map.MapModel:FindFirstChild("ActiveObjectives")
+if activeObjs and activeObjs:FindFirstChild("Pages") then
+for _, v in ipairs(activeObjs.Pages:GetDescendants()) do
+if v.Name == "p_esp_gui" then
+v:Destroy()
+end
+end
+end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -369,7 +382,7 @@ _G.k_esp = v
 if _G.k_esp then
 k_esp = game:GetService("RunService").Stepped:Connect(function()
 for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
-if v:IsA("Model") and v:GetAttribute("Health") > 250 and not v:FindFirstChild("k_esp") then
+if v:IsA("Model") and v.Humanoid.Health > 250 and not v:FindFirstChild("k_esp") then
 local h = Instance.new("Highlight",v)
 h.Name = "k_esp"
 h.OutlineColor = Color3.new(1,0,0)
