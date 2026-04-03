@@ -175,11 +175,28 @@ Tabs.Players:AddCheckbox({
   Callback = function(v)
 _G.awt_S = v
 game:GetService("RunService").Stepped:Connect(function()
-if _G.awt_S then
-for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
-if v:IsA("Model") and not v:FindFirstChild("KillerConfig") then
-if game:GetService("Players"):GetPlayerFromCharacter(v) ~= game:GetService("Players").LocalPlayer then
-game.Players.LocalPlayer.Character.Humanoid:MoveTo(v.HumanoidRootPart.Position)
+if _G.awt_S and game.Players.LocalPlayer.Character:FindFirstChild("KillerConfig") then
+local p = game:GetService("Players")
+local lp = p.LocalPlayer
+local ch = lp.Character
+local ps = game:GetService("PathfindingService")
+if ch and ch:FindFirstChild("HumanoidRootPart")then
+local t,d = nil,math.huge
+for _,v in pairs(workspace:GetChildren())do
+if v:IsA("Model")and v ~= ch and not v:FindFirstChild("KillerConfig")and v:FindFirstChild("HumanoidRootPart")then
+local dist = (ch.HumanoidRootPart.Position-v.HumanoidRootPart.Position).Magnitude
+if dist < d then d = dist;t = v end
+end
+end
+if t then
+local path = ps:CreatePath({AgentCanJump = true})
+path:ComputeAsync(ch.HumanoidRootPart.Position,t.HumanoidRootPart.Position)
+local w = path:GetWaypoints()
+if w[2]then
+ch.Humanoid:MoveTo(w[2].Position)
+if w[2].Action == Enum.PathWaypointAction.Jump then ch.Humanoid.Jump = true end
+else
+ch.Humanoid:MoveTo(t.HumanoidRootPart.Position)
 end
 end
 end
