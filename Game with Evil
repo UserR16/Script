@@ -65,6 +65,25 @@ end
 end)
 end})
 Tabs.Main:AddCheckbox({
+  Name = "Auto Interact Pages",
+  Default = false,
+  Callback = function(v)
+_G.AutoPages = v
+game:GetService("RunService").Stepped:Connect(function()
+if _G.AutoPages then
+local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:GetService("Workspace").Live:FindFirstChild("Map") and game:GetService("Workspace").Live.Map:FindFirstChild("MapModel") and game:GetService("Workspace").Live.Map.MapModel:FindFirstChild("ActiveObjectives")
+if activeObjs and activeObjs:FindFirstChild("Pages") then
+for _,v in ipairs(activeObjs.Pages:GetChildren()) do
+if v.Parent.Name == "Pages" and v.Name == "PageModel" then
+local prompt = v:FindFirstChild("Paper") and v:FindFirstChild("Paper"):FindFirstChild("Attachment") and v:FindFirstChild("Paper"):FindFirstChild("Attachment"):FindFirstChildWhichIsA("Prompt")
+if prompt then fireproximityprompt(prompt) end
+end
+end
+end
+end
+end)
+end})
+Tabs.Main:AddCheckbox({
   Name = "Auto Bluetooth",
   Default = false,
   Callback = function(v)
@@ -134,7 +153,23 @@ if char then char:SetAttribute("WalkSpeed",16) end
 end
 end)
 end})
-
+Tabs.Players:AddCheckbox({
+  Name = "Auto Walk to Survivor",
+  Default = false,
+  Callback = function(v)
+_G.awt_S = v
+game:GetService("RunService").Stepped:Connect(function()
+if _G.awt_S then
+for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
+if v:IsA("Model") and not v:FindFirstChild("KillerConfig") then
+if game:GetService("Players"):GetPlayerFromCharacter(v) ~= game:GetService("Players").LocalPlayer then
+game.Players.LocalPlayer.Character.Humanoid:MoveTo(v.HumanoidRootPart.Position)
+end
+end
+end
+end
+end)
+end})
 --[[
 Tabs.Players:AddSlider({
   Name = "Distance (Extend Hitbox)",
@@ -310,7 +345,7 @@ local live = workspace:FindFirstChild("Live")
 local activeObjs = live and live:FindFirstChild("Map") and live.Map:FindFirstChild("MapModel") and live.Map.MapModel:FindFirstChild("ActiveObjectives")
 if activeObjs and activeObjs:FindFirstChild("Pages") then
 for _, v in ipairs(activeObjs.Pages:GetChildren()) do
-if v.Name == "Page" and v:FindFirstChild("Paper") and not v:FindFirstChild("p_esp_gui") then
+if v.Name == "PageModel" and v:FindFirstChild("Paper") and not v:FindFirstChild("p_esp_gui") then
 local Billboard = Instance.new("BillboardGui")
 Billboard.Name = "p_esp_gui"
 Billboard.Parent = v
@@ -383,7 +418,7 @@ _G.k_esp = v
 if _G.k_esp then
 k_esp = game:GetService("RunService").Stepped:Connect(function()
 for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
-if v:IsA("Model") and v:FindFirstChild("Humanoid").MaxHealth > 650 and not v:FindFirstChild("k_esp") then
+if v:IsA("Model") and v:FindFirstChild("KillerConfig") and not v:FindFirstChild("k_esp") then
 local h = Instance.new("Highlight",v)
 h.Name = "k_esp"
 h.OutlineColor = Color3.new(1,0,0)
@@ -403,7 +438,7 @@ _G.s_esp = v
 if _G.s_esp then
 s_esp = game:GetService("RunService").Stepped:Connect(function()
 for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
-if v:IsA("Model") and v:FindFirstChild("Humanoid").MaxHealth < 650 and not v:FindFirstChild("s_esp") then
+if v:IsA("Model") and not v:FindFirstChild("KillerConfig") and not v:FindFirstChild("s_esp") then
 if game:GetService("Players"):GetPlayerFromCharacter(v) ~= game:GetService("Players").LocalPlayer then
 local h = Instance.new("Highlight",v)
 h.Name = "s_esp"
