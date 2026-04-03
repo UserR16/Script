@@ -75,7 +75,7 @@ local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:
 if activeObjs and activeObjs:FindFirstChild("Pages") then
 for _,v in ipairs(activeObjs.Pages:GetChildren()) do
 if v.Parent.Name == "Pages" and v.Name == "PageModel" then
-local prompt = v:FindFirstChild("Paper") and v:FindFirstChild("Paper"):FindFirstChild("Attachment") and v:FindFirstChild("Paper"):FindFirstChild("Attachment"):FindFirstChildWhichIsA("Prompt")
+local prompt = v:FindFirstChild("Paper") and v:FindFirstChild("Paper"):FindFirstChild("Attachment") and v:FindFirstChild("Paper"):FindFirstChild("Attachment"):FindFirstChildWhichIsA("ProximityPrompt")
 if prompt then fireproximityprompt(prompt) end
 end
 end
@@ -150,6 +150,22 @@ if char then char:SetAttribute("WalkSpeed",35) end
 else
 local char = game:GetService("Players").LocalPlayer.Character
 if char then char:SetAttribute("WalkSpeed",16) end
+end
+end)
+end})
+Tabs.Players:AddCheckbox({
+  Name = "Always Through Killers Wall",
+  Default = false,
+  Callback = function(v)
+_G.atk_wall = v
+game:GetService("RunService").Stepped:Connect(function()
+local killerBarriers = game:GetService("Workspace"):FindFirstChild("Live") and game:GetService("Workspace").Live:FindFirstChild("Map") and game:GetService("Workspace").Live.Map:FindFirstChild("MapModel") and game:GetService("Workspace").Live.Map.MapModel:FindFirstChild("KillerBarriers")
+if killerBarriers then
+for _,v in ipairs(killerBarriers:GetChildren()) do
+if v.Parent.Name == "KillerBarriers" and v:IsA("BasePart") then
+v.CanCollide = not _G.atk_wall
+end
+end
 end
 end)
 end})
