@@ -326,7 +326,7 @@ Tabs.Players:AddCheckbox({
   Name = "Auto Walk to Survivor",
   Default = false,
   Callback = function(v)
-_G.awt_S = true
+_G.awt_S = v
 local lp = game.Players.LocalPlayer
 local ps = game:GetService("PathfindingService")
 local rs = game:GetService("RunService")
