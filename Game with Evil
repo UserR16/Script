@@ -173,37 +173,44 @@ Tabs.Players:AddCheckbox({
   Name = "Auto Walk to Survivor",
   Default = false,
   Callback = function(v)
-_G.awt_S = v
-game:GetService("RunService").Stepped:Connect(function()
-if _G.awt_S and game.Players.LocalPlayer.Character:FindFirstChild("KillerConfig") then
-local p = game:GetService("Players")
-local lp = p.LocalPlayer
-local ch = lp.Character
+_G.awt_S = true
+local lp = game.Players.LocalPlayer
 local ps = game:GetService("PathfindingService")
-if ch and ch:FindFirstChild("HumanoidRootPart")then
+local rs = game:GetService("RunService")
+local last = 0
+local path = ps:CreatePath({AgentCanJump = true})
+local points = {}
+local cur = 1
+
+rs.Stepped:Connect(function()
+if _G.awt_S and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")then
+local hrp = lp.Character.HumanoidRootPart
+local hum = lp.Character.Humanoid
+local now = tick()
+if now-last > 0.2 then
+last = now
 local t,d = nil,math.huge
 for _,v in pairs(workspace:GetChildren())do
-if v:IsA("Model")and v ~= ch and not v:FindFirstChild("KillerConfig")and v:FindFirstChild("HumanoidRootPart")then
-local dist = (ch.HumanoidRootPart.Position-v.HumanoidRootPart.Position).Magnitude
+if v:IsA("Model")and v ~= lp.Character and not v:FindFirstChild("KillerConfig")and v:FindFirstChild("HumanoidRootPart")then
+local dist = (hrp.Position-v.HumanoidRootPart.Position).Magnitude
 if dist < d then d = dist;t = v end
 end
 end
 if t then
-local path = ps:CreatePath({AgentCanJump = true})
-path:ComputeAsync(ch.HumanoidRootPart.Position,t.HumanoidRootPart.Position)
-local w = path:GetWaypoints()
-if w[2]then
-ch.Humanoid:MoveTo(w[2].Position)
-if w[2].Action == Enum.PathWaypointAction.Jump then ch.Humanoid.Jump = true end
-else
-ch.Humanoid:MoveTo(t.HumanoidRootPart.Position)
+path:ComputeAsync(hrp.Position,t.HumanoidRootPart.Position)
+points = path:GetWaypoints()
+cur = 2
 end
 end
+if points[cur]then
+hum:MoveTo(points[cur].Position)
+if (hrp.Position-points[cur].Position).Magnitude < 2 then cur = cur+1 end
+if points[cur]and points[cur].Action == Enum.PathWaypointAction.Jump then hum.Jump = true end
 end
 end
 end)
 end})
---[[
+if _G.Premium then
 Tabs.Players:AddSlider({
   Name = "Distance (Extend Hitbox)",
   Min = 5,
@@ -211,29 +218,44 @@ Tabs.Players:AddSlider({
   Increase = 1,
   Default = 5,
   Callback = function(v)
-_G.DistanceExtendHitbox = v
+_G.hitbox_Power = v
 end})
 Tabs.Players:AddCheckbox({
   Name = "Extend Hitbox",
   Default = false,
   Callback = function(v)
-_G.ExtendHitbox = v
-if _G.ExtendHitbox == true then
-local distance = _G.DistanceExtendHitbox or 10
-repeat game:GetService("RunService").Heartbeat:Wait()
-local vel, movel = nil, 0.1
-while not (game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character.Parent and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Parent) do
-game:GetService("RunService").Heartbeat:Wait()
+_G.hitbox_S = v
+local lp = game.Players.LocalPlayer
+local rs = game:GetService("RunService")
+local last = 0
+local t = nil
+
+rs.Heartbeat:Connect(function()
+if _G.hitbox_S == true and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")then
+local hrp = lp.Character.HumanoidRootPart
+local now = tick()
+
+if now-last > 0.2 then
+last = now
+local d = math.huge
+t = nil
+for _,v in pairs(workspace:GetChildren())do
+if v:IsA("Model")and v ~= lp.Character and not v:FindFirstChild("KillerConfig")and v:FindFirstChild("HumanoidRootPart")then
+local dist = (hrp.Position-v.HumanoidRootPart.Position).Magnitude
+if dist < d then d = dist;t = v.HumanoidRootPart end
 end
-vel = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Velocity
-game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Velocity = vel * distance + (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * distance)
-game:GetService("RunService").RenderStepped:Wait()
-if (game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character.Parent and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Parent) then
-game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Velocity = vel
 end
-until _G.ExtendHitbox == false
 end
-end})]]--
+
+if t then
+local p = _G.hitbox_Power * 6
+local v = hrp.Velocity
+hrp.Velocity = v * p + (hrp.CFrame.LookVector * p)
+end
+end
+end)
+end})
+end
 Tabs.Visual:AddSection({"Camera"})
 
 Tabs.Visual:AddCheckbox({
