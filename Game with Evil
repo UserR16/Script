@@ -511,9 +511,9 @@ for _,v in ipairs(activeObjs.Electrical:GetChildren()) do
 if v.Parent.Name == "Electrical" and v.Name == "ElectricalBox" and not v:FindFirstChild("eb_esp") then
 CreateESP({
     Target = v,
-    Title = "Quest", 
+    Title = "Electrical Box", 
     Color = Color3.fromRGB(0, 255, 255), 
-    Name = "Electrical Box",
+    Name = "eb_esp",
     Distance = _G.Distance, 
     Tracer = _G.Tracer
 })
@@ -538,9 +538,9 @@ for _,v in ipairs(activeObjs.Bluetooth:GetChildren()) do
 if v.Parent.Name == "Bluetooth" and v.Name == "BluetoothDevice" and not v:FindFirstChild("b_esp") then
 CreateESP({
     Target = v,
-    Title = "Quest", 
+    Title = "Bluetooth", 
     Color = Color3.fromRGB(0, 255, 0), 
-    Name = "Bluetooth",
+    Name = "b_esp",
     Distance = _G.Distance, 
     Tracer = _G.Tracer
 })
@@ -563,12 +563,12 @@ local live = workspace:FindFirstChild("Live")
 local activeObjs = live and live:FindFirstChild("Map") and live.Map:FindFirstChild("MapModel") and live.Map.MapModel:FindFirstChild("ActiveObjectives")
 if activeObjs and activeObjs:FindFirstChild("Pages") then
 for _, v in ipairs(activeObjs.Pages:GetChildren()) do
-if v.Name == "PageModel" and v:FindFirstChild("Paper") and not v:FindFirstChild("p_esp_gui") then
+if v.Name == "PageModel" and v:FindFirstChild("Paper") and not v:FindFirstChild("p_esp") then
 CreateESP({
     Target = v,
-    Title = "Quest", 
+    Title = "Hidden Page", 
     Color = Color3.fromRGB(255, 150, 0), 
-    Name = "Hidden Page",
+    Name = "p_esp",
     Distance = _G.Distance, 
     Tracer = _G.Tracer
 })
@@ -585,7 +585,7 @@ local live = workspace:FindFirstChild("Live")
 local activeObjs = live and live:FindFirstChild("Map") and live.Map:FindFirstChild("MapModel") and live.Map.MapModel:FindFirstChild("ActiveObjectives")
 if activeObjs and activeObjs:FindFirstChild("Pages") then
 for _, v in ipairs(activeObjs.Pages:GetDescendants()) do
-if v.Name == "p_esp_gui" then
+if v.Name == "p_esp" then
 v:Destroy()
 end
 end
@@ -605,9 +605,9 @@ for _,v in ipairs(activeObjs.Generators:GetChildren()) do
 if v.Parent.Name == "Generators" and v.Name == "Generator" and not v:FindFirstChild("g_esp") then
 CreateESP({
     Target = v,
-    Title = "Quest", 
+    Title = "Generator", 
     Color = Color3.fromRGB(0,0,255), 
-    Name = "Generator",
+    Name = "g_esp",
     Distance = _G.Distance, 
     Tracer = _G.Tracer
 })
@@ -630,9 +630,9 @@ for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
 if v:IsA("Model") and v:FindFirstChild("KillerConfig") and not v:FindFirstChild("k_esp") then
 CreateESP({
     Target = v,
-    Title = "Killer", 
+    Title = v.Name, 
     Color = Color3.fromRGB(255), 
-    Name = v.Name,
+    Name = "k_esp",
     Distance = _G.Distance, 
     Tracer = _G.Tracer
 })
@@ -655,9 +655,9 @@ if v:IsA("Model") and not v:FindFirstChild("KillerConfig") and not v:FindFirstCh
 if game:GetService("Players"):GetPlayerFromCharacter(v) ~= game:GetService("Players").LocalPlayer then
 CreateESP({
     Target = v,
-    Title = "Survivor", 
+    Title = v.Name, 
     Color = Color3.fromRGB(0, 255, 100), 
-    Name = v.Name,
+    Name = "s_esp",
     Distance = _G.Distance, 
     Tracer = _G.Tracer
 })
