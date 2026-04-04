@@ -4,6 +4,159 @@ redzlib:MakeLoading({
 Title = "Game with Evil 🧊",
 Duration = 2
 })
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
+local CoreGui = game:GetService("CoreGui")
+
+local function CreateESP(Settings)
+    local v = Settings.Target
+    local title = Settings.Title or "Unknown"
+    local espColor = Settings.Color or Color3.fromRGB(255, 255, 255)
+    local espName = Settings.Name or "No Name"
+    local showDistance = Settings.Distance
+    local showTracer = Settings.Tracer
+
+    if not v then return end
+
+    local Highlight = Instance.new("Highlight")
+    Highlight.Name = espName
+    Highlight.Parent = v
+    Highlight.OutlineColor = espColor
+    Highlight.FillTransparency = 1
+
+    local Billboard = Instance.new("BillboardGui")
+    Billboard.Adornee = v:IsA("Model") and (v.PrimaryPart or v:FindFirstChildWhichIsA("BasePart")) or v
+    Billboard.Size = UDim2.new(6, 0, 4, 0)
+    Billboard.StudsOffset = Vector3.new(0, 1, 0)
+    Billboard.AlwaysOnTop = true
+    Billboard.Parent = CoreGui
+
+    local Container = Instance.new("Frame", Billboard)
+    Container.Size = UDim2.new(1, 0, 0.5, 0)
+    Container.BackgroundTransparency = 1
+    Instance.new("UIListLayout", Container).HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+    local function CreateLabel(txt, color)
+        local lbl = Instance.new("TextLabel", Container)
+        lbl.Text = txt
+        lbl.TextColor3 = color
+        lbl.TextScaled = true
+        lbl.Font = Enum.Font.SourceSansBold
+        lbl.BackgroundTransparency = 1
+        lbl.Size = UDim2.new(1, 0, 0.3, 0)
+        Instance.new("UIStroke", lbl).Thickness = 1.2
+        return lbl
+    end
+
+    local titleLbl = CreateLabel(title, espColor)
+    local distLbl = CreateLabel("", Color3.fromRGB(200, 200, 200))
+
+    local HealthBack = Instance.new("Frame", Container)
+    HealthBack.Size = UDim2.new(0.8, 0, 0.15, 0)
+    HealthBack.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+    HealthBack.Visible = false
+    Instance.new("UICorner", HealthBack).CornerRadius = UDim.new(0.5, 0)
+    
+    local HealthGreen = Instance.new("Frame", HealthBack)
+    HealthGreen.Size = UDim2.new(1, 0, 1, 0)
+    HealthGreen.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+    Instance.new("UICorner", HealthGreen).CornerRadius = UDim.new(0.5, 0)
+
+    local HealthText = Instance.new("TextLabel", HealthBack)
+    HealthText.Size = UDim2.new(1, 0, 1, 0)
+    HealthText.BackgroundTransparency = 1
+    HealthText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    HealthText.TextScaled = true
+    Instance.new("UIStroke", HealthText).Thickness = 0.8
+
+    local TracerLine = Drawing.new("Line")
+    local ArrowLine1 = Drawing.new("Line")
+    local ArrowLine2 = Drawing.new("Line")
+    local ArrowDist = Drawing.new("Text")
+
+    local function Update()
+        local Connection
+        Connection = RunService.RenderStepped:Connect(function()
+            if v:IsDescendantOf(workspace) and Highlight.Parent ~= nil then
+                local Root = v:IsA("Model") and (v.PrimaryPart or v:FindFirstChildWhichIsA("BasePart")) or v
+                local Hum = v:FindFirstChildOfClass("Humanoid")
+                
+                if Root then
+                    local ScreenPos, OnScreen = Camera:WorldToViewportPoint(Root.Position)
+                    local Dist = math.floor((Camera.CFrame.Position - Root.Position).Magnitude)
+                    
+                    if OnScreen then
+                        Billboard.Enabled = true
+                        ArrowLine1.Visible = false; ArrowLine2.Visible = false; ArrowDist.Visible = false
+                        
+                        if showDistance then
+                            distLbl.Visible = true
+                            distLbl.Text = Dist .. "m"
+                        end
+
+                        if Hum then
+                            HealthBack.Visible = true
+                            HealthText.Text = math.floor(Hum.Health) .. "/" .. math.floor(Hum.MaxHealth)
+                            HealthGreen.Size = UDim2.new(math.clamp(Hum.Health/Hum.MaxHealth, 0, 1), 0, 1, 0)
+                        end
+
+                        if showTracer then
+                            TracerLine.Visible = true
+                            TracerLine.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
+                            TracerLine.To = Vector2.new(ScreenPos.X, ScreenPos.Y)
+                            TracerLine.Color = espColor
+                        else
+                            TracerLine.Visible = false
+                        end
+                    else
+                        -- FIX LỖI NGƯỢC HƯỚNG MŨI TÊN (OFF-SCREEN)
+                        Billboard.Enabled = false
+                        TracerLine.Visible = false
+                        
+                        local Center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+                        local ObjPos = Camera:WorldToScreenPoint(Root.Position)
+                        local ObjVector = Vector2.new(ObjPos.X, ObjPos.Y)
+                        
+                        -- Nếu Z < 0 (sau lưng), đảo ngược hướng để chỉ đúng
+                        local Dir = (ObjVector - Center).Unit
+                        if ObjPos.Z < 0 then
+                            Dir = -Dir
+                        end
+                        
+                        local Radius = 200
+                        local ArrowPos = Center + (Dir * Radius)
+                        local Angle = math.atan2(Dir.Y, Dir.X)
+                        local Size = 18
+                        local Spread = math.rad(150) -- Góc V nhọn YARHM
+
+                        ArrowLine1.Visible = true
+                        ArrowLine1.Color = espColor
+                        ArrowLine1.Thickness = 1.5
+                        ArrowLine1.From = ArrowPos
+                        ArrowLine1.To = ArrowPos + Vector2.new(math.cos(Angle + Spread) * Size, math.sin(Angle + Spread) * Size)
+
+                        ArrowLine2.Visible = true
+                        ArrowLine2.Color = espColor
+                        ArrowLine2.Thickness = 1.5
+                        ArrowLine2.From = ArrowPos
+                        ArrowLine2.To = ArrowPos + Vector2.new(math.cos(Angle - Spread) * Size, math.sin(Angle - Spread) * Size)
+
+                        ArrowDist.Visible = true
+                        ArrowDist.Text = Dist .. "m"
+                        ArrowDist.Size = 13
+                        ArrowDist.Center = true
+                        ArrowDist.Outline = true
+                        ArrowDist.Position = ArrowPos + (Dir * 25)
+                    end
+                end
+            else
+                Highlight:Destroy(); Billboard:Destroy(); TracerLine:Remove(); ArrowLine1:Remove(); ArrowLine2:Remove(); ArrowDist:Remove()
+                Connection:Disconnect()
+            end
+        end)
+    end
+    coroutine.wrap(Update)()
+end
 redzlib:MakeNotification({
 Title = "Alert",
 Description = "Loaded",
@@ -356,9 +509,14 @@ local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:
 if activeObjs and activeObjs:FindFirstChild("Electrical") then
 for _,v in ipairs(activeObjs.Electrical:GetChildren()) do
 if v.Parent.Name == "Electrical" and v.Name == "ElectricalBox" and not v:FindFirstChild("eb_esp") then
-local h = Instance.new("Highlight",v)
-h.Name = "eb_esp"
-h.FillTransparency = 1
+CreateESP({
+    Target = v,
+    Title = "Quest", 
+    Color = Color3.fromRGB(0, 255, 255), 
+    Name = "Electrical Box",
+    Distance = _G.Distance, 
+    Tracer = _G.Tracer
+})
 end
 end
 end
@@ -378,9 +536,14 @@ local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:
 if activeObjs and activeObjs:FindFirstChild("Bluetooth") then
 for _,v in ipairs(activeObjs.Bluetooth:GetChildren()) do
 if v.Parent.Name == "Bluetooth" and v.Name == "BluetoothDevice" and not v:FindFirstChild("b_esp") then
-local h = Instance.new("Highlight",v)
-h.Name = "b_esp"
-h.FillTransparency = 1
+CreateESP({
+    Target = v,
+    Title = "Quest", 
+    Color = Color3.fromRGB(0, 255, 0), 
+    Name = "Bluetooth",
+    Distance = _G.Distance, 
+    Tracer = _G.Tracer
+})
 end
 end
 end
@@ -401,27 +564,14 @@ local activeObjs = live and live:FindFirstChild("Map") and live.Map:FindFirstChi
 if activeObjs and activeObjs:FindFirstChild("Pages") then
 for _, v in ipairs(activeObjs.Pages:GetChildren()) do
 if v.Name == "PageModel" and v:FindFirstChild("Paper") and not v:FindFirstChild("p_esp_gui") then
-local Billboard = Instance.new("BillboardGui")
-Billboard.Name = "p_esp_gui"
-Billboard.Parent = v
-Billboard.AlwaysOnTop = true
-Billboard.Size = UDim2.new(0, 200, 0, 50)
-Billboard.Adornee = v
-Billboard.MaxDistance = 5000
-local TextLabel = Instance.new("TextLabel")
-TextLabel.Parent = Billboard
-TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-TextLabel.BackgroundTransparency = 1
-TextLabel.TextColor3 = Color3.new(1, 1, 1)
-TextLabel.Font = Enum.Font.SourceSansBold
-TextLabel.TextSize = 16
-TextLabel.Text = "Hidden Page"
-TextLabel.Size = UDim2.new(1, 0, 1, 0)
-TextLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
-local UIStroke = Instance.new("UIStroke")
-UIStroke.Parent = TextLabel
-UIStroke.Thickness = 1
-UIStroke.Color = Color3.new(0, 0, 0)
+CreateESP({
+    Target = v,
+    Title = "Quest", 
+    Color = Color3.fromRGB(255, 150, 0), 
+    Name = "Hidden Page",
+    Distance = _G.Distance, 
+    Tracer = _G.Tracer
+})
 end
 end
 end
@@ -453,10 +603,14 @@ local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:
 if activeObjs and activeObjs:FindFirstChild("Generators") then
 for _,v in ipairs(activeObjs.Generators:GetChildren()) do
 if v.Parent.Name == "Generators" and v.Name == "Generator" and not v:FindFirstChild("g_esp") then
-local h = Instance.new("Highlight",v)
-h.Name = "g_esp"
-h.FillTransparency = 1
-h.OutlineColor = Color3.new(0,0,1)
+CreateESP({
+    Target = v,
+    Title = "Quest", 
+    Color = Color3.fromRGB(0,0,255), 
+    Name = "Generator",
+    Distance = _G.Distance, 
+    Tracer = _G.Tracer
+})
 end
 end
 end
@@ -474,10 +628,14 @@ if _G.k_esp then
 k_esp = game:GetService("RunService").Stepped:Connect(function()
 for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
 if v:IsA("Model") and v:FindFirstChild("KillerConfig") and not v:FindFirstChild("k_esp") then
-local h = Instance.new("Highlight",v)
-h.Name = "k_esp"
-h.OutlineColor = Color3.new(1,0,0)
-h.FillTransparency = 1
+CreateESP({
+    Target = v,
+    Title = "Killer", 
+    Color = Color3.fromRGB(255), 
+    Name = v.Name,
+    Distance = _G.Distance, 
+    Tracer = _G.Tracer
+})
 end
 end
 end)
@@ -495,10 +653,14 @@ s_esp = game:GetService("RunService").Stepped:Connect(function()
 for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
 if v:IsA("Model") and not v:FindFirstChild("KillerConfig") and not v:FindFirstChild("s_esp") then
 if game:GetService("Players"):GetPlayerFromCharacter(v) ~= game:GetService("Players").LocalPlayer then
-local h = Instance.new("Highlight",v)
-h.Name = "s_esp"
-h.OutlineColor = Color3.new(0,1,0)
-h.FillTransparency = 1
+CreateESP({
+    Target = v,
+    Title = "Survivor", 
+    Color = Color3.fromRGB(0, 255, 100), 
+    Name = v.Name,
+    Distance = _G.Distance, 
+    Tracer = _G.Tracer
+})
 end
 end
 end
@@ -506,4 +668,17 @@ end)
 else
 if s_esp then s_esp:Disconnect() h:Destroy() end
 end
+end})
+Tabs.Visual:AddSection({"Setting ESP"})
+Tabs.Visual:AddCheckbox({
+  Name = "Distance ESP",
+  Default = false,
+  Callback = function(v)
+_G.Distance = v
+end})
+Tabs.Visual:AddCheckbox({
+  Name = "Tracer ESP",
+  Default = false,
+  Callback = function(v)
+_G.Tracer = v
 end})
