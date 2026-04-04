@@ -8,155 +8,8 @@ local RunService = game:GetService("RunService")
 local Camera = workspace.CurrentCamera
 local CoreGui = game:GetService("CoreGui")
 
-local function CreateESP(Settings)
-    local v = Settings.Target
-    local title = Settings.Title or "Unknown"
-    local espColor = Settings.Color or Color3.fromRGB(255, 255, 255)
-    local espName = Settings.Name or "No Name"
-    local showDistance = Settings.Distance
-    local showTracer = Settings.Tracer
+local esp = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImamGV/Script/refs/heads/main/ESP"))()
 
-    if not v then return end
-
-    local Highlight = Instance.new("Highlight")
-    Highlight.Name = espName
-    Highlight.Parent = v
-    Highlight.OutlineColor = espColor
-    Highlight.FillTransparency = 1
-
-    local Billboard = Instance.new("BillboardGui")
-    Billboard.Adornee = v:IsA("Model") and (v.PrimaryPart or v:FindFirstChildWhichIsA("BasePart")) or v
-    Billboard.Size = UDim2.new(6, 0, 4, 0)
-    Billboard.StudsOffset = Vector3.new(0, 1, 0)
-    Billboard.AlwaysOnTop = true
-    Billboard.Parent = CoreGui
-
-    local Container = Instance.new("Frame", Billboard)
-    Container.Size = UDim2.new(1, 0, 0.5, 0)
-    Container.BackgroundTransparency = 1
-    Instance.new("UIListLayout", Container).HorizontalAlignment = Enum.HorizontalAlignment.Center
-
-    local function CreateLabel(txt, color)
-        local lbl = Instance.new("TextLabel", Container)
-        lbl.Text = txt
-        lbl.TextColor3 = color
-        lbl.TextScaled = true
-        lbl.Font = Enum.Font.SourceSansBold
-        lbl.BackgroundTransparency = 1
-        lbl.Size = UDim2.new(1, 0, 0.3, 0)
-        Instance.new("UIStroke", lbl).Thickness = 1.2
-        return lbl
-    end
-
-    local titleLbl = CreateLabel(title, espColor)
-    local distLbl = CreateLabel("", Color3.fromRGB(200, 200, 200))
-
-    local HealthBack = Instance.new("Frame", Container)
-    HealthBack.Size = UDim2.new(0.8, 0, 0.15, 0)
-    HealthBack.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
-    HealthBack.Visible = false
-    Instance.new("UICorner", HealthBack).CornerRadius = UDim.new(0.5, 0)
-    
-    local HealthGreen = Instance.new("Frame", HealthBack)
-    HealthGreen.Size = UDim2.new(1, 0, 1, 0)
-    HealthGreen.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-    Instance.new("UICorner", HealthGreen).CornerRadius = UDim.new(0.5, 0)
-
-    local HealthText = Instance.new("TextLabel", HealthBack)
-    HealthText.Size = UDim2.new(1, 0, 1, 0)
-    HealthText.BackgroundTransparency = 1
-    HealthText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    HealthText.TextScaled = true
-    Instance.new("UIStroke", HealthText).Thickness = 0.8
-
-    local TracerLine = Drawing.new("Line")
-    local ArrowLine1 = Drawing.new("Line")
-    local ArrowLine2 = Drawing.new("Line")
-    local ArrowDist = Drawing.new("Text")
-
-    local function Update()
-        local Connection
-        Connection = RunService.RenderStepped:Connect(function()
-            if v:IsDescendantOf(workspace) and Highlight.Parent ~= nil then
-                local Root = v:IsA("Model") and (v.PrimaryPart or v:FindFirstChildWhichIsA("BasePart")) or v
-                local Hum = v:FindFirstChildOfClass("Humanoid")
-                
-                if Root then
-                    local ScreenPos, OnScreen = Camera:WorldToViewportPoint(Root.Position)
-                    local Dist = math.floor((Camera.CFrame.Position - Root.Position).Magnitude)
-                    
-                    if OnScreen then
-                        Billboard.Enabled = true
-                        ArrowLine1.Visible = false; ArrowLine2.Visible = false; ArrowDist.Visible = false
-                        
-                        if showDistance then
-                            distLbl.Visible = true
-                            distLbl.Text = Dist .. "m"
-                        end
-
-                        if Hum then
-                            HealthBack.Visible = true
-                            HealthText.Text = math.floor(Hum.Health) .. "/" .. math.floor(Hum.MaxHealth)
-                            HealthGreen.Size = UDim2.new(math.clamp(Hum.Health/Hum.MaxHealth, 0, 1), 0, 1, 0)
-                        end
-
-                        if showTracer then
-                            TracerLine.Visible = true
-                            TracerLine.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
-                            TracerLine.To = Vector2.new(ScreenPos.X, ScreenPos.Y)
-                            TracerLine.Color = espColor
-                        else
-                            TracerLine.Visible = false
-                        end
-                    else
-                        -- FIX LỖI NGƯỢC HƯỚNG MŨI TÊN (OFF-SCREEN)
-                        Billboard.Enabled = false
-                        TracerLine.Visible = false
-                        
-                        local Center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-                        local ObjPos = Camera:WorldToScreenPoint(Root.Position)
-                        local ObjVector = Vector2.new(ObjPos.X, ObjPos.Y)
-                        
-                        -- Nếu Z < 0 (sau lưng), đảo ngược hướng để chỉ đúng
-                        local Dir = (ObjVector - Center).Unit
-                        if ObjPos.Z < 0 then
-                            Dir = -Dir
-                        end
-                        
-                        local Radius = 200
-                        local ArrowPos = Center + (Dir * Radius)
-                        local Angle = math.atan2(Dir.Y, Dir.X)
-                        local Size = 18
-                        local Spread = math.rad(150) -- Góc V nhọn YARHM
-
-                        ArrowLine1.Visible = true
-                        ArrowLine1.Color = espColor
-                        ArrowLine1.Thickness = 1.5
-                        ArrowLine1.From = ArrowPos
-                        ArrowLine1.To = ArrowPos + Vector2.new(math.cos(Angle + Spread) * Size, math.sin(Angle + Spread) * Size)
-
-                        ArrowLine2.Visible = true
-                        ArrowLine2.Color = espColor
-                        ArrowLine2.Thickness = 1.5
-                        ArrowLine2.From = ArrowPos
-                        ArrowLine2.To = ArrowPos + Vector2.new(math.cos(Angle - Spread) * Size, math.sin(Angle - Spread) * Size)
-
-                        ArrowDist.Visible = true
-                        ArrowDist.Text = Dist .. "m"
-                        ArrowDist.Size = 13
-                        ArrowDist.Center = true
-                        ArrowDist.Outline = true
-                        ArrowDist.Position = ArrowPos + (Dir * 25)
-                    end
-                end
-            else
-                Highlight:Destroy(); Billboard:Destroy(); TracerLine:Remove(); ArrowLine1:Remove(); ArrowLine2:Remove(); ArrowDist:Remove()
-                Connection:Disconnect()
-            end
-        end)
-    end
-    coroutine.wrap(Update)()
-end
 redzlib:MakeNotification({
 Title = "Alert",
 Description = "Loaded",
@@ -306,63 +159,6 @@ if char then char:SetAttribute("WalkSpeed",16) end
 end
 end)
 end})
-Tabs.Players:AddCheckbox({
-  Name = "Always Through Killers Wall",
-  Default = false,
-  Callback = function(v)
-_G.atk_wall = v
-game:GetService("RunService").Stepped:Connect(function()
-local killerBarriers = game:GetService("Workspace"):FindFirstChild("Live") and game:GetService("Workspace").Live:FindFirstChild("Map") and game:GetService("Workspace").Live.Map:FindFirstChild("MapModel") and game:GetService("Workspace").Live.Map.MapModel:FindFirstChild("KillerBarriers")
-if killerBarriers then
-for _,v in ipairs(killerBarriers:GetChildren()) do
-if v.Parent.Name == "KillerBarriers" and v:IsA("BasePart") then
-v.CanCollide = not _G.atk_wall
-end
-end
-end
-end)
-end})
-Tabs.Players:AddCheckbox({
-  Name = "Auto Walk to Survivor",
-  Default = false,
-  Callback = function(v)
-_G.awt_S = v
-local lp = game.Players.LocalPlayer
-local ps = game:GetService("PathfindingService")
-local rs = game:GetService("RunService")
-local last = 0
-local path = ps:CreatePath({AgentCanJump = true})
-local points = {}
-local cur = 1
-
-rs.Stepped:Connect(function()
-if _G.awt_S and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")then
-local hrp = lp.Character.HumanoidRootPart
-local hum = lp.Character.Humanoid
-local now = tick()
-if now-last > 0.2 then
-last = now
-local t,d = nil,math.huge
-for _,v in pairs(workspace:GetChildren())do
-if v:IsA("Model")and v ~= lp.Character and not v:FindFirstChild("KillerConfig")and v:FindFirstChild("HumanoidRootPart")then
-local dist = (hrp.Position-v.HumanoidRootPart.Position).Magnitude
-if dist < d then d = dist;t = v end
-end
-end
-if t then
-path:ComputeAsync(hrp.Position,t.HumanoidRootPart.Position)
-points = path:GetWaypoints()
-cur = 2
-end
-end
-if points[cur]then
-hum:MoveTo(points[cur].Position)
-if (hrp.Position-points[cur].Position).Magnitude < 2 then cur = cur+1 end
-if points[cur]and points[cur].Action == Enum.PathWaypointAction.Jump then hum.Jump = true end
-end
-end
-end)
-end})
 if _G.Premium then
 Tabs.Players:AddSlider({
   Name = "Distance (Extend Hitbox)",
@@ -509,20 +305,13 @@ local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:
 if activeObjs and activeObjs:FindFirstChild("Electrical") then
 for _,v in ipairs(activeObjs.Electrical:GetChildren()) do
 if v.Parent.Name == "Electrical" and v.Name == "ElectricalBox" and not v:FindFirstChild("eb_esp") then
-CreateESP({
-    Target = v,
-    Title = "Electrical Box", 
-    Color = Color3.fromRGB(0, 255, 255), 
-    Name = "eb_esp",
-    Distance = _G.Distance, 
-    Tracer = _G.Tracer
-})
+esp:AddESP(v, "Electrical Box", Color3.new(0,1,1), 15, 'eb_esp')
 end
 end
 end
 end)
 else
-if eb_esp then eb_esp:Disconnect() h:Destroy() end
+if eb_esp then eb_esp:Disconnect() esp:Delete('eb_esp") end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -536,20 +325,13 @@ local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:
 if activeObjs and activeObjs:FindFirstChild("Bluetooth") then
 for _,v in ipairs(activeObjs.Bluetooth:GetChildren()) do
 if v.Parent.Name == "Bluetooth" and v.Name == "BluetoothDevice" and not v:FindFirstChild("b_esp") then
-CreateESP({
-    Target = v,
-    Title = "Bluetooth", 
-    Color = Color3.fromRGB(0, 255, 0), 
-    Name = "b_esp",
-    Distance = _G.Distance, 
-    Tracer = _G.Tracer
-})
+esp:AddESP(v, "Bluetooth", Color3.fromRGB(70,70,70), 15, 'b_esp')
 end
 end
 end
 end)
 else
-if b_esp then b_esp:Disconnect() h:Destroy() end
+if b_esp then b_esp:Disconnect() esp:Delete('b_esp") end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -564,14 +346,7 @@ local activeObjs = live and live:FindFirstChild("Map") and live.Map:FindFirstChi
 if activeObjs and activeObjs:FindFirstChild("Pages") then
 for _, v in ipairs(activeObjs.Pages:GetChildren()) do
 if v.Name == "PageModel" and v:FindFirstChild("Paper") and not v:FindFirstChild("p_esp") then
-CreateESP({
-    Target = v,
-    Title = "Hidden Page", 
-    Color = Color3.fromRGB(255, 150, 0), 
-    Name = "p_esp",
-    Distance = _G.Distance, 
-    Tracer = _G.Tracer
-})
+esp:AddESP(v, "Hidden", Color3.new(1,1,1), 15, 'p_esp')
 end
 end
 end
@@ -579,16 +354,7 @@ end)
 else
 if _G.p_esp_connection then
 _G.p_esp_connection:Disconnect()
-_G.p_esp_connection = nil
-end
-local live = workspace:FindFirstChild("Live")
-local activeObjs = live and live:FindFirstChild("Map") and live.Map:FindFirstChild("MapModel") and live.Map.MapModel:FindFirstChild("ActiveObjectives")
-if activeObjs and activeObjs:FindFirstChild("Pages") then
-for _, v in ipairs(activeObjs.Pages:GetDescendants()) do
-if v.Name == "p_esp" then
-v:Destroy()
-end
-end
+esp:Delete('p_esp")
 end
 end
 end})
@@ -603,20 +369,13 @@ local activeObjs = game:GetService("Workspace"):FindFirstChild("Live") and game:
 if activeObjs and activeObjs:FindFirstChild("Generators") then
 for _,v in ipairs(activeObjs.Generators:GetChildren()) do
 if v.Parent.Name == "Generators" and v.Name == "Generator" and not v:FindFirstChild("g_esp") then
-CreateESP({
-    Target = v,
-    Title = "Generator", 
-    Color = Color3.fromRGB(0,0,255), 
-    Name = "g_esp",
-    Distance = _G.Distance, 
-    Tracer = _G.Tracer
-})
+esp:AddESP(v, "Generator", Color3.new(0,0,1), 15, 'g_esp')
 end
 end
 end
 end)
 else
-if g_esp then g_esp:Disconnect() h:Destroy() end
+if g_esp then g_esp:Disconnect() esp:Delete('g_esp") end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -628,19 +387,12 @@ if _G.k_esp then
 k_esp = game:GetService("RunService").Stepped:Connect(function()
 for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
 if v:IsA("Model") and v:FindFirstChild("KillerConfig") and not v:FindFirstChild("k_esp") then
-CreateESP({
-    Target = v,
-    Title = v.Name, 
-    Color = Color3.fromRGB(255), 
-    Name = "k_esp",
-    Distance = _G.Distance, 
-    Tracer = _G.Tracer
-})
+esp:AddESP(v, v.Name, Color3.new(1), 15, 'k_esp')
 end
 end
 end)
 else
-if k_esp then k_esp:Disconnect() h:Destroy() end
+if k_esp then k_esp:Disconnect() esp:Delete('k_esp") end
 end
 end})
 Tabs.Visual:AddCheckbox({
@@ -653,20 +405,13 @@ s_esp = game:GetService("RunService").Stepped:Connect(function()
 for _,v in ipairs(game:GetService("Workspace"):GetChildren()) do
 if v:IsA("Model") and not v:FindFirstChild("KillerConfig") and not v:FindFirstChild("s_esp") then
 if game:GetService("Players"):GetPlayerFromCharacter(v) ~= game:GetService("Players").LocalPlayer then
-CreateESP({
-    Target = v,
-    Title = v.Name, 
-    Color = Color3.fromRGB(0, 255, 100), 
-    Name = "s_esp",
-    Distance = _G.Distance, 
-    Tracer = _G.Tracer
-})
+esp:AddESP(v, v.Name, Color3.fromRGB(0,255,100), 15, 's_esp')
 end
 end
 end
 end)
 else
-if s_esp then s_esp:Disconnect() h:Destroy() end
+if s_esp then s_esp:Disconnect() esp:Delete('s_esp") end
 end
 end})
 Tabs.Visual:AddSection({"Setting ESP"})
@@ -674,11 +419,11 @@ Tabs.Visual:AddCheckbox({
   Name = "Distance ESP",
   Default = false,
   Callback = function(v)
-_G.Distance = v
+_G.DistanceESP = v
 end})
 Tabs.Visual:AddCheckbox({
-  Name = "Tracer ESP",
+  Name = "Rainbow ESP",
   Default = false,
   Callback = function(v)
-_G.Tracer = v
+_G.RainbowESP = v
 end})
