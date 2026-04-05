@@ -1,7 +1,13 @@
+-- [[ GEXUN V3.4 - FINAL PLATINUM EDITION (FIXED ALL) ]] --
 local TweenService = game:GetService("TweenService")
 local UIS = game:GetService("UserInputService")
-local LP = game.Players.LocalPlayer
+local LP = game:GetService("Players").LocalPlayer
 local HttpService = game:GetService("HttpService")
+
+-- Tự động tìm CoreGui an toàn nhất cho mọi Executor
+local CoreGui
+pcall(function() CoreGui = (gethui and gethui()) or game:GetService("CoreGui") end)
+if not CoreGui then CoreGui = LP:WaitForChild("PlayerGui") end
 
 local GexunLib = {}
 local Theme = {
@@ -39,57 +45,74 @@ local function MakeDraggable(topbar, object)
 end
 
 function GexunLib:CreateWindow(cfg)
-    -- [[ KEY SYSTEM ]] --
-    if cfg.KeySystem then
-        local KeyAuth = false
-        local KGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
-        local KF = Instance.new("Frame", KGui); KF.Size = UDim2.new(0, 300, 0, 150); KF.Position = UDim2.new(0.5, -150, 0.5, -75); KF.BackgroundColor3 = Theme.Main; Instance.new("UICorner", KF)
-        local KT = Instance.new("TextLabel", KF); KT.Size = UDim2.new(1, 0, 0, 40); KT.Text = "KEY SYSTEM"; KT.TextColor3 = Theme.Accent; KT.BackgroundTransparency = 1; KT.Font = "GothamBold"; KT.TextSize = 18
-        local KInp = Instance.new("TextBox", KF); KInp.Size = UDim2.new(0, 240, 0, 35); KInp.Position = UDim2.new(0.5, -120, 0.4, 0); KInp.BackgroundColor3 = Theme.Section; KInp.Text = ""; KInp.PlaceholderText = "Enter Key..."; KInp.TextColor3 = Theme.White; Instance.new("UICorner", KInp)
-        local KBtn = Instance.new("TextButton", KF); KBtn.Size = UDim2.new(0, 240, 0, 35); KBtn.Position = UDim2.new(0.5, -120, 0.7, 5); KBtn.BackgroundColor3 = Theme.Accent; KBtn.Text = "VERIFY"; KBtn.TextColor3 = Theme.White; Instance.new("UICorner", KBtn)
-        
-        KBtn.MouseButton1Click:Connect(function()
-            if KInp.Text == cfg.Key then KeyAuth = true; KGui:Destroy() else KInp.Text = ""; KInp.PlaceholderText = "WRONG KEY!" end
-        end)
-        repeat task.wait() until KeyAuth == true
-    end
-
-    local G = Instance.new("ScreenGui", game:GetService("CoreGui")); G.Name = "GexunUI_Final"
-    local F = Instance.new("Frame", G); F.Size = UDim2.new(0, 550, 0, 380); F.Position = UDim2.new(0.5, -275, 0.5, -190); F.BackgroundColor3 = Theme.Main; F.ClipsDescendants = true; Instance.new("UICorner", F)
-    local TopBar = Instance.new("Frame", F); TopBar.Size = UDim2.new(1, 0, 0, 35); TopBar.BackgroundTransparency = 1; MakeDraggable(TopBar, F)
-    local T = Instance.new("TextLabel", TopBar); T.Size = UDim2.new(1, -20, 1, 0); T.Position = UDim2.new(0, 15, 0, 0); T.Text = cfg.Name or "ggui v1"; T.TextColor3 = Theme.Text; T.BackgroundTransparency = 1; T.Font = "GothamBold"; T.TextSize = 16; T.TextXAlignment = "Left"
-    
-    -- [[ RESIZE SYSTEM ]] --
-    local ResizeBtn = Instance.new("TextButton", F); ResizeBtn.Size = UDim2.new(0, 15, 0, 15); ResizeBtn.Position = UDim2.new(1, -15, 1, -15); ResizeBtn.BackgroundTransparency = 1; ResizeBtn.Text = ""; ResizeBtn.TextColor3 = Theme.Accent; ResizeBtn.TextSize = 12
-    local resizing = false
-    ResizeBtn.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then resizing = true end end)
-    UIS.InputChanged:Connect(function(i)
-        if resizing and i.UserInputType == Enum.UserInputType.Touch then
-            local mousePos = UIS:GetMouseLocation()
-            local newSize = UDim2.new(0, math.max(400, mousePos.X - F.AbsolutePosition.X), 0, math.max(300, mousePos.Y - F.AbsolutePosition.Y))
-            F.Size = newSize
-        end
-    end)
-    UIS.InputEnded:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then resizing = false end end)
-
-    -- [[ CONFIG SYSTEM ]] --
+    -- [[ CONFIG SYSTEM MẠNH MẼ HƠN ]] --
     local ConfigData = {}
+    local FolderName = "GexunConfigs"
+    local FileName = cfg.Name .. ".json"
+    
     local function SaveConfig()
-        if not isfolder("GexunConfigs") then makefolder("GexunConfigs") end
-        writefile("GexunConfigs/"..cfg.Name..".json", HttpService:JSONEncode(ConfigData))
+        if isfolder and not isfolder(FolderName) then makefolder(FolderName) end
+        if writefile then writefile(FolderName.."/"..FileName, HttpService:JSONEncode(ConfigData)) end
     end
+    
     local function LoadConfig()
-        if isfile("GexunConfigs/"..cfg.Name..".json") then
-            ConfigData = HttpService:JSONDecode(readfile("GexunConfigs/"..cfg.Name..".json"))
+        if isfile and isfile(FolderName.."/"..FileName) then
+            local success, data = pcall(function() return HttpService:JSONDecode(readfile(FolderName.."/"..FileName)) end)
+            if success and type(data) == "table" then ConfigData = data end
         end
     end
     LoadConfig()
 
+    -- [[ UI CHÍNH ]] --
+    local G = Instance.new("ScreenGui", CoreGui); G.Name = "GexunUI_Final"
+    local F = Instance.new("Frame", G); F.Size = UDim2.new(0, 550, 0, 380); F.Position = UDim2.new(0.5, -275, 0.5, -190); F.BackgroundColor3 = Theme.Main; F.ClipsDescendants = true; F.Visible = false; Instance.new("UICorner", F)
+    local TopBar = Instance.new("Frame", F); TopBar.Size = UDim2.new(1, 0, 0, 35); TopBar.BackgroundTransparency = 1; MakeDraggable(TopBar, F)
+    local T = Instance.new("TextLabel", TopBar); T.Size = UDim2.new(1, -20, 1, 0); T.Position = UDim2.new(0, 15, 0, 0); T.Text = cfg.Name or "GEXUN PLATINUM"; T.TextColor3 = Theme.Text; T.BackgroundTransparency = 1; T.Font = "GothamBold"; T.TextSize = 16; T.TextXAlignment = "Left"
+    
+    -- [[ KEY SYSTEM (Không làm treo game) ]] --
     local UI_Open = true
+    if cfg.KeySystem then
+        if ConfigData["SavedKey"] == cfg.Key then
+            F.Visible = true -- Tự đăng nhập nếu key cũ đúng
+        else
+            UI_Open = false
+            local KGui = Instance.new("ScreenGui", CoreGui)
+            local KF = Instance.new("Frame", KGui); KF.Size = UDim2.new(0, 300, 0, 150); KF.Position = UDim2.new(0.5, -150, 0.5, -75); KF.BackgroundColor3 = Theme.Main; Instance.new("UICorner", KF)
+            local KT = Instance.new("TextLabel", KF); KT.Size = UDim2.new(1, 0, 0, 40); KT.Text = "KEY SYSTEM"; KT.TextColor3 = Theme.Accent; KT.BackgroundTransparency = 1; KT.Font = "GothamBold"; KT.TextSize = 18
+            local KInp = Instance.new("TextBox", KF); KInp.Size = UDim2.new(0, 240, 0, 35); KInp.Position = UDim2.new(0.5, -120, 0.4, 0); KInp.BackgroundColor3 = Theme.Section; KInp.Text = ""; KInp.PlaceholderText = "Enter Key..."; KInp.TextColor3 = Theme.White; Instance.new("UICorner", KInp)
+            local KBtn = Instance.new("TextButton", KF); KBtn.Size = UDim2.new(0, 240, 0, 35); KBtn.Position = UDim2.new(0.5, -120, 0.7, 5); KBtn.BackgroundColor3 = Theme.Accent; KBtn.Text = "VERIFY"; KBtn.TextColor3 = Theme.White; Instance.new("UICorner", KBtn)
+            
+            KBtn.MouseButton1Click:Connect(function()
+                if KInp.Text == cfg.Key then 
+                    ConfigData["SavedKey"] = cfg.Key; SaveConfig()
+                    KGui:Destroy(); F.Visible = true; UI_Open = true
+                else 
+                    KInp.Text = ""; KInp.PlaceholderText = "WRONG KEY!" 
+                end
+            end)
+        end
+    else
+        F.Visible = true
+    end
+
+    -- [[ RESIZE SYSTEM FIX ]] --
+    local ResizeBtn = Instance.new("TextButton", F); ResizeBtn.Size = UDim2.new(0, 15, 0, 15); ResizeBtn.Position = UDim2.new(1, -15, 1, -15); ResizeBtn.BackgroundTransparency = 1; ResizeBtn.Text = "◢"; ResizeBtn.TextColor3 = Theme.Accent; ResizeBtn.TextSize = 12
+    local resizing = false
+    ResizeBtn.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then resizing = true end end)
+    UIS.InputChanged:Connect(function(i)
+        if resizing and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then
+            local mousePos = UIS:GetMouseLocation()
+            F.Size = UDim2.new(0, math.max(400, mousePos.X - F.AbsolutePosition.X), 0, math.max(300, mousePos.Y - F.AbsolutePosition.Y))
+        end
+    end)
+    UIS.InputEnded:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then resizing = false end end)
+
     UIS.InputBegan:Connect(function(input, gpe)
         if not gpe and input.KeyCode == (cfg.ToggleKey or Enum.KeyCode.RightControl) then
-            UI_Open = not UI_Open
-            F.Visible = UI_Open
+            if not cfg.KeySystem or ConfigData["SavedKey"] == cfg.Key then
+                UI_Open = not UI_Open
+                F.Visible = UI_Open
+            end
         end
     end)
 
@@ -100,7 +123,11 @@ function GexunLib:CreateWindow(cfg)
     local M = Instance.new("TextButton", G)
     M.Size = UDim2.new(0, 45, 0, 45); M.Position = UDim2.new(0, 20, 0.4, 0); M.BackgroundColor3 = Theme.Sidebar; M.Text = "GX"; M.Font = Enum.Font.GothamBold; M.TextSize = 14; M.TextColor3 = Theme.Accent; Instance.new("UICorner", M).CornerRadius = UDim.new(1, 0)
     Instance.new("UIStroke", M).Color = Theme.Accent
-    M.MouseButton1Click:Connect(function() UI_Open = not UI_Open; F.Visible = UI_Open end)
+    M.MouseButton1Click:Connect(function() 
+        if not cfg.KeySystem or ConfigData["SavedKey"] == cfg.Key then
+            UI_Open = not UI_Open; F.Visible = UI_Open 
+        end
+    end)
     
     local FStroke = Instance.new("UIStroke", F); FStroke.Color = Theme.Accent; FStroke.Thickness = 0; FStroke.Transparency = 0.6
 
@@ -154,7 +181,7 @@ function GexunLib:CreateWindow(cfg)
                 local Elements = {}
                 function Elements:AddButton(opt)
                     local Btn = Instance.new("TextButton", SCont); Btn.Size = UDim2.new(1, 0, 0, 30); Btn.BackgroundColor3 = Theme.Main; Btn.Text = opt.Text; Btn.TextColor3 = Theme.White; Btn.Font = "GothamBold"; Btn.TextSize = 12; Instance.new("UICorner", Btn)
-                    Btn.MouseButton1Click:Connect(opt.Callback)
+                    Btn.MouseButton1Click:Connect(function() if opt.Callback then opt.Callback() end end)
                     return Elements
                 end
 
@@ -162,7 +189,7 @@ function GexunLib:CreateWindow(cfg)
                     local IFrame = Instance.new("Frame", SCont); IFrame.Size = UDim2.new(1, 0, 0, 35); IFrame.BackgroundColor3 = Theme.Main; Instance.new("UICorner", IFrame)
                     local L = Instance.new("TextLabel", IFrame); L.Text = opt.Text; L.Size = UDim2.new(0.4, 0, 1, 0); L.Position = UDim2.new(0, 10, 0, 0); L.TextColor3 = Theme.Text; L.BackgroundTransparency = 1; L.TextXAlignment = "Left"; L.Font = "Gotham"; L.TextSize = 12
                     local Box = Instance.new("TextBox", IFrame); Box.Size = UDim2.new(0.5, 0, 0, 25); Box.Position = UDim2.new(1, -10, 0.5, 0); Box.AnchorPoint = Vector2.new(1, 0.5); Box.BackgroundColor3 = Theme.Sidebar; Box.Text = ConfigData[opt.Text] or opt.Default or ""; Box.TextColor3 = Theme.White; Box.Font = "Gotham"; Box.TextSize = 11; Instance.new("UICorner", Box)
-                    Box.FocusLost:Connect(function() ConfigData[opt.Text] = Box.Text; SaveConfig(); opt.Callback(Box.Text) end)
+                    Box.FocusLost:Connect(function() ConfigData[opt.Text] = Box.Text; SaveConfig(); if opt.Callback then opt.Callback(Box.Text) end end)
                     return Elements
                 end
 
@@ -176,9 +203,9 @@ function GexunLib:CreateWindow(cfg)
                         State = not State; ConfigData[opt.Text] = State; SaveConfig()
                         PlayTween(C, {Position = State and UDim2.new(1, -14, 0.5, -6) or UDim2.new(0, 2, 0.5, -6)})
                         PlayTween(Box, {BackgroundColor3 = State and Theme.Accent or Theme.Sidebar})
-                        opt.Callback(State)
+                        if opt.Callback then opt.Callback(State) end
                     end)
-                    if State then task.spawn(function() opt.Callback(State) end) end
+                    if State and opt.Callback then task.spawn(function() opt.Callback(State) end) end
                     return Elements
                 end
 
@@ -187,25 +214,27 @@ function GexunLib:CreateWindow(cfg)
                     local SFrame = Instance.new("Frame", SCont); SFrame.Size = UDim2.new(1, 0, 0, 42); SFrame.BackgroundColor3 = Theme.Main; Instance.new("UICorner", SFrame)
                     local L = Instance.new("TextLabel", SFrame); L.Text = opt.Text .. ": " .. DefaultValue; L.Size = UDim2.new(1, -20, 0, 20); L.Position = UDim2.new(0, 10, 0, 5); L.TextColor3 = Theme.White; L.Font = "Gotham"; L.TextSize = 11; L.BackgroundTransparency = 1; L.TextXAlignment = "Left"
                     local Bar = Instance.new("TextButton", SFrame); Bar.Size = UDim2.new(1, -24, 0, 4); Bar.Position = UDim2.new(0, 12, 0, 30); Bar.BackgroundColor3 = Theme.Sidebar; Bar.Text = ""; Instance.new("UICorner", Bar)
-                    local Fill = Instance.new("Frame", Bar); Fill.Size = UDim2.new((DefaultValue-opt.Min)/(opt.Max-opt.Min), 0, 1, 0); Fill.BackgroundColor3 = Theme.Accent; Instance.new("UICorner", Fill)
+                    local ratio = math.max(1, opt.Max - opt.Min)
+                    local Fill = Instance.new("Frame", Bar); Fill.Size = UDim2.new((DefaultValue - opt.Min) / ratio, 0, 1, 0); Fill.BackgroundColor3 = Theme.Accent; Instance.new("UICorner", Fill)
                     local Knob = Instance.new("Frame", Bar); Knob.Size = UDim2.new(0, 10, 0, 10); Knob.AnchorPoint = Vector2.new(0.5, 0.5); Knob.Position = UDim2.new(Fill.Size.X.Scale, 0, 0.5, 0); Knob.BackgroundColor3 = Theme.White; Instance.new("UICorner", Knob)
                     local drag = false
                     local function Upd(i)
                         local p = math.clamp((i.Position.X - Bar.AbsolutePosition.X) / Bar.AbsoluteSize.X, 0, 1)
                         local v = math.floor(opt.Min + ((opt.Max - opt.Min) * p))
-                        Fill.Size = UDim2.new(p, 0, 1, 0); Knob.Position = UDim2.new(p, 0, 0.5, 0); L.Text = opt.Text .. ": " .. v; ConfigData[opt.Text] = v; SaveConfig(); opt.Callback(v)
+                        Fill.Size = UDim2.new(p, 0, 1, 0); Knob.Position = UDim2.new(p, 0, 0.5, 0); L.Text = opt.Text .. ": " .. v; ConfigData[opt.Text] = v; SaveConfig(); 
+                        if opt.Callback then opt.Callback(v) end
                     end
                     Bar.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then drag = true; Upd(i) end end)
                     UIS.InputEnded:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then drag = false end end)
                     UIS.InputChanged:Connect(function(i) if drag and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then Upd(i) end end)
-                    if ConfigData[opt.Text] then task.spawn(function() opt.Callback(ConfigData[opt.Text]) end) end
+                    if ConfigData[opt.Text] and opt.Callback then task.spawn(function() opt.Callback(ConfigData[opt.Text]) end) end
                     return Elements
                 end
 
                 function Elements:AddDropdown(opt)
                     local dOpen = false; local selected = ConfigData[opt.Text] or (opt.Multi and {} or "None")
                     local DFrame = Instance.new("Frame", SCont); DFrame.Size = UDim2.new(1, 0, 0, 30); DFrame.BackgroundColor3 = Theme.Main; DFrame.ClipsDescendants = true; Instance.new("UICorner", DFrame)
-                    local DBtn = Instance.new("TextButton", DFrame); DBtn.Size = UDim2.new(1, 0, 0, 30); DBtn.BackgroundTransparency = 1; DBtn.Text = "  " .. opt.Text .. " : " .. (opt.Multi and #selected > 0 and table.concat(selected, ", ") or tostring(selected)); DBtn.TextColor3 = Theme.Text; DBtn.Font = "Gotham"; DBtn.TextSize = 11; DBtn.TextXAlignment = "Left"
+                    local DBtn = Instance.new("TextButton", DFrame); DBtn.Size = UDim2.new(1, 0, 0, 30); DBtn.BackgroundTransparency = 1; DBtn.Text = "  " .. opt.Text .. " : " .. (opt.Multi and type(selected)=="table" and #selected > 0 and table.concat(selected, ", ") or tostring(selected)); DBtn.TextColor3 = Theme.Text; DBtn.Font = "Gotham"; DBtn.TextSize = 11; DBtn.TextXAlignment = "Left"
                     local DArrow = Instance.new("TextLabel", DBtn); DArrow.Size = UDim2.new(0, 30, 0, 30); DArrow.Position = UDim2.new(1, -30, 0, 0); DArrow.Text = "▼"; DArrow.TextColor3 = Theme.White; DArrow.BackgroundTransparency = 1; DArrow.Font = "GothamBold"; DArrow.TextSize = 10
                     local ICont = Instance.new("Frame", DFrame); ICont.Size = UDim2.new(1, 0, 0, #opt.List * 25); ICont.Position = UDim2.new(0, 0, 0, 30); ICont.BackgroundTransparency = 1; Instance.new("UIListLayout", ICont)
                     
@@ -220,11 +249,12 @@ function GexunLib:CreateWindow(cfg)
                         local I = Instance.new("TextButton", ICont); I.Size = UDim2.new(1, 0, 0, 25); I.BackgroundTransparency = 1; I.Text = tostring(v); I.TextColor3 = Theme.DarkText; I.Font = "Gotham"; I.TextSize = 11
                         I.MouseButton1Click:Connect(function()
                             if opt.Multi then
+                                if type(selected) ~= "table" then selected = {} end
                                 if table.find(selected, v) then table.remove(selected, table.find(selected, v)); I.TextColor3 = Theme.DarkText else table.insert(selected, v); I.TextColor3 = Theme.Accent end
                                 DBtn.Text = "  "..opt.Text.." : "..(#selected > 0 and table.concat(selected, ", ") or "None")
-                                ConfigData[opt.Text] = selected; SaveConfig(); opt.Callback(selected)
+                                ConfigData[opt.Text] = selected; SaveConfig(); if opt.Callback then opt.Callback(selected) end
                             else
-                                selected = v; DBtn.Text = "  "..opt.Text.." : "..tostring(v); dOpen = false; PlayTween(DFrame, {Size = UDim2.new(1, 0, 0, 30)}); PlayTween(DArrow, {Rotation = 0}); ConfigData[opt.Text] = v; SaveConfig(); opt.Callback(v)
+                                selected = v; DBtn.Text = "  "..opt.Text.." : "..tostring(v); dOpen = false; PlayTween(DFrame, {Size = UDim2.new(1, 0, 0, 30)}); PlayTween(DArrow, {Rotation = 0}); ConfigData[opt.Text] = v; SaveConfig(); if opt.Callback then opt.Callback(v) end
                                 task.wait(0.25); if sOpen then PlayTween(SectionFrame, {Size = UDim2.new(1, -10, 0, SL.AbsoluteContentSize.Y + 45)}) end
                             end
                         end)
@@ -239,22 +269,5 @@ function GexunLib:CreateWindow(cfg)
     end
     return Tabs
 end
+
 return GexunLib
---[[
--- [[ TEST ]] --
-local Win = GexunLib:CreateWindow({
-    Name = "GEXUN PLATINUM", 
-    ToggleKey = Enum.KeyCode.RightControl,
-    KeySystem = true,
-    Key = "GEXUN_123" -- Key đăng nhập
-})
-
-local Tab = Win:CreateTab("Main Hub")
-local Sub = Tab:CreateSubTab("Settings")
-
-local Sec = Sub:AddSection("Configuration", true)
-Sec:AddInput({Text = "User Name", Default = "Player", Callback = function(v) print("Input: " .. v) end})
-Sec:AddToggle({Text = "Auto Farm", Callback = function(v) print("Toggle: ", v) end})
-Sec:AddSlider({Text = "WalkSpeed", Min = 16, Max = 200, Default = 16, Callback = function(v) LP.Character.Humanoid.WalkSpeed = v end})
-Sec:AddDropdown({Text = "Select World", List = {"Sea 1", "Sea 2", "Sea 3"}, Multi = false, Callback = function(v) print("World: " .. v) end})
-Sec:AddButton({Text = "Force Save Config", Callback = function() print("Saved manually!") end})]]--
