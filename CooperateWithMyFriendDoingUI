@@ -48,7 +48,7 @@ function GexunLib:CreateWindow(cfg)
     -- [[ CONFIG SYSTEM MẠNH MẼ HƠN ]] --
     local ConfigData = {}
     local FolderName = "GexunConfigs"
-    local FileName = cfg.Name .. ".json"
+    local FileName = cfg.FolderName .. ".json"
     
     local function SaveConfig()
         if isfolder and not isfolder(FolderName) then makefolder(FolderName) end
@@ -65,9 +65,9 @@ function GexunLib:CreateWindow(cfg)
 
     -- [[ UI CHÍNH ]] --
     local G = Instance.new("ScreenGui", CoreGui); G.Name = "GexunUI_Final"
-    local F = Instance.new("Frame", G); F.Size = UDim2.new(0, 550, 0, 380); F.Position = UDim2.new(0.5, -275, 0.5, -190); F.BackgroundColor3 = Theme.Main; F.ClipsDescendants = true; F.Visible = false; Instance.new("UICorner", F)
+    local F = Instance.new("Frame", G); F.Size = UDim2.new(0, 550, 0, 380); F.Position = UDim2.new(0.5, -275, 0.5, -190); F.BackgroundColor3 = Theme.Main; F.ClipsDescendants = true; F.BackgroundTransparency = 0.2; F.Visible = false; Instance.new("UICorner", F)
     local TopBar = Instance.new("Frame", F); TopBar.Size = UDim2.new(1, 0, 0, 35); TopBar.BackgroundTransparency = 1; MakeDraggable(TopBar, F)
-    local T = Instance.new("TextLabel", TopBar); T.Size = UDim2.new(1, -20, 1, 0); T.Position = UDim2.new(0, 15, 0, 0); T.Text = cfg.Name or "GEXUN PLATINUM"; T.TextColor3 = Theme.Text; T.BackgroundTransparency = 1; T.Font = "GothamBold"; T.TextSize = 16; T.TextXAlignment = "Left"
+    local T = Instance.new("TextLabel", TopBar); T.Size = UDim2.new(1, -20, 1, 0); T.Position = UDim2.new(0, 15, 0, 0); T.Text = cfg.Name or "Hub"; T.TextColor3 = Theme.Text; T.BackgroundTransparency = 1; T.Font = "GothamBold"; T.TextSize = 16; T.TextXAlignment = "Left"
     
     -- [[ KEY SYSTEM (Không làm treo game) ]] --
     local UI_Open = true
@@ -77,9 +77,9 @@ function GexunLib:CreateWindow(cfg)
         else
             UI_Open = false
             local KGui = Instance.new("ScreenGui", CoreGui)
-            local KF = Instance.new("Frame", KGui); KF.Size = UDim2.new(0, 300, 0, 150); KF.Position = UDim2.new(0.5, -150, 0.5, -75); KF.BackgroundColor3 = Theme.Main; Instance.new("UICorner", KF)
+            local KF = Instance.new("Frame", KGui); KF.Size = UDim2.new(0, 300, 0, 150); KF.Position = UDim2.new(0.5, -150, 0.5, -75); KF.BackgroundTransparency = 0.2; KF.BackgroundColor3 = Theme.Main; Instance.new("UICorner", KF)
             local KT = Instance.new("TextLabel", KF); KT.Size = UDim2.new(1, 0, 0, 40); KT.Text = "KEY SYSTEM"; KT.TextColor3 = Theme.Accent; KT.BackgroundTransparency = 1; KT.Font = "GothamBold"; KT.TextSize = 18
-            local KInp = Instance.new("TextBox", KF); KInp.Size = UDim2.new(0, 240, 0, 35); KInp.Position = UDim2.new(0.5, -120, 0.4, 0); KInp.BackgroundColor3 = Theme.Section; KInp.Text = ""; KInp.PlaceholderText = "Enter Key..."; KInp.TextColor3 = Theme.White; Instance.new("UICorner", KInp)
+            local KInp = Instance.new("TextBox", KF); KInp.Size = UDim2.new(0, 240, 0, 35); KInp.Position = UDim2.new(0.5, -120, 0.4, 0); Key.BackgroundTransparency = 0.2; KInp.BackgroundColor3 = Theme.Section; KInp.Text = ""; KInp.PlaceholderText = "Enter Your Key.."; KInp.TextColor3 = Theme.White; Instance.new("UICorner", KInp)
             local KBtn = Instance.new("TextButton", KF); KBtn.Size = UDim2.new(0, 240, 0, 35); KBtn.Position = UDim2.new(0.5, -120, 0.7, 5); KBtn.BackgroundColor3 = Theme.Accent; KBtn.Text = "VERIFY"; KBtn.TextColor3 = Theme.White; Instance.new("UICorner", KBtn)
             
             KBtn.MouseButton1Click:Connect(function()
