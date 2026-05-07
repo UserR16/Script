@@ -116,7 +116,7 @@ function GexunLib:CreateWindow(cfg)
         end
     end)
 
-    local Sidebar = Instance.new("Frame", F); Sidebar.Size = UDim2.new(0, 110, 1, -45); Sidebar.Position = UDim2.new(0, 8, 0, 40); Sidebar.BackgroundColor3 = Theme.Sidebar; Instance.new("UICorner", Sidebar)
+    local Sidebar = Instance.new("Frame", F); Sidebar.Size = UDim2.new(0, 110, 1, -45); Sidebar.BackgroundTransparency = 0.2; Sidebar.Position = UDim2.new(0, 8, 0, 40); Sidebar.BackgroundColor3 = Theme.Sidebar; Instance.new("UICorner", Sidebar)
     local SLayout = Instance.new("UIListLayout", Sidebar); SLayout.Padding = UDim.new(0, 5); SLayout.HorizontalAlignment = "Center"; Instance.new("UIPadding", Sidebar).PaddingTop = UDim.new(0, 5)
     local Container = Instance.new("Frame", F); Container.Size = UDim2.new(1, -135, 1, -45); Container.Position = UDim2.new(0, 125, 0, 40); Container.BackgroundTransparency = 1
     
@@ -138,7 +138,7 @@ function GexunLib:CreateWindow(cfg)
         local SubLayout = Instance.new("UIListLayout", SubTabHolder); SubLayout.FillDirection = "Horizontal"; SubLayout.Padding = UDim.new(0, 5)
         local ContentHolder = Instance.new("Frame", TabPage); ContentHolder.Size = UDim2.new(1, 0, 1, -35); ContentHolder.Position = UDim2.new(0, 0, 0, 35); ContentHolder.BackgroundTransparency = 1
 
-        local TabBtn = Instance.new("TextButton", Sidebar); TabBtn.Size = UDim2.new(0, 100, 0, 30); TabBtn.Text = name; TabBtn.BackgroundColor3 = Theme.Main; TabBtn.TextColor3 = Theme.DarkText; TabBtn.Font = "GothamSemibold"; TabBtn.TextSize = 12; Instance.new("UICorner", TabBtn)
+        local TabBtn = Instance.new("TextButton", Sidebar); TabBtn.Size = UDim2.new(0, 100, 0, 30); TabBtn.Text = name; TabBtn.BackgroundColor3 = Theme.Main; TabBtn.TextColor3 = Theme.DarkText; TabBtn.BackgroundTransparency = 0.2; TabBtn.Font = "GothamSemibold"; TabBtn.TextSize = 12; Instance.new("UICorner", TabBtn)
         
         if not Tabs.Current then Tabs.Current = TabPage; TabPage.Visible = true; TabBtn.BackgroundColor3 = Theme.Accent; TabBtn.TextColor3 = Theme.White end
         TabBtn.MouseButton1Click:Connect(function()
@@ -152,7 +152,7 @@ function GexunLib:CreateWindow(cfg)
             local SubPage = Instance.new("ScrollingFrame", ContentHolder); SubPage.Size = UDim2.new(1, 0, 1, 0); SubPage.BackgroundTransparency = 1; SubPage.Visible = false; SubPage.AutomaticCanvasSize = "Y"; SubPage.ScrollBarThickness = 2; SubPage.ScrollBarImageColor3 = Theme.Accent
             local SPLayout = Instance.new("UIListLayout", SubPage); SPLayout.Padding = UDim.new(0, 8); SPLayout.HorizontalAlignment = "Center"
 
-            local SubBtn = Instance.new("TextButton", SubTabHolder); SubBtn.Size = UDim2.new(0, 80, 1, 0); SubBtn.Text = subname; SubBtn.BackgroundColor3 = Theme.SubTab; SubBtn.TextColor3 = Color3.new(1,1,1); SubBtn.Font = "GothamSemibold"; SubBtn.TextSize = 11; Instance.new("UICorner", SubBtn); SubBtn.AutomaticSize = "X"
+            local SubBtn = Instance.new("TextButton", SubTabHolder); SubBtn.BackgroundTransparency = 0.2; SubBtn.Size = UDim2.new(0, 80, 1, 0); SubBtn.Text = subname; SubBtn.BackgroundColor3 = Theme.SubTab; SubBtn.TextColor3 = Color3.new(1,1,1); SubBtn.Font = "GothamSemibold"; SubBtn.TextSize = 11; Instance.new("UICorner", SubBtn); SubBtn.AutomaticSize = "X"
             Instance.new("UIPadding", SubBtn).PaddingLeft = UDim.new(0,10); SubBtn.UIPadding.PaddingRight = UDim.new(0,10)
 
             if not SubTabs.Current then SubTabs.Current = SubPage; SubPage.Visible = true; SubBtn.BackgroundColor3 = Theme.Accent end
@@ -165,7 +165,7 @@ function GexunLib:CreateWindow(cfg)
             local Sections = {}
             function Sections:AddSection(sname, isOpen)
                 local sOpen = (isOpen == nil and true or isOpen)
-                local SectionFrame = Instance.new("Frame", SubPage); SectionFrame.Size = UDim2.new(1, -10, 0, 32); SectionFrame.BackgroundColor3 = Theme.Section; SectionFrame.ClipsDescendants = true; Instance.new("UICorner", SectionFrame)
+                local SectionFrame = Instance.new("Frame", SubPage); SectionFrame.BackgroundTransparency = 0.2; SectionFrame.Size = UDim2.new(1, -10, 0, 32); SectionFrame.BackgroundColor3 = Theme.Section; SectionFrame.ClipsDescendants = true; Instance.new("UICorner", SectionFrame)
                 local STitle = Instance.new("TextLabel", SectionFrame); STitle.Size = UDim2.new(1, 0, 0, 32); STitle.Position = UDim2.new(0, 10, 0, 0); STitle.Text = sname:upper(); STitle.TextColor3 = Theme.Accent; STitle.Font = "GothamBold"; STitle.TextSize = 11; STitle.BackgroundTransparency = 1; STitle.TextXAlignment = "Left"
                 local Arrow = Instance.new("TextLabel", SectionFrame); Arrow.Size = UDim2.new(0, 32, 0, 32); Arrow.Position = UDim2.new(1, -32, 0, 0); Arrow.Text = "▼"; Arrow.TextColor3 = Theme.White; Arrow.BackgroundTransparency = 1; Arrow.Font = "GothamBold"; Arrow.TextSize = 10
                 local SCont = Instance.new("Frame", SectionFrame); SCont.Size = UDim2.new(1, -10, 0, 0); SCont.Position = UDim2.new(0, 5, 0, 35); SCont.BackgroundTransparency = 1; local SL = Instance.new("UIListLayout", SCont); SL.Padding = UDim.new(0, 6)
@@ -186,16 +186,16 @@ function GexunLib:CreateWindow(cfg)
                 end
 
                 function Elements:AddInput(opt)
-                    local IFrame = Instance.new("Frame", SCont); IFrame.Size = UDim2.new(1, 0, 0, 35); IFrame.BackgroundColor3 = Theme.Main; Instance.new("UICorner", IFrame)
+                    local IFrame = Instance.new("Frame", SCont); IFrame.BackgroundTransparency = 0.2; IFrame.Size = UDim2.new(1, 0, 0, 35); IFrame.BackgroundColor3 = Theme.Main; Instance.new("UICorner", IFrame)
                     local L = Instance.new("TextLabel", IFrame); L.Text = opt.Text; L.Size = UDim2.new(0.4, 0, 1, 0); L.Position = UDim2.new(0, 10, 0, 0); L.TextColor3 = Theme.Text; L.BackgroundTransparency = 1; L.TextXAlignment = "Left"; L.Font = "Gotham"; L.TextSize = 12
-                    local Box = Instance.new("TextBox", IFrame); Box.Size = UDim2.new(0.5, 0, 0, 25); Box.Position = UDim2.new(1, -10, 0.5, 0); Box.AnchorPoint = Vector2.new(1, 0.5); Box.BackgroundColor3 = Theme.Sidebar; Box.Text = ConfigData[opt.Text] or opt.Default or ""; Box.TextColor3 = Theme.White; Box.Font = "Gotham"; Box.TextSize = 11; Instance.new("UICorner", Box)
+                    local Box = Instance.new("TextBox", IFrame); Box.BackgroundTransparency = 0.2;  Box.Size = UDim2.new(0.5, 0, 0, 25); Box.Position = UDim2.new(1, -10, 0.5, 0); Box.AnchorPoint = Vector2.new(1, 0.5); Box.BackgroundColor3 = Theme.Sidebar; Box.Text = ConfigData[opt.Text] or opt.Default or ""; Box.TextColor3 = Theme.White; Box.Font = "Gotham"; Box.TextSize = 11; Instance.new("UICorner", Box)
                     Box.FocusLost:Connect(function() ConfigData[opt.Text] = Box.Text; SaveConfig(); if opt.Callback then opt.Callback(Box.Text) end end)
                     return Elements
                 end
 
                 function Elements:AddToggle(opt)
                     local State = ConfigData[opt.Text] or false
-                    local TFrame = Instance.new("Frame", SCont); TFrame.Size = UDim2.new(1, 0, 0, 30); TFrame.BackgroundColor3 = Theme.Main; Instance.new("UICorner", TFrame)
+                    local TFrame = Instance.new("Frame", SCont); TFrame.BackgroundTransparency = 0.2; TFrame.Size = UDim2.new(1, 0, 0, 30); TFrame.BackgroundColor3 = Theme.Main; Instance.new("UICorner", TFrame)
                     local L = Instance.new("TextLabel", TFrame); L.Text = opt.Text; L.Size = UDim2.new(1, -40, 1, 0); L.Position = UDim2.new(0, 10, 0, 0); L.TextColor3 = Theme.Text; L.BackgroundTransparency = 1; L.TextXAlignment = "Left"; L.Font = "Gotham"; L.TextSize = 12
                     local Box = Instance.new("TextButton", TFrame); Box.Size = UDim2.new(0, 32, 0, 16); Box.Position = UDim2.new(1, -38, 0.5, -8); Box.BackgroundColor3 = State and Theme.Accent or Theme.Sidebar; Box.Text = ""; Instance.new("UICorner", Box).CornerRadius = UDim.new(1, 0)
                     local C = Instance.new("Frame", Box); C.Size = UDim2.new(0, 12, 0, 12); C.Position = State and UDim2.new(1, -14, 0.5, -6) or UDim2.new(0, 2, 0.5, -6); C.BackgroundColor3 = Theme.White; Instance.new("UICorner", C).CornerRadius = UDim.new(1, 0)
@@ -211,7 +211,7 @@ function GexunLib:CreateWindow(cfg)
 
                 function Elements:AddSlider(opt)
                     local DefaultValue = ConfigData[opt.Text] or opt.Default or opt.Min
-                    local SFrame = Instance.new("Frame", SCont); SFrame.Size = UDim2.new(1, 0, 0, 42); SFrame.BackgroundColor3 = Theme.Main; Instance.new("UICorner", SFrame)
+                    local SFrame = Instance.new("Frame", SCont); SFrame.BackgroundTransparency = 0.2; SFrame.Size = UDim2.new(1, 0, 0, 42); SFrame.BackgroundColor3 = Theme.Main; Instance.new("UICorner", SFrame)
                     local L = Instance.new("TextLabel", SFrame); L.Text = opt.Text .. ": " .. DefaultValue; L.Size = UDim2.new(1, -20, 0, 20); L.Position = UDim2.new(0, 10, 0, 5); L.TextColor3 = Theme.White; L.Font = "Gotham"; L.TextSize = 11; L.BackgroundTransparency = 1; L.TextXAlignment = "Left"
                     local Bar = Instance.new("TextButton", SFrame); Bar.Size = UDim2.new(1, -24, 0, 4); Bar.Position = UDim2.new(0, 12, 0, 30); Bar.BackgroundColor3 = Theme.Sidebar; Bar.Text = ""; Instance.new("UICorner", Bar)
                     local ratio = math.max(1, opt.Max - opt.Min)
@@ -233,7 +233,7 @@ function GexunLib:CreateWindow(cfg)
 
                 function Elements:AddDropdown(opt)
                     local dOpen = false; local selected = ConfigData[opt.Text] or (opt.Multi and {} or "None")
-                    local DFrame = Instance.new("Frame", SCont); DFrame.Size = UDim2.new(1, 0, 0, 30); DFrame.BackgroundColor3 = Theme.Main; DFrame.ClipsDescendants = true; Instance.new("UICorner", DFrame)
+                    local DFrame = Instance.new("Frame", SCont); DFrame.BackgroundTransparency = 0.2; DFrame.Size = UDim2.new(1, 0, 0, 30); DFrame.BackgroundColor3 = Theme.Main; DFrame.ClipsDescendants = true; Instance.new("UICorner", DFrame)
                     local DBtn = Instance.new("TextButton", DFrame); DBtn.Size = UDim2.new(1, 0, 0, 30); DBtn.BackgroundTransparency = 1; DBtn.Text = "  " .. opt.Text .. " : " .. (opt.Multi and type(selected)=="table" and #selected > 0 and table.concat(selected, ", ") or tostring(selected)); DBtn.TextColor3 = Theme.Text; DBtn.Font = "Gotham"; DBtn.TextSize = 11; DBtn.TextXAlignment = "Left"
                     local DArrow = Instance.new("TextLabel", DBtn); DArrow.Size = UDim2.new(0, 30, 0, 30); DArrow.Position = UDim2.new(1, -30, 0, 0); DArrow.Text = "▼"; DArrow.TextColor3 = Theme.White; DArrow.BackgroundTransparency = 1; DArrow.Font = "GothamBold"; DArrow.TextSize = 10
                     local ICont = Instance.new("Frame", DFrame); ICont.Size = UDim2.new(1, 0, 0, #opt.List * 25); ICont.Position = UDim2.new(0, 0, 0, 30); ICont.BackgroundTransparency = 1; Instance.new("UIListLayout", ICont)
